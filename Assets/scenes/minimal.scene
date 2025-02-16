@@ -556,7 +556,7 @@
           "RotationSpeed": 1,
           "RunByDefault": false,
           "RunSpeed": 320,
-          "ShowColliderComponents": false,
+          "ShowColliderComponents": true,
           "ShowRigidbodyComponent": false,
           "ThirdPerson": false,
           "ToggleCameraModeButton": "view",
@@ -633,6 +633,16 @@
           "OnComponentUpdate": null,
           "Priority": 5,
           "Speed": 1
+        },
+        {
+          "__type": "Player",
+          "__guid": "e77c4d53-a416-435a-81ab-65cd42e6a790",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
         }
       ],
       "Children": [
@@ -766,6 +776,16 @@
           },
           "RenderType": "On",
           "Tint": "0.7814,0.05815,0.05815,1"
+        },
+        {
+          "__type": "Trash",
+          "__guid": "63db3b15-4a90-4e11-80d9-439973164596",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
         }
       ]
     },
@@ -808,7 +828,26 @@
       "Name": "Props Spawn Point",
       "Position": "-12.00129,629.133,192.7021",
       "Scale": "1.454637,0.2852585,1.358833",
-      "Enabled": true
+      "Enabled": true,
+      "Components": [
+        {
+          "__type": "SpawnerTrash",
+          "__guid": "aa9e5912-33cd-4e87-bc7d-2b2cd290de7c",
+          "delayPush": 0.5,
+          "delayRemove": 3,
+          "force": 5000,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "trashPrefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/trash.prefab"
+          }
+        }
+      ]
     }
   ],
   "SceneProperties": {
