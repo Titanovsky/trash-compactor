@@ -263,7 +263,7 @@
               "OnTriggerEnter": null,
               "OnTriggerExit": null,
               "Scale": "100,100,10",
-              "Static": false,
+              "Static": true,
               "Surface": null,
               "SurfaceVelocity": "0,0,0"
             }
@@ -318,7 +318,7 @@
               "OnTriggerEnter": null,
               "OnTriggerExit": null,
               "Scale": "100,100,11",
-              "Static": false,
+              "Static": true,
               "Surface": null,
               "SurfaceVelocity": "0,0,0"
             }
@@ -373,7 +373,7 @@
               "OnTriggerEnter": null,
               "OnTriggerExit": null,
               "Scale": "100,100,11",
-              "Static": false,
+              "Static": true,
               "Surface": null,
               "SurfaceVelocity": "0,0,0"
             }
@@ -428,7 +428,7 @@
               "OnTriggerEnter": null,
               "OnTriggerExit": null,
               "Scale": "100,100,11",
-              "Static": false,
+              "Static": true,
               "Surface": null,
               "SurfaceVelocity": "0,0,0"
             }
@@ -483,7 +483,7 @@
               "OnTriggerEnter": null,
               "OnTriggerExit": null,
               "Scale": "100,100,11",
-              "Static": false,
+              "Static": true,
               "Surface": null,
               "SurfaceVelocity": "0,0,0"
             }
@@ -643,6 +643,20 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null
+        },
+        {
+          "__type": "FpPlayerGrabber",
+          "__guid": "f4e8beda-8704-42f6-935d-5c07d767a84a",
+          "DecalEffect": null,
+          "ImpactEffect": null,
+          "MovementSmoothness": 3,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "ShootDamage": 9
         }
       ],
       "Children": [
@@ -695,7 +709,7 @@
         },
         {
           "__guid": "8f1b67b5-e5b4-49b3-a5ac-b8df42ad9721",
-          "Flags": 1,
+          "Flags": 0,
           "Name": "Colliders",
           "Enabled": true,
           "Components": [
