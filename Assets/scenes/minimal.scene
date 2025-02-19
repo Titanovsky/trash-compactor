@@ -11,7 +11,7 @@
           "__type": "Sandbox.SceneInformation",
           "__guid": "e8c3cee6-e374-4f90-8f55-04a9555833a6",
           "Author": null,
-          "Changes": null,
+          "Changes": "",
           "Description": "",
           "Group": null,
           "OnComponentDestroy": null,
@@ -32,6 +32,18 @@
       "Name": "MAP",
       "Position": "35.45618,-684.3589,379.1797",
       "Enabled": true,
+      "Components": [
+        {
+          "__type": "GameHandler",
+          "__guid": "619ed734-bc9c-4705-9228-3b7bbfae2330",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        }
+      ],
       "Children": [
         {
           "__guid": "3ee1c9f4-07be-4e0b-8b23-67bee2d8ec8a",
