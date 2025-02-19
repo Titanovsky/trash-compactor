@@ -1,15 +1,16 @@
-using Sandbox;
-
-public sealed class GameHandler : Component
+public static class GameHandler
 {
-	private void Init()
+	public static void Init()
 	{
-
+		InitRoles();
 	}
 
-
-	protected override void OnStart()
+	private static void InitRoles()
 	{
-		Init();
+		var grabber = new Role( "grabber", "Grabber" );
+		var survival = new Role( "grabber", "Grabber" );
+
+		RoleHandler.Add( grabber );
+		RoleHandler.Add( survival );
 	}
 }

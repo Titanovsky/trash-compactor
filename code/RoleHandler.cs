@@ -1,21 +1,46 @@
-﻿public class RoleHandler
+﻿public static class RoleHandler
 {
-	public static List<string> Roles { get; private set; } = new();
+	public static Dictionary<string, Role> Roles { get; private set; } = new();
 
-	public void Add(string role)
+	public static void Add(Role role)
 	{
-		Roles.Add(role);
+		if (Roles.ContainsKey(role.Id))
+		{
+			Log.Error( $"An attemption to add the role {role.Name} ({role.Id}) with similiar id" );
+
+			return;
+		}
+
+		Roles.Add(role.Id, role);
 	}
 
-	public void Remove(string role)
+	public static void Remove(Role role)
 	{
-		Roles.Remove(role);
+		if ( !Roles.TryGetValue( role.Id, out Role currentRole ) ) return;
+		if ( currentRole != role ) return;
+
+		Remove( role.Id );
 	}
 
-	public string Get( string role )
+	public static void Remove( string id )
 	{
-		if (!Roles.Contains( role )) return null;
+		Roles.Remove( id );
+	}
 
-		return role;
+	public static Role Get( string id )
+	{
+		if ( !Roles.TryGetValue(id, out Role result) ) return null;
+
+		return result;
+	}
+
+	public static bool Exists( string id )
+	{
+		return Roles.ContainsKey( id );
+	}
+
+	public static bool Exists( Role role )
+	{
+		return Roles.ContainsKey( role.Id ) && Roles[role.Id] == role;
 	}
 }
