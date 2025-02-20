@@ -3,14 +3,16 @@ public static class GameHandler
 	public static void Init()
 	{
 		InitRoles();
+		//InitTrashTrigger();
+		//SpawnPlayer();
 	}
 
 	private static void InitRoles()
 	{
-		var grabber = new Role( "grabber", "Grabber" );
-		var survival = new Role( "grabber", "Grabber" );
+		RoleHandler.Reset(); // cuz static
 
-		RoleHandler.Add( grabber );
-		RoleHandler.Add( survival );
+		RoleHandler.Add( new Role( "spectator", "Spectator" ) );
+		RoleHandler.Add( new Role( "trashman", "Trashman" ) );
+		RoleHandler.Add( new Role( "soccer", "Soccer" ) );
 	}
 }
