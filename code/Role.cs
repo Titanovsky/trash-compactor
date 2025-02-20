@@ -1,4 +1,6 @@
-﻿public class Role : IValid
+﻿using System;
+
+public class Role : IValid
 {
 	public string Id { get; set; }
 	public string Name { get; set; }
@@ -15,5 +17,12 @@
 	{
 		Id = id.ToString();
 		Name = name;
+	}
+
+	public bool Check(Enum enumValue)
+	{
+		if ( !this.IsValid() ) return false;
+
+		return (Id.ToLower() == enumValue.ToString().ToLower());
 	}
 }
