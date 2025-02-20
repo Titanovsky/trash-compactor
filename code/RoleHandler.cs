@@ -43,4 +43,12 @@
 	{
 		return Roles.ContainsKey( role.Id ) && Roles[role.Id] == role;
 	}
+
+	/// <summary>
+	/// Reset All
+	/// </summary>
+	public static void Reset()
+	{
+		Roles.Clear();
+	}
 }
