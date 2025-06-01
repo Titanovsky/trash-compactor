@@ -6,11 +6,4 @@ public sealed class EntryPoint : Component
 	{
 		GameHandler.Init();
 	}
-
-	private float t = 0f;
-	protected override void OnUpdate()
-	{
-		t += Time.Delta;
-		Log.Info( t );
-	}
 }
