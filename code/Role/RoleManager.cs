@@ -1,4 +1,4 @@
-﻿public static class RoleHandler
+﻿public static class RoleManager
 {
 	public static Dictionary<string, Role> Roles { get; private set; } = new();
 

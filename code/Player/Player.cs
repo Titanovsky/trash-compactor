@@ -29,7 +29,7 @@ public sealed class Player : Component, Component.IDamageable
 
 	public void SetRole( string id )
 	{
-		SetRole( RoleHandler.Get( id ) );
+		SetRole( RoleManager.Get( id ) );
 	}
 
 	public void SetupRole()
@@ -38,13 +38,13 @@ public sealed class Player : Component, Component.IDamageable
 
 		Transform transform = new( Vector3.Zero, Rotation.Identity );
 
-		if (Role.Check(GameRoles.Spectator))
+		if (Role.Check(TrashCompactorRole.Spectator))
 		{
 			Log.Info("ds");
-		} else if (Role.Check(GameRoles.Soccer))
+		} else if (Role.Check(TrashCompactorRole.Soccer))
 		{
 			Log.Info( "b" );
-		} else if ( Role.Check(GameRoles.Trashman))
+		} else if ( Role.Check(TrashCompactorRole.Trashman))
 		{
 			Log.Info( "c" );
 		}
