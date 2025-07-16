@@ -23,7 +23,7 @@ public static class GameHandler
 
 	private static void SpawnPlayer()
 	{
-		var ply = Player.Instance;
+		var ply = Player.Local;
 
 		ply.SetRole( "soccer" );
 		ply.SetupRole();

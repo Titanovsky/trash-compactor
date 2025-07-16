@@ -1,7 +1,7 @@
 {
   "Title": "Trash Compactor ",
   "Type": "game",
-  "Org": "local",
+  "Org": "titanovsky",
   "Ident": "trash_compactor",
   "Schema": 1,
   "IncludeSourceFiles": false,
@@ -23,6 +23,7 @@
     "PerMapRanking": false,
     "LeaderboardType": "None",
     "CsProjName": "",
-    "StartupScene": "scenes/minimal.scene"
+    "StartupScene": "scenes/minimal.scene",
+    "LaunchMode": "QuickPlay"
   }
 }

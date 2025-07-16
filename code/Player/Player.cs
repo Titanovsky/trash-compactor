@@ -2,21 +2,11 @@ using Sandbox;
 
 public sealed class Player : Component, Component.IDamageable
 {
-	public static Player Instance { get; set; }
+	public static Player Local { get; set; }
 
 	public Role Role { get; set; }
-
-	protected override void OnAwake()
-	{
-		if ( Instance.IsValid() ) return;
-
-		Instance = this;
-	}
-
-	public void OnDamage( in DamageInfo damage )
-	{
-		Log.Info( damage.Attacker );
-	}
+	public PlayerController Controller { get; set; }
+	public FpPlayerGrabber Grabber { get; set; }
 
 	public void SetRole( Role role )
 	{
@@ -51,5 +41,17 @@ public sealed class Player : Component, Component.IDamageable
 
 		WorldPosition = transform.Position;
 		WorldRotation = transform.Rotation;
+	}
+
+	protected override void OnAwake()
+	{
+		if ( Local.IsValid() ) return;
+
+		Local = this;
+	}
+
+	public void OnDamage( in DamageInfo damage )
+	{
+		Log.Info( damage.Attacker );
 	}
 }

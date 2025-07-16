@@ -31,7 +31,7 @@ public sealed class SpawnerTrash : Component
 
 	private void Prepare()
 	{
-		_ply = Player.Instance;
+		_ply = Player.Local;
 	}
 
 	private async void SpawnTrash()
