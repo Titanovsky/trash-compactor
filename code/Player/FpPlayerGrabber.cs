@@ -77,11 +77,12 @@ public sealed class FpPlayerGrabber : Component
 
 		if ( Input.Down( "attack2" ) )
 		{
-			Shoot();
+			Push();
 			return;
 		}
 
 		var tr = Scene.Trace.Ray( Scene.Camera.WorldPosition, Scene.Camera.WorldPosition + Scene.Camera.WorldRotation.Forward * 1000 )
+			.IgnoreGameObjectHierarchy(GameObject)
 			.Run();
 
 		if ( !tr.Hit || tr.Body is null )
@@ -135,18 +136,18 @@ public sealed class FpPlayerGrabber : Component
 		if ( grabbedBody is null )
 		{
 			var tr = Scene.Trace.Ray( Scene.Camera.ScreenNormalToRay( 0.5f ), 1000.0f )
-							//.IgnoreGameObjectHierarchy( GameObject.Root )
-							.Run();
+                            .IgnoreGameObjectHierarchy(GameObject)
+                            .Run();
 
 			if ( tr.Hit )
 			{
-				Gizmo.Draw.Color = Color.Cyan;
+				Gizmo.Draw.Color = Color.Green;
 				Gizmo.Draw.SolidSphere( tr.HitPosition, 1 );
 			}
 		}
 	}
 
-	public void Shoot()
+	public void Push()
 	{
 		if ( timeSinceShoot < 0.1f )
 			return;
@@ -158,11 +159,11 @@ public sealed class FpPlayerGrabber : Component
 		var ray = Scene.Camera.ScreenNormalToRay( 0.5f );
 		ray.Forward += Vector3.Random * 0.03f;
 
-		var tr = Scene.Trace.Ray( ray, 3000.0f )
-				.IgnoreGameObjectHierarchy( GameObject.Root )
+		var tr = Scene.Trace.Ray(ray, 3000.0f)
+				.WithoutTags("player")
 				.Run();
 
-		if ( !tr.Hit || tr.GameObject is null )
+        if ( !tr.Hit || tr.GameObject is null )
 			return;
 
 		if ( ImpactEffect.IsValid() )
