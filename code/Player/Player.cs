@@ -39,8 +39,8 @@ public sealed class Player : Component, Component.IDamageable
 			Log.Info( "c" );
 		}
 
-		WorldPosition = transform.Position;
-		WorldRotation = transform.Rotation;
+		//WorldPosition = transform.Position;
+		//WorldRotation = transform.Rotation;
 	}
 
 	protected override void OnAwake()
