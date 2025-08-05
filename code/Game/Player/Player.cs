@@ -1,6 +1,3 @@
-using Sandbox;
-using System.Data;
-
 public sealed class Player : Component, Component.IDamageable
 {
 	public static Player Local { get; set; }
@@ -47,6 +44,12 @@ public sealed class Player : Component, Component.IDamageable
     //	//WorldRotation = transform.Rotation;
     //}
 
+    public void Prepare()
+    {
+        Log.Info($"Your role: {Role.Name}");
+        Log.Info($"Check: {Role.Check("spectator")}");
+    }
+
     public void ChangeRole(Role role)
 	{
 		Role = role;
@@ -70,7 +73,8 @@ public sealed class Player : Component, Component.IDamageable
 
     protected override void OnStart()
     {
-		ChangeRole(new Spectator());
+        ChangeRole(new Spectator());
+        Prepare();
     }
 
 	public void OnDamage( in DamageInfo damage )
