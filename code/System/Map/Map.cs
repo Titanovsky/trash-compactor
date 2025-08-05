@@ -1,4 +1,6 @@
-﻿public class Map()
+﻿namespace TrashCompactor.System;
+
+public class MapInfo() : Component
 {
     public Transform TrashmanTransform { get; set; } = new Transform(Vector3.Zero, Rotation.Identity);
     public Transform SurvivalTransform { get; set; } = new Transform(Vector3.Zero, Rotation.Identity);

@@ -1,6 +1,8 @@
+using TrashCompactor.System;
+
 public static class Gameplay
 {
-	public static Map Map { get; set; }
+	public static MapInfo MapInfo { get; set; }
 
 	public static void Init()
 	{
