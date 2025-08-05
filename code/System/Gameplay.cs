@@ -1,8 +1,10 @@
 using TrashCompactor.System;
 
-public static class Gameplay
+public class Gameplay : Component
 {
-	public static MapInfo MapInfo { get; set; }
+	public static Gameplay Instance { get; private set; }
+
+	[Property] public MapInfo MapInfo { get; set; }
 
 	public static void Init()
 	{
@@ -32,4 +34,15 @@ public static class Gameplay
 		//ply.SetRole( "soccer" );
 		//ply.SetupRole();
 	}
+
+    protected override void OnAwake()
+    {
+		if (Instance == null)
+			Instance = this;
+    }
+
+    protected override void OnDestroy()
+    {
+		Instance = null;
+    }
 }

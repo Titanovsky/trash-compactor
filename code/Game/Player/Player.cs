@@ -5,6 +5,7 @@ public sealed class Player : Component, Component.IDamageable
 	public Role Role { get; set; }
 	public PlayerController Controller { get; set; }
 	public FpPlayerGrabber Grabber { get; set; }
+    [Property] public CameraComponent Camera { get; set; }
 
 	public bool CanFly = false;
     public bool Godmode = false;
@@ -55,7 +56,7 @@ public sealed class Player : Component, Component.IDamageable
 		Role = role;
 
 		role.Setup(this);
-	}
+    }
 
 	public void ResetStats()
 	{

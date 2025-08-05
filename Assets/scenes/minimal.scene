@@ -17,9 +17,15 @@
       "OwnerTransfer": 1,
       "Components": [
         {
-          "__type": "EntryPoint",
-          "__guid": "d87fe249-a7a9-4295-9536-c961db854104",
+          "__type": "Gameplay",
+          "__guid": "6fd5a40c-a40d-4560-9ada-9a56800a584a",
           "__enabled": true,
+          "MapInfo": {
+            "_type": "component",
+            "component_id": "ab3aa8c1-5e44-46cb-b24d-c7fc544301bd",
+            "go": "519aaadf-b3bc-402f-8a49-d6ab0e4affd8",
+            "component_type": "MapInfo"
+          },
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -80,7 +86,34 @@
       "NetworkInterpolation": true,
       "NetworkOrphaned": 0,
       "OwnerTransfer": 1,
-      "Components": [],
+      "Components": [
+        {
+          "__type": "TrashCompactor.System.MapInfo",
+          "__guid": "ab3aa8c1-5e44-46cb-b24d-c7fc544301bd",
+          "__enabled": true,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "SpectatorTransform": {
+            "Position": "-16,-176,104",
+            "Scale": "1,1,1",
+            "Rotation": "-0,0,-1,-0.00000004371139"
+          },
+          "SurvivalTransform": {
+            "Position": "-16,-176,104",
+            "Scale": "1,1,1",
+            "Rotation": "0,0,0,1"
+          },
+          "TrashmanTransform": {
+            "Position": "-47.99976,1624,616",
+            "Scale": "1,1,1",
+            "Rotation": "0,0,-0.7071067,0.7071068"
+          }
+        }
+      ],
       "Children": []
     },
     {
@@ -165,20 +198,20 @@
               "-0,0,-1"
             ],
             "TextureScale": [
-              "0.5312499,0.25",
-              "0.1416667,0.25",
+              "0.53125,0.25",
+              "0.1416667,0.2499999",
               "0.25,0.25",
               "0.25,0.25",
-              "0.1416667,0.25",
+              "0.1416666,0.25",
               "0.1416667,0.25"
             ],
             "TextureOffset": [
-              "271.0588,1504",
-              "56.47046,0.0001220703",
+              "271.0587,480",
+              "56.47046,0.0002441406",
               "0,448",
               "0,448",
               "455.5295,448",
-              "56.47052,448"
+              "56.47021,448"
             ],
             "MaterialIndex": [
               0,
@@ -637,12 +670,12 @@
                   "0.25,0.25"
                 ],
                 "TextureOffset": [
-                  "160,287.9994",
-                  "160,287.9993",
+                  "159.9999,287.9994",
+                  "159.9999,287.9993",
                   "287.9993,288.0001",
                   "224.0007,288.0001",
-                  "352,288.0001",
-                  "160,288.0001"
+                  "352.0001,288.0001",
+                  "159.9999,288.0001"
                 ],
                 "MaterialIndex": [
                   0,
@@ -792,12 +825,12 @@
                   "0.25,0.25"
                 ],
                 "TextureOffset": [
-                  "416,288",
-                  "416,288",
+                  "415.9999,288",
+                  "415.9999,288",
                   "288,288.0506",
                   "224,288.0505",
-                  "96,288.0506",
-                  "416,288.0506"
+                  "96.00006,288.0506",
+                  "415.9999,288.0506"
                 ],
                 "MaterialIndex": [
                   0,
@@ -1237,14 +1270,14 @@
                   "1,0,-0",
                   "-0.000000343097,-1,0.0000003972702",
                   "0.000000343097,1,-0.0000003972702",
-                  "-1,-0,0",
-                  "1,0,0"
+                  "-1,-0.00000000000006013189,-0.00000008669767",
+                  "1,0.00000000000006013189,0.00000008669767"
                 ],
                 "TextureVAxis": [
                   "0,-1,0",
                   "0,-1,0",
-                  "0.6536199,0,-0.756823",
-                  "0.6536199,0,-0.756823",
+                  "0.6536199,0,-0.7568229",
+                  "0.6536199,0,-0.7568229",
                   "0,-0.0000006935813,-1",
                   "-0,-0.0000006935813,-1"
                 ],
@@ -1258,11 +1291,11 @@
                 ],
                 "TextureOffset": [
                   "160,288.0005",
-                  "160,288",
-                  "288,24.50549",
-                  "224,504.8463",
-                  "352,448.0085",
-                  "160,448.0052"
+                  "159.9999,288",
+                  "288,24.50543",
+                  "224,504.8462",
+                  "352.0001,448.0085",
+                  "159.9999,448.0052"
                 ],
                 "MaterialIndex": [
                   0,
@@ -1388,20 +1421,20 @@
                   "1.9375,-0.3125"
                 ],
                 "TextureUAxis": [
-                  "-1,-0.0000001045123,0",
                   "-1,-0.00000007838419,0",
-                  "0.0000002982001,1,0.0000004360448",
-                  "-0.0000002832344,-1,-0.0000004489698",
-                  "1,0.00000000000006013189,-0.00000008669767",
-                  "-1,0.00000000000006013189,-0.00000008669767"
+                  "-1,-0.00000007838419,0",
+                  "0.000000641297,1,0.0000008333151",
+                  "-0.000000641297,-1,-0.0000008333151",
+                  "1,0,0",
+                  "-1,0,0"
                 ],
                 "TextureVAxis": [
                   "0,1,0",
                   "-0,1,0",
-                  "-0.6536199,-0.00000005123347,-0.7568229",
-                  "-0.6536199,-0.0000000683113,-0.7568229",
-                  "0,0.0000006935813,-1",
-                  "0,0.0000006935813,-1"
+                  "-0.6536199,-0.00000005123347,-0.756823",
+                  "-0.6536199,-0.00000005123347,-0.756823",
+                  "0,0.000001387163,-1",
+                  "0,0.000001387163,-1"
                 ],
                 "TextureScale": [
                   "0.25,0.25",
@@ -1412,12 +1445,12 @@
                   "0.25,0.25"
                 ],
                 "TextureOffset": [
-                  "400.0001,224.0007",
-                  "400.0001,224.0002",
-                  "223.9999,143.2274",
-                  "288.0001,111.5681",
-                  "111.9999,448.0074",
-                  "399.9999,448.0042"
+                  "96.00012,224.001",
+                  "96.00012,224",
+                  "223.9993,504.8463",
+                  "288.0007,473.1873",
+                  "415.9998,448.0085",
+                  "95.99988,448.002"
                 ],
                 "MaterialIndex": [
                   0,
@@ -2261,6 +2294,12 @@
           "__type": "Player",
           "__guid": "a9409a89-5c5d-4ff0-ad70-d63a3795414a",
           "__enabled": true,
+          "Camera": {
+            "_type": "component",
+            "component_id": "cf3cbf96-22b6-4be4-a5d0-672a96c17f9f",
+            "go": "3ee1c9f4-07be-4e0b-8b23-67bee2d8ec8a",
+            "component_type": "CameraComponent"
+          },
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -2290,7 +2329,7 @@
           "__version": 1,
           "Flags": 0,
           "Name": "Body",
-          "Position": "0,0,0",
+          "Position": "32.00012,0.0001773834,0",
           "Rotation": "0,0,0,1",
           "Scale": "1,1,1",
           "Tags": "",
@@ -2414,6 +2453,49 @@
           "Children": []
         }
       ]
+    },
+    {
+      "__guid": "ede405ef-7832-4e84-8d86-8856f3c203a8",
+      "__version": 1,
+      "Flags": 0,
+      "Name": "Cube",
+      "Position": "-16,-176,104",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkInterpolation": true,
+      "NetworkOrphaned": 0,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "fad20065-f3dd-4b19-abb6-12d9be9315c4",
+          "__enabled": true,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/dev/box.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        }
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {
