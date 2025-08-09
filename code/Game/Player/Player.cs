@@ -10,6 +10,10 @@ public sealed class Player : Component, Component.IDamageable
 	public bool CanFly = false;
     public bool Godmode = false;
 
+    public int Health = 0;
+    public int Armor = 0;
+    public string Name = "";
+
     //public void SetRole( RoleBase role )
     //{
     //	if (!role.IsValid()) return;
@@ -70,6 +74,8 @@ public sealed class Player : Component, Component.IDamageable
 		if ( Local.IsValid() ) return;
 
 		Local = this; //todo to network
+
+        Name = Connection.Local.DisplayName;
 	}
 
     protected override void OnStart()
