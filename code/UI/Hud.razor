@@ -1,19 +1,44 @@
-@using Sandbox;
-@using Sandbox.UI;
+﻿@using Sandbox
+@using Sandbox.UI
 @inherits PanelComponent
-@namespace Sandbox
 
-<root>
-	<div class="title">@MyStringValue</div>
+<root class="player-hud">
+  <div class="name">@PlayerName</div>
+
+  <div class="card">
+    <div class="stat">
+      <div class="emoji">❤️</div>
+      <div class="value">@HealthValue</div>
+    </div>
+
+    <div class="stat">
+      <div class="emoji">🛡️</div>
+      <div class="value">@ArmorValue</div>
+    </div>
+  </div>
 </root>
 
-@code
-{
+@code {
+  public float HealthValue { get; set; }
+  public float ArmorValue  { get; set; }
+  public string PlayerName { get; set; } = "—";
 
-	[Property, TextArea] public string MyStringValue { get; set; } = "Hello World!";
+  protected override void OnUpdate()
+  {
+    var p = Player.Local; // как ты просил
+    if ( p is not null )
+    {
+      HealthValue = p.Health;
+      ArmorValue  = p.Armor;
+      PlayerName  = p.Name ?? p.GameObject?.Name ?? "Player";
+    }
+  }
 
-	/// <summary>
-	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
-	/// </summary>
-	protected override int BuildHash() => System.HashCode.Combine( MyStringValue );
+  // Перестраиваем UI только когда реально меняются данные
+  protected override int BuildHash()
+    => System.HashCode.Combine(
+         (int)System.MathF.Round(HealthValue),
+         (int)System.MathF.Round(ArmorValue),
+         PlayerName
+       );
 }

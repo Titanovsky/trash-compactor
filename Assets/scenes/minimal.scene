@@ -2138,7 +2138,7 @@
       "__guid": "0b022c60-77ae-4eb9-a425-6b7e58179897",
       "__version": 1,
       "Flags": 0,
-      "Name": "Player Controller",
+      "Name": "Player",
       "Position": "-47.99994,1656,616",
       "Rotation": "0,0,-0.7071067,0.7071068",
       "Scale": "1,1,1",
@@ -2321,6 +2321,34 @@
           "OnComponentStart": null,
           "OnComponentUpdate": null,
           "ShootDamage": 9
+        },
+        {
+          "__type": "Sandbox.ScreenPanel",
+          "__guid": "a98d5ec9-6c74-4561-b1bc-0f960eedfb7f",
+          "__enabled": true,
+          "AutoScreenScale": true,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Opacity": 1,
+          "Scale": 1,
+          "ScaleStrategy": "ConsistentHeight",
+          "TargetCamera": null,
+          "ZIndex": 100
+        },
+        {
+          "__type": "Hud",
+          "__guid": "295d3748-25a1-447d-83a9-3fa34dfe6ff5",
+          "__enabled": true,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
         }
       ],
       "Children": [
