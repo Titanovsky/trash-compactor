@@ -7,7 +7,7 @@ public abstract class Role
 
 	public virtual void Setup(Player player) 
     { 
-        player.WorldPosition = SpawnTransform.Position;
+        //player.WorldPosition = SpawnTransform.Position;
     }
 
 	public virtual bool Check(Type type)
