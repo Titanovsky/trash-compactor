@@ -1,7 +1,7 @@
 {
-  "Title": "Trash Compactor ",
+  "Title": "Trash Compactor",
   "Type": "game",
-  "Org": "titanovsky",
+  "Org": "ambi",
   "Ident": "trash_compactor",
   "Schema": 1,
   "IncludeSourceFiles": false,
