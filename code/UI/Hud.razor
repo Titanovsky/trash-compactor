@@ -4,42 +4,47 @@
 @namespace Sandbox
 
 <root class="player-hud">
-  <div class="name">@PlayerName</div>
+	<div class="name">@PlayerName</div>
 
-  <div class="card">
-    <div class="stat">
-      <div class="emoji">❤️</div>
-      <div class="value">@HealthValue</div>
-    </div>
+	<div class="card">
+		<div class="stat">
+			<div class="emoji">❤️</div>
+			<div class="value">@HealthValue</div>
+		</div>
 
-    <div class="stat">
-      <div class="emoji">🛡️</div>
-      <div class="value">@ArmorValue</div>
-    </div>
-  </div>
+		<div class="stat">
+			<div class="emoji">🛡️</div>
+			<div class="value">@ArmorValue</div>
+		</div>
+
+		<div class="stat">
+			<div class="emoji">⌛</div>
+			<div class="value">@RoundManager.Instance.Timer.Relative.ToString("F0")</div>
+		</div>
+	</div>
 </root>
 
 @code {
-  public float HealthValue { get; set; }
-  public float ArmorValue  { get; set; }
-  public string PlayerName { get; set; } = "—";
+	public float HealthValue { get; set; }
+	public float ArmorValue { get; set; }
+	public string PlayerName { get; set; } = "—";
 
-  protected override void OnUpdate()
-  {
-    var p = Player.Local; // как ты просил
-    if ( p is not null )
-    {
-      HealthValue = p.Health;
-      ArmorValue  = p.Armor;
-      PlayerName  = p.Name ?? p.GameObject?.Name ?? "Player";
-    }
-  }
+	protected override void OnStart()
+	{
+		var p = Player.Local;
+		if (p is not null)
+		{
+			HealthValue = p.Health;
+			ArmorValue = p.Armor;
+			PlayerName = p.Name ?? p.GameObject?.Name ?? "Player";
+		}
+	}
 
-  // Перестраиваем UI только когда реально меняются данные
-  protected override int BuildHash()
-    => System.HashCode.Combine(
-         (int)System.MathF.Round(HealthValue),
-         (int)System.MathF.Round(ArmorValue),
-         PlayerName
-       );
+	protected override int BuildHash()
+	=> System.HashCode.Combine(
+		  (int)System.MathF.Round(HealthValue),
+		  (int)System.MathF.Round(ArmorValue),
+		  RoundManager.Instance.Timer.Relative,
+		  PlayerName
+	);
 }
