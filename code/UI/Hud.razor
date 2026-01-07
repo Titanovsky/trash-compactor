@@ -4,7 +4,8 @@
 @namespace Sandbox
 
 <root class="player-hud">
-	<div class="name">@PlayerName</div>
+	<div class="name">@Name</div>
+	<div class="name">@RoundManager.Instance.State</div>
 
 	<div class="card">
 		<div class="stat">
@@ -25,26 +26,19 @@
 </root>
 
 @code {
-	public float HealthValue { get; set; }
-	public float ArmorValue { get; set; }
-	public string PlayerName { get; set; } = "—";
+	private float HealthValue => Player.Local.IsValid() ? Player.Local.Health : 0f;
+	private float ArmorValue => Player.Local.IsValid() ? Player.Local.Armor : 0f;
+	private string Name => Player.Local.IsValid() ? Player.Local.Name : "";
 
 	protected override void OnStart()
 	{
-		var p = Player.Local;
-		if (p is not null)
-		{
-			HealthValue = p.Health;
-			ArmorValue = p.Armor;
-			PlayerName = p.Name ?? p.GameObject?.Name ?? "Player";
-		}
 	}
 
 	protected override int BuildHash()
 	=> System.HashCode.Combine(
 		  (int)System.MathF.Round(HealthValue),
 		  (int)System.MathF.Round(ArmorValue),
-		  RoundManager.Instance.Timer.Relative,
-		  PlayerName
+		  Name,
+		  RoundManager.Instance.Timer.Relative
 	);
 }

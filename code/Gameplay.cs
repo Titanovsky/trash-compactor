@@ -5,15 +5,16 @@ public class Gameplay : Component
 	public static Gameplay Instance { get; private set; }
 
 	[Property] public MapInfo MapInfo { get; set; }
+	[Property] public GameObject Spawn;
 
-	public static void Init()
+	public void Init()
 	{
 		InitRoles();
 		//InitTrashTrigger();
-		SpawnPlayer();
+		SpawnPlayers();
 	}
 
-	private static void InitRoles()
+	private void InitRoles()
 	{
 		//RoleManager.Reset(); // cuz static
 
@@ -27,12 +28,12 @@ public class Gameplay : Component
 		//RoleManager.Add( new RoleBase( soccer, "Soccer" ) );
 	}
 
-	private static void SpawnPlayer()
+	[Rpc.Broadcast(NetFlags.Reliable | NetFlags.HostOnly)]
+	public void SpawnPlayers()
 	{
-		//var ply = Player.Local;
+		if (IsProxy) return;
 
-		//ply.SetRole( "soccer" );
-		//ply.SetupRole();
+		Player.Local.Spawn();
 	}
 
     protected override void OnAwake()

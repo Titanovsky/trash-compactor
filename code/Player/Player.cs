@@ -1,18 +1,25 @@
+using System;
+using static Sandbox.Gizmo;
+
 public sealed class Player : Component, Component.IDamageable
 {
 	public static Player Local { get; set; }
 
-	public Role Role { get; set; }
-	public PlayerController Controller { get; set; }
-	public FpPlayerGrabber Grabber { get; set; }
+	[Property] public PlayerController Controller { get; private set; }
+	[Property] public FpPlayerGrabber Grabber { get; private set; }
     [Property] public CameraComponent Camera { get; set; }
 
-	public bool CanFly = false;
+    public Role Role { get; private set; }
+    [Sync] public RoleTrashCompactor RoleEnum { get; set; } = RoleTrashCompactor.Survival;
+
+    public bool CanFly = false;
     public bool Godmode = false;
 
     public int Health = 0;
     public int Armor = 0;
-    public string Name = "";
+    [Sync] public string Name { get; set; } = "";
+
+    private Vector3 _jumpForceSpawn = new Vector3(.1f, .1f, .1f);
 
     //public void SetRole( RoleBase role )
     //{
@@ -49,43 +56,71 @@ public sealed class Player : Component, Component.IDamageable
     //	//WorldRotation = transform.Rotation;
     //}
 
+    public void Spawn()
+    {
+        if (IsProxy) return;
+
+        WorldPosition = Gameplay.Instance.Spawn.WorldPosition;
+
+        Controller.Jump(_jumpForceSpawn); // workaround cuz stuck
+    }
+
     public void Prepare()
     {
+        if (IsProxy) return;
+
         Log.Info($"Your role: {Role.Name}");
         Log.Info($"Check: {Role.Check("spectator")}");
     }
 
     public void ChangeRole(Role role)
 	{
-		Role = role;
+        if (IsProxy) return;
+
+        Role = role;
 
 		role.Setup(this);
     }
 
 	public void ResetStats()
 	{
-		CanFly = false;
-        Godmode = false;
+        if (IsProxy) return;
 
+        CanFly = false;
+        Godmode = false;
     }
 
-	protected override void OnAwake()
-	{
-		if ( Local.IsValid() ) return;
+    public void OnDamage(in DamageInfo damage)
+    {
+        //Log.Info(damage.Attacker);
+    }
 
-		Local = this; //todo to network
+    private void CreateSingleton()
+    {
+        if (IsProxy) return;
 
-        Name = Connection.Local.DisplayName;
-	}
+        Local = this;
+    }
+
+    private void RemoveSingleton()
+    {
+        if (Local != this) return;
+
+        Local = null;
+    }
 
     protected override void OnStart()
     {
+        CreateSingleton(); // cuz network good works only OnStart
         ChangeRole(new Spectator());
         Prepare();
+
+        Log.Info(Connection.Local.DisplayName);
+        Name = Connection.Local.DisplayName;
     }
 
-	public void OnDamage( in DamageInfo damage )
-	{
-		Log.Info( damage.Attacker );
-	}
+    protected override void OnDestroy()
+    {
+        RemoveSingleton();
+    }
 }

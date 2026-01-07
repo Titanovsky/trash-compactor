@@ -1,5 +1,4 @@
-﻿using Sandbox;
-using System;
+﻿using System;
 
 public class RoundManager : Component
 {
@@ -12,18 +11,19 @@ public class RoundManager : Component
     [Property] public float RoundTime { get; set; } = 120f;
     [Property] public float PostRoundTime { get; set; } = 10f;
 
-    public TimeUntil Timer { get; set; } = 0;
+    public TimeUntil Timer { get; private set; } = 0;
 
-    public RoundState State { get; private set; } = RoundState.None;
+    [Sync(SyncFlags.FromHost)] public RoundState State { get; private set; } = RoundState.None;
 
     public void Start()
     {
         if (!Networking.IsHost) return;
 
-        Timer = RoundTime;
         State = RoundState.Started;
 
-        SendSyncToClientsRpc(Timer.Relative, State.ToString());
+        Timer = RoundTime;
+
+        SendSyncToClientsRpc(Timer.Relative);
         StartRpc();
 
         Log.Info($"[Round Manager] Started");
@@ -51,10 +51,10 @@ public class RoundManager : Component
     {
         if (!Networking.IsHost) return;
 
-        Timer = PostRoundTime;
         State = RoundState.Finished;
+        Timer = PostRoundTime;
 
-        SendSyncToClientsRpc(Timer.Relative, State.ToString());
+        SendSyncToClientsRpc(Timer.Relative);
         FinishRpc();
 
         Log.Info($"[Round Manager] Finished");
@@ -71,7 +71,7 @@ public class RoundManager : Component
     {
         if (!Networking.IsHost)
         {
-            Log.Info($"Send request to host");
+            Log.Info($"[Round Manager] Send request to host: {Connection.Host.DisplayName}");
 
             RequestSyncToHostRpc();
         }
@@ -88,43 +88,33 @@ public class RoundManager : Component
             Start();
     }
 
-    private void ChangeState(string state)
-    {
-        State = Enum.Parse<RoundState>(state);
-    }
-
     [Rpc.Host(NetFlags.Reliable)]
     private void RequestSyncToHostRpc()
     {
         var time = Timer.Relative;
-        Log.Info($"Take request from {Rpc.Caller.DisplayName} and send {time}");
+        Log.Info($"[Round Manager] Take request from {Rpc.Caller.DisplayName} and send {time}");
 
-        SendSyncToClientsRpc(time, State.ToString());
+        SendSyncToClientsRpc(time);
     }
 
     [Rpc.Broadcast(NetFlags.HostOnly | NetFlags.Reliable)]
-    private void SendSyncToClientsRpc(float time, string state)
+    private void SendSyncToClientsRpc(float time)
     {
-        if (IsProxy) return;
-
         Timer = time;
-        ChangeState(state);
 
-        Log.Info($"Sync from {Rpc.Caller.DisplayName}, Time: {time} State: {State}");
+        Log.Info($"[Round Manager] Sync from {Rpc.Caller.DisplayName}, Time: {time}");
     }
 
     [Rpc.Broadcast(NetFlags.HostOnly | NetFlags.Reliable)]
     private void StartRpc()
     { 
-        if (IsProxy) return;
-
         Log.Info($"[Round Manager] RPC Start");
     }
 
     [Rpc.Broadcast(NetFlags.HostOnly | NetFlags.Reliable)]
     private void FinishRpc()
     {
-        if (IsProxy) return;
+        Player.Local.Spawn();
 
         Log.Info($"[Round Manager] RPC Finished");
     }
