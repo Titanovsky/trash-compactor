@@ -10,11 +10,8 @@ public sealed class SpawnerTrash : Component
 	[Property, Group( "Trash Config" )] public float delayPush = .5f;
 	[Property, Group( "Trash Config" )] public float delayRemove = 3f;
 
-	private Player _ply;
-
 	protected override void OnStart()
 	{
-		Prepare();
 		//SpawnTrash();
 	}
 
@@ -27,11 +24,6 @@ public sealed class SpawnerTrash : Component
 	{
 		if ( Input.Pressed( "use" ) )
 			SpawnTrash();
-	}
-
-	private void Prepare()
-	{
-		_ply = Player.Local;
 	}
 
 	private async void SpawnTrash()
@@ -55,7 +47,7 @@ public sealed class SpawnerTrash : Component
 		if ( !go.IsValid() ) return;
 
 		var rb = go.GetComponent<Rigidbody>();
-		var dir = (_ply.WorldPosition - WorldPosition).Normal;
+		var dir = (Player.Local.WorldPosition - WorldPosition).Normal;
 
 		rb.Velocity = dir * force;
 	}
