@@ -3,7 +3,7 @@
 public abstract class Role
 {
 	public virtual string Name { get; set; } = "none";
-	public virtual Transform SpawnTransform { get; set; } = new Transform(Vector3.Zero, Rotation.Identity);
+	public virtual List<GameObject> Spawns { get; set; }
 
 	public virtual void Setup(Player player) 
     { 

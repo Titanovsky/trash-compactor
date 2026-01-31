@@ -2,7 +2,31 @@
 
 public class MapInfo() : Component
 {
-    [Property] public Transform TrashmanTransform { get; set; } = new Transform(Vector3.Zero, Rotation.Identity);
-    [Property] public Transform SurvivalTransform { get; set; } = new Transform(Vector3.Zero, Rotation.Identity);
-    [Property] public Transform SpectatorTransform { get; set; } = new Transform(Vector3.Zero, Rotation.Identity);
+    public static MapInfo Instance { get; private set; }
+
+    [Property] public List<GameObject> SpawnTrashmans { get; set; } = new();
+    [Property] public List<GameObject> SpawnSurvivals { get; set; } = new();
+    [Property] public List<GameObject> SpawnSpectors { get; set; } = new();
+
+    private void CreateSingleton()
+    {
+        if (Instance == null)
+            Instance = this;
+    }
+
+    private void RemoveSingleton()
+    {
+        if (Instance != null)
+            Instance = null;
+    }
+
+    protected override void OnDestroy()
+    {
+        RemoveSingleton();
+    }
+
+    protected override void OnAwake()
+    {
+        CreateSingleton();
+    }
 }

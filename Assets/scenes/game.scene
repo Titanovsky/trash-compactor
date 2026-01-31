@@ -91,7 +91,7 @@
           "SpawnPoints": [
             {
               "_type": "gameobject",
-              "go": "c609c51c-07f7-4582-8dbc-3b84230f7a9f"
+              "go": "c0af7a1d-9170-4dd3-8d16-e0c1e7bdd1a2"
             }
           ],
           "StartServer": true
@@ -163,10 +163,7 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "Spawn": {
-            "_type": "gameobject",
-            "go": "c609c51c-07f7-4582-8dbc-3b84230f7a9f"
-          }
+          "Spawn": null
         }
       ],
       "Children": []
@@ -216,24 +213,232 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "SpectatorTransform": {
-            "Position": "0,0,0",
-            "Scale": "1,1,1",
-            "Rotation": "0,0,0,1"
-          },
-          "SurvivalTransform": {
-            "Position": "0,0,0",
-            "Scale": "1,1,1",
-            "Rotation": "0,0,0,1"
-          },
-          "TrashmanTransform": {
-            "Position": "0,0,0",
-            "Scale": "1,1,1",
-            "Rotation": "0,0,0,1"
-          }
+          "SpawnSpectors": [
+            {
+              "_type": "gameobject",
+              "go": "5695993f-5058-49f7-8033-50234d1fad8c"
+            }
+          ],
+          "SpawnSurvivals": [
+            {
+              "_type": "gameobject",
+              "go": "73fab9eb-aeda-4ea4-b969-c7863cd0d0f3"
+            },
+            {
+              "_type": "gameobject",
+              "go": "aff6df68-77b1-4140-8b95-21722f59ae48"
+            },
+            {
+              "_type": "gameobject",
+              "go": "a75109d8-e7c8-46cd-8ff4-df4442a7f40b"
+            },
+            {
+              "_type": "gameobject",
+              "go": "5e419c28-7538-4929-a886-8e6312bcbd3b"
+            }
+          ],
+          "SpawnTrashmans": [
+            {
+              "_type": "gameobject",
+              "go": "220af5e5-130a-45f7-a8b2-35a01a97d18b"
+            },
+            {
+              "_type": "gameobject",
+              "go": "aa4df0c8-f88d-45a7-84a9-083b15dd8091"
+            },
+            {
+              "_type": "gameobject",
+              "go": "2dd2114b-97ae-4c50-924f-21b55ebb04f3"
+            },
+            {
+              "_type": "gameobject",
+              "go": "0c4c7fb1-7ab2-4c2d-9fdb-7842a33d42d8"
+            }
+          ]
         }
       ],
       "Children": [
+        {
+          "__guid": "97d1fc0d-f2c7-4ccf-84af-fffc35f6b0b2",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Spawns",
+          "Position": "355.6772,-1360.442,-837.133",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": [
+            {
+              "__guid": "220af5e5-130a-45f7-a8b2-35a01a97d18b",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Spawn Trashman",
+              "Position": "0,2040,696",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "aa4df0c8-f88d-45a7-84a9-083b15dd8091",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Spawn Trashman (1)",
+              "Position": "0,1856,696",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "2dd2114b-97ae-4c50-924f-21b55ebb04f3",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Spawn Trashman (2)",
+              "Position": "0,1208,696",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "0c4c7fb1-7ab2-4c2d-9fdb-7842a33d42d8",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Spawn Trashman (3)",
+              "Position": "0,1416,696",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "73fab9eb-aeda-4ea4-b969-c7863cd0d0f3",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Spawn Surv",
+              "Position": "0,536,64",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "aff6df68-77b1-4140-8b95-21722f59ae48",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Spawn Surv (1)",
+              "Position": "0,352,64",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "a75109d8-e7c8-46cd-8ff4-df4442a7f40b",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Spawn Surv (2)",
+              "Position": "0,-296,64",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "5e419c28-7538-4929-a886-8e6312bcbd3b",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Spawn Surv (3)",
+              "Position": "0,-88,64",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "5695993f-5058-49f7-8033-50234d1fad8c",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Spawn Spectator",
+              "Position": "0,472,688",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            }
+          ]
+        },
         {
           "__guid": "9f4707a1-91b5-4804-9caa-a528e496680c",
           "__version": 2,
@@ -2375,24 +2580,6 @@
           "OnComponentUpdate": null
         }
       ],
-      "Children": []
-    },
-    {
-      "__guid": "c609c51c-07f7-4582-8dbc-3b84230f7a9f",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "Spawn",
-      "Position": "-48,1688,584",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [],
       "Children": []
     }
   ],

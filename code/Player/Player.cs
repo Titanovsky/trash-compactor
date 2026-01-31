@@ -60,7 +60,8 @@ public sealed class Player : Component, Component.IDamageable
     {
         if (IsProxy) return;
 
-        WorldPosition = Gameplay.Instance.Spawn.WorldPosition;
+        WorldPosition = Role.Spawns.GetRandom().WorldPosition;
+        //WorldPosition = Gameplay.Instance.Spawn.WorldPosition;
 
         Controller.Jump(_jumpForceSpawn); // workaround cuz stuck
     }
@@ -112,7 +113,7 @@ public sealed class Player : Component, Component.IDamageable
     protected override void OnStart()
     {
         CreateSingleton(); // cuz network good works only OnStart
-        ChangeRole(new Spectator());
+        ChangeRole(new Trashman());
         Prepare();
 
         Log.Info(Connection.Local.DisplayName);
