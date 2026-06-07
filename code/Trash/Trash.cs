@@ -4,13 +4,28 @@ public sealed class Trash : Component, Component.ICollisionListener
 {
 	public void OnCollisionStart( Collision collision )
 	{
-		var damagable = collision.Other.GameObject.Parent?.Components.Get<IDamageable>();
-		if (damagable is not Player) return;
+		if ( !Networking.IsHost )
+			return;
 
-		var rb = GetComponent<Rigidbody>();
+		var player = FindPlayer( collision.Other.GameObject );
+		if ( !player.IsValid() || !player.IsAlive || player.RoleEnum != RoleTrashCompactor.Survival )
+			return;
 
-		Log.Info( rb.Velocity.Length );
+		player.KillByTrashServer();
+	}
 
-		damagable?.OnDamage(new DamageInfo( rb.Velocity.Length, GameObject, null));
+	private Player FindPlayer( GameObject gameObject )
+	{
+		var current = gameObject;
+		while ( current.IsValid() )
+		{
+			var player = current.Components.Get<Player>();
+			if ( player.IsValid() )
+				return player;
+
+			current = current.Parent;
+		}
+
+		return null;
 	}
 }

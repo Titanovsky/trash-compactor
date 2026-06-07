@@ -1,14 +1,12 @@
-﻿using TrashCompactor.System;
+using TrashCompactor.System;
 
 public class Trashman : Role
 {
-    public override string Name { get; set; } = "Trashman";
-    public override List<GameObject> Spawns { get; set; } = MapInfo.Instance.SpawnTrashmans;
+	public override string Name { get; set; } = "Trashman";
+	public override RoleTrashCompactor RoleEnum => RoleTrashCompactor.Trashman;
 
-    public override void Setup(Player player)
-    {
-        var spawns = MapInfo.Instance.SpawnTrashmans;
-
-        player.WorldPosition = spawns.GetRandom().WorldPosition;
-    }
+	public override List<GameObject> GetSpawns( MapInfo mapInfo )
+	{
+		return mapInfo?.SpawnTrashmans ?? new();
+	}
 }

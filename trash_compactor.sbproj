@@ -2,17 +2,17 @@
   "Title": "Trash Compactor",
   "Type": "game",
   "Org": "ambi",
-  "Ident": "trash_compactor",
+  "Ident": "tc",
   "Schema": 1,
   "IncludeSourceFiles": false,
-  "Resources": null,
+  "Resources": "fonts/*",
   "PackageReferences": [],
   "EditorReferences": null,
   "Mounts": null,
   "IsStandaloneOnly": false,
   "Metadata": {
-    "MaxPlayers": 64,
-    "MinPlayers": 1,
+    "MaxPlayers": 20,
+    "MinPlayers": 2,
     "TickRate": 50,
     "GameNetworkType": "Multiplayer",
     "MapSelect": "Unrestricted",
@@ -23,7 +23,8 @@
     "PerMapRanking": false,
     "LeaderboardType": "None",
     "CsProjName": "",
-    "StartupScene": "scenes/minimal.scene",
-    "LaunchMode": "QuickPlay"
+    "StartupScene": "scenes/game.scene",
+    "LaunchMode": "QuickPlay",
+    "DedicatedServerStartupScene": "scenes/game.scene"
   }
 }

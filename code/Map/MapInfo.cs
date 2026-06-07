@@ -7,6 +7,8 @@ public class MapInfo() : Component
     [Property] public List<GameObject> SpawnTrashmans { get; set; } = new();
     [Property] public List<GameObject> SpawnSurvivals { get; set; } = new();
     [Property] public List<GameObject> SpawnSpectors { get; set; } = new();
+    [Property] public List<GameObject> TrashPropSpawns { get; set; } = new();
+    [Property] public List<GameObject> SoloTrashPropSpawns { get; set; } = new();
 
     private void CreateSingleton()
     {

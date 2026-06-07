@@ -1,199 +1,178 @@
-﻿using Sandbox;
-using System;
+using Sandbox;
 
 public sealed class FpPlayerGrabber : Component
 {
 	[Property] public GameObject ImpactEffect { get; set; }
 	[Property] public GameObject DecalEffect { get; set; }
 	[Property] public float ShootDamage { get; set; } = 9.0f;
+	[Property] public float MaxGrabDistance { get; set; } = 450f;
 
-	/// <summary>
-	/// The higher this is, the "looser" the grip is when dragging objects
-	/// </summary>
-	[Property, Range( 1, 16 )] public float MovementSmoothness { get; set; } = 3.0f;
+	[Property, Range( 1, 16 )]
+	public float MovementSmoothness { get; set; } = 3.0f;
 
-	PhysicsBody grabbedBody;
-	Transform grabbedOffset;
-	Vector3 localOffset;
+	private Rigidbody _grabbedBody;
 
-	bool waitForUp = false;
+	private bool _clientHasGrab;
+	private Transform _clientGrabbedOffset;
+	private bool _waitForUp;
 
-	//SoundEvent shootSound = Cloud.SoundEvent( "mdlresrc.toolgunshoot" );
-
-	TimeSince timeSinceShoot;
-
-    public void Grub()
-    {
-
-    }
-
-    public void Push()
-    {
-        if (timeSinceShoot < 0.1f)
-            return;
-
-        timeSinceShoot = 0;
-
-        //Sound.Play( shootSound, WorldPosition );
-
-        var ray = Scene.Camera.ScreenNormalToRay(0.5f);
-        ray.Forward += Vector3.Random * 0.03f;
-
-        var tr = Scene.Trace.Ray(ray, 3000.0f)
-                .WithoutTags("player")
-                .Run();
-
-        if (!tr.Hit || tr.GameObject is null)
-            return;
-
-        if (ImpactEffect.IsValid())
-        {
-            ImpactEffect.Clone(new Transform(tr.HitPosition + tr.Normal * 2.0f, Rotation.LookAt(tr.Normal)));
-        }
-
-        if (DecalEffect.IsValid())
-        {
-            var decal = DecalEffect.Clone(new Transform(tr.HitPosition + tr.Normal * 2.0f, Rotation.LookAt(-tr.Normal, Vector3.Random), Random.Shared.Float(0.8f, 1.2f)));
-            decal.SetParent(tr.GameObject);
-        }
-
-        if (tr.Body.IsValid())
-        {
-            tr.Body.ApplyImpulseAt(tr.HitPosition, tr.Direction * 200.0f * tr.Body.Mass.Clamp(0, 200));
-        }
-
-        var damage = new DamageInfo(ShootDamage, GameObject, GameObject, tr.Hitbox);
-        damage.Position = tr.HitPosition;
-        damage.Shape = tr.Shape;
-
-        foreach (var damageable in tr.GameObject.Components.GetAll<IDamageable>())
-        {
-            damageable.OnDamage(damage);
-        }
-    }
-
-    protected override void OnUpdate()
-    {
-        if (IsProxy)
-            return;
-
-        Transform aimTransform = Scene.Camera.WorldTransform;
-
-        if (waitForUp)
-        {
-            return;
-        }
-
-        if (grabbedBody.IsValid())
-        {
-            if (Input.Down("attack2"))
-            {
-                grabbedBody.MotionEnabled = false;
-                grabbedBody.Velocity = 0;
-                grabbedBody.AngularVelocity = 0;
-
-                grabbedOffset = default;
-                grabbedBody = default;
-                waitForUp = true;
-                return;
-            }
-
-            var targetTx = aimTransform.ToWorld(grabbedOffset);
-
-            var worldStart = grabbedBody.GetLerpedTransform(Time.Now).PointToWorld(localOffset);
-            var worldEnd = targetTx.PointToWorld(localOffset);
-
-            //var delta = Scene.Camera.WorldTransform.PointToWorld( new Vector3( 0, -10, -5 ) ) - worldStart;
-            var delta = worldEnd - worldStart;
-            for (var f = 0.0f; f < delta.Length; f += 2.0f)
-            {
-                var size = 1 - f * 0.01f;
-                if (size < 0) break;
-
-                Gizmo.Draw.Color = Color.Cyan;
-                Gizmo.Draw.SolidSphere(worldStart + delta.Normal * f, size);
-            }
-
-            if (!Input.Down("attack1"))
-            {
-                grabbedOffset = default;
-                grabbedBody = default;
-            }
-            else
-            {
-                return;
-            }
-        }
-
-        if (Input.Down("attack2"))
-        {
-            Push();
-            return;
-        }
-
-        var tr = Scene.Trace.Ray(Scene.Camera.WorldPosition, Scene.Camera.WorldPosition + Scene.Camera.WorldRotation.Forward * 1000)
-            .IgnoreGameObjectHierarchy(GameObject)
-            .Run();
-
-        if (!tr.Hit || tr.Body is null)
-            return;
-
-        if (tr.Body.BodyType == PhysicsBodyType.Static)
-            return;
-
-        if (Input.Down("attack1"))
-        {
-            grabbedBody = tr.Body;
-            localOffset = tr.Body.Transform.PointToLocal(tr.HitPosition);
-            grabbedOffset = aimTransform.ToLocal(tr.Body.Transform);
-            grabbedBody.MotionEnabled = true;
-        }
-    }
-
-    protected override void OnFixedUpdate()
+	protected override void OnUpdate()
 	{
 		if ( IsProxy )
 			return;
 
-		Transform aimTransform = Scene.Camera.WorldTransform;
-
-		if ( waitForUp )
+		if ( _waitForUp )
 		{
-			if ( Input.Down( "attack1" ) || Input.Down( "attack2" ) )
-			{
-				return;
-			}
+			if ( !Input.Down( "attack1" ) && !Input.Down( "attack2" ) )
+				_waitForUp = false;
+
+			return;
 		}
 
-		waitForUp = false;
-
-		if ( grabbedBody.IsValid() )
+		if ( !CanUseLocal() )
 		{
-			if ( Input.Down( "attack1" ) )
-			{
-				var targetTx = aimTransform.ToWorld( grabbedOffset );
-				grabbedBody.SmoothMove( targetTx, 0.02f * MovementSmoothness, Time.Delta );
-				return;
-			}
+			StopClientGrab();
+			return;
 		}
+
+		var aimTransform = Scene.Camera.WorldTransform;
+
+		if ( _clientHasGrab )
+		{
+			if ( Input.Pressed( "attack2" ) || !Input.Down( "attack1" ) )
+				StopClientGrab();
+
+			return;
+		}
+
+		if ( !Input.Pressed( "attack1" ) )
+			return;
+
+		var trace = Scene.Trace
+			.Ray( Scene.Camera.WorldPosition, Scene.Camera.WorldPosition + Scene.Camera.WorldRotation.Forward * MaxGrabDistance )
+			.IgnoreGameObjectHierarchy( GameObject )
+			.Run();
+
+		if ( !trace.Hit || !trace.Body.IsValid() || trace.Body.BodyType == PhysicsBodyType.Static )
+			return;
+
+		var trash = FindTrash( trace.GameObject );
+		if ( !trash.IsValid() )
+			return;
+
+		_clientGrabbedOffset = aimTransform.ToLocal( trace.Body.Transform );
+		_clientHasGrab = true;
+
+		RequestStartGrabRpc( trash.GameObject );
+	}
+
+	protected override void OnFixedUpdate()
+	{
+		if ( IsProxy || !_clientHasGrab || _waitForUp )
+			return;
+
+		if ( !Input.Down( "attack1" ) || !CanUseLocal() )
+		{
+			StopClientGrab();
+			return;
+		}
+
+		var target = Scene.Camera.WorldTransform.ToWorld( _clientGrabbedOffset );
+		RequestMoveGrabRpc( target.Position, target.Rotation );
+	}
+
+	private void StopClientGrab()
+	{
+		if ( !_clientHasGrab )
+			return;
+
+		_clientHasGrab = false;
+		_clientGrabbedOffset = default;
+		_waitForUp = true;
+
+		RequestReleaseGrabRpc();
 	}
 
 	protected override void OnPreRender()
 	{
-		base.OnPreRender();
+		if ( IsProxy || !CanUseLocal() || _clientHasGrab )
+			return;
 
+		var trace = Scene.Trace
+			.Ray( Scene.Camera.ScreenNormalToRay( 0.5f ), MaxGrabDistance )
+			.IgnoreGameObjectHierarchy( GameObject )
+			.Run();
 
-		if ( grabbedBody is null )
+		if ( trace.Hit && FindTrash( trace.GameObject ).IsValid() )
 		{
-			var tr = Scene.Trace.Ray( Scene.Camera.ScreenNormalToRay( 0.5f ), 1000.0f )
-                            .IgnoreGameObjectHierarchy(GameObject)
-                            .Run();
-
-			if ( tr.Hit )
-			{
-				Gizmo.Draw.Color = Color.Green;
-				Gizmo.Draw.SolidSphere( tr.HitPosition, 1 );
-			}
+			Gizmo.Draw.Color = Color.Green;
+			Gizmo.Draw.SolidSphere( trace.HitPosition, 1 );
 		}
+	}
+
+	private bool CanUseLocal()
+	{
+		var player = Components.Get<Player>();
+		return player.IsValid() && player.CanUseTrashmanTools;
+	}
+
+	private Trash FindTrash( GameObject gameObject )
+	{
+		var current = gameObject;
+		while ( current.IsValid() )
+		{
+			var trash = current.Components.Get<Trash>();
+			if ( trash.IsValid() )
+				return trash;
+
+			current = current.Parent;
+		}
+
+		return null;
+	}
+
+	[Rpc.Host( NetFlags.Reliable )]
+	private void RequestStartGrabRpc( GameObject target )
+	{
+		if ( !CanGrabServer( target ) )
+			return;
+
+		var body = target.Components.Get<Rigidbody>();
+		if ( !body.IsValid() )
+			return;
+
+		_grabbedBody = body;
+		_grabbedBody.MotionEnabled = true;
+	}
+
+	[Rpc.Host( NetFlags.Unreliable )]
+	private void RequestMoveGrabRpc( Vector3 targetPosition, Rotation targetRotation )
+	{
+		if ( !_grabbedBody.IsValid() || !CanGrabServer( _grabbedBody.GameObject ) )
+			return;
+
+		var targetTransform = new Transform( targetPosition, targetRotation );
+		_grabbedBody.SmoothMove( targetTransform, 0.02f * MovementSmoothness, Time.Delta );
+	}
+
+	[Rpc.Host( NetFlags.Reliable )]
+	private void RequestReleaseGrabRpc()
+	{
+		_grabbedBody = null;
+	}
+
+	private bool CanGrabServer( GameObject target )
+	{
+		if ( !Networking.IsHost || !target.IsValid() )
+			return false;
+
+		var player = Components.Get<Player>();
+		if ( !player.IsValid() || !player.CanUseTrashmanTools )
+			return false;
+
+		if ( (player.WorldPosition - target.WorldPosition).Length > MaxGrabDistance )
+			return false;
+
+		return FindTrash( target ).IsValid();
 	}
 }

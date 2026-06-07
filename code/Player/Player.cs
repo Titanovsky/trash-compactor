@@ -1,127 +1,222 @@
-using System;
-using static Sandbox.Gizmo;
+using TrashCompactor.System;
 
 public sealed class Player : Component, Component.IDamageable
 {
-	public static Player Local { get; set; }
+	public static Player Local { get; private set; }
 
 	[Property] public PlayerController Controller { get; private set; }
 	[Property] public FpPlayerGrabber Grabber { get; private set; }
-    [Property] public CameraComponent Camera { get; set; }
+	[Property] public CameraComponent Camera { get; set; }
 
-    public Role Role { get; private set; }
-    [Sync] public RoleTrashCompactor RoleEnum { get; set; } = RoleTrashCompactor.Survival;
+	public Role Role { get; private set; } = Role.Create( RoleTrashCompactor.Survival );
 
-    public bool CanFly = false;
-    public bool Godmode = false;
+	[Sync( SyncFlags.FromHost ), Change( nameof( OnRoleChanged ) )]
+	public RoleTrashCompactor RoleEnum { get; private set; } = RoleTrashCompactor.Survival;
 
-    public int Health = 0;
-    public int Armor = 0;
-    [Sync] public string Name { get; set; } = "";
+	[Sync( SyncFlags.FromHost ), Change( nameof( OnAliveChanged ) )]
+	public bool IsAlive { get; private set; } = true;
 
-    private Vector3 _jumpForceSpawn = new Vector3(.1f, .1f, .1f);
+	[Sync] public string Name { get; set; } = "";
 
-    //public void SetRole( RoleBase role )
-    //{
-    //	if (!role.IsValid()) return;
+	public bool CanFly { get; private set; }
+	public bool Godmode { get; private set; }
 
-    //	Role = role;
+	public int Health = 0;
+	public int Armor = 0;
 
-    //	Log.Info( $"The Player {GameObject} has the role: {role.Name} ({role.Id})" );
-    //}
+	private readonly Vector3 _jumpForceSpawn = new( .1f, .1f, .1f );
+	private GameObject _ragdoll;
 
-    //public void SetRole( string id )
-    //{
-    //	SetRole( RoleManager.Get( id ) );
-    //}
+	public bool IsTrashman => RoleEnum == RoleTrashCompactor.Trashman;
+	public bool IsSurvival => RoleEnum == RoleTrashCompactor.Survival;
+	public bool IsSpectator => RoleEnum == RoleTrashCompactor.Spectator;
 
-    //public void SetupRole()
-    //{
-    //	Log.Info( $"IsValid Role {Role} : {Role.IsValid()}" );
+	public bool CanUseTrashmanTools =>
+		IsAlive
+		&& IsTrashman
+		&& RoundManager.Instance.IsValid()
+		&& RoundManager.Instance.State == RoundState.Started;
 
-    //	Transform transform = new( Vector3.Zero, Rotation.Identity );
-
-    //	if (Role.Check(TrashCompactorRole.Spectator))
-    //	{
-    //		Log.Info("ds");
-    //	} else if (Role.Check(TrashCompactorRole.Soccer))
-    //	{
-    //		Log.Info( "b" );
-    //	} else if ( Role.Check(TrashCompactorRole.Trashman))
-    //	{
-    //		Log.Info( "c" );
-    //	}
-
-    //	//WorldPosition = transform.Position;
-    //	//WorldRotation = transform.Rotation;
-    //}
-
-    public void Spawn()
-    {
-        if (IsProxy) return;
-
-        WorldPosition = Role.Spawns.GetRandom().WorldPosition;
-        //WorldPosition = Gameplay.Instance.Spawn.WorldPosition;
-
-        Controller.Jump(_jumpForceSpawn); // workaround cuz stuck
-    }
-
-    public void Prepare()
-    {
-        if (IsProxy) return;
-
-        Log.Info($"Your role: {Role.Name}");
-        Log.Info($"Check: {Role.Check("spectator")}");
-    }
-
-    public void ChangeRole(Role role)
+	public void Spawn()
 	{
-        if (IsProxy) return;
+		SpawnForCurrentRoleServer();
+	}
 
-        Role = role;
+	public void Prepare()
+	{
+		if ( IsProxy )
+			return;
 
-		role.Setup(this);
-    }
+		Log.Info( $"Your role: {Role.Name}" );
+	}
 
 	public void ResetStats()
 	{
-        if (IsProxy) return;
+		CanFly = false;
+		Godmode = false;
+	}
 
-        CanFly = false;
-        Godmode = false;
-    }
+	public void OnDamage( in DamageInfo damage )
+	{
+	}
 
-    public void OnDamage(in DamageInfo damage)
-    {
-        //Log.Info(damage.Attacker);
-    }
+	public void SetRoleServer( RoleTrashCompactor role )
+	{
+		if ( !Networking.IsHost )
+			return;
 
-    private void CreateSingleton()
-    {
-        if (IsProxy) return;
+		RoleEnum = role;
+		ApplyRoleState();
+	}
 
-        Local = this;
-    }
+	public void RespawnForRoundServer( RoleTrashCompactor role )
+	{
+		if ( !Networking.IsHost )
+			return;
 
-    private void RemoveSingleton()
-    {
-        if (Local != this) return;
+		IsAlive = role != RoleTrashCompactor.Spectator;
+		RoleEnum = role;
 
-        Local = null;
-    }
+		SpawnForCurrentRoleServer();
+		ApplySpawnPresentationRpc();
+		ApplyRoleState();
+	}
 
-    protected override void OnStart()
-    {
-        CreateSingleton(); // cuz network good works only OnStart
-        ChangeRole(new Trashman());
-        Prepare();
+	public void SpawnForCurrentRoleServer()
+	{
+		if ( !Networking.IsHost )
+			return;
 
-        Log.Info(Connection.Local.DisplayName);
-        Name = Connection.Local.DisplayName;
-    }
+		var spawns = Role.Create( RoleEnum ).GetSpawns( MapInfo.Instance );
+		if ( spawns.Count > 0 )
+			WorldPosition = spawns.GetRandom().WorldPosition;
 
-    protected override void OnDestroy()
-    {
-        RemoveSingleton();
-    }
+		if ( Controller.IsValid() )
+		{
+			Controller.Enabled = IsAlive && RoleEnum != RoleTrashCompactor.Spectator;
+			Controller.Jump( _jumpForceSpawn );
+
+			if ( Controller.Body.IsValid() )
+			{
+				Controller.Body.Velocity = Vector3.Zero;
+				Controller.Body.AngularVelocity = Vector3.Zero;
+			}
+		}
+	}
+
+	public void KillByTrashServer()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		if ( !IsAlive || RoleEnum != RoleTrashCompactor.Survival )
+			return;
+
+		IsAlive = false;
+		RoleEnum = RoleTrashCompactor.Spectator;
+
+		ApplyDeathPresentationRpc();
+		ApplyRoleState();
+
+		RoundManager.Instance?.CheckRoundEndServer();
+	}
+
+	private void OnRoleChanged( RoleTrashCompactor oldRole, RoleTrashCompactor newRole )
+	{
+		ApplyRoleState();
+	}
+
+	private void OnAliveChanged( bool oldValue, bool newValue )
+	{
+		ApplyRoleState();
+	}
+
+	private void ApplyRoleState()
+	{
+		Role = Role.Create( RoleEnum );
+		CanFly = IsSpectator;
+		Godmode = IsSpectator;
+
+		var canMove = IsAlive && !IsSpectator;
+		var canGrab = IsAlive && IsTrashman;
+
+		if ( Controller.IsValid() )
+		{
+			Controller.Enabled = canMove;
+
+			if ( Controller.Renderer.IsValid() )
+				Controller.Renderer.Enabled = IsAlive;
+		}
+
+		if ( Grabber.IsValid() )
+			Grabber.Enabled = canGrab;
+	}
+
+	private void CreateSingleton()
+	{
+		if ( IsProxy )
+			return;
+
+		Local = this;
+	}
+
+	private void RemoveSingleton()
+	{
+		if ( Local != this )
+			return;
+
+		Local = null;
+	}
+
+	[Rpc.Broadcast( NetFlags.HostOnly | NetFlags.Reliable )]
+	private void ApplyDeathPresentationRpc()
+	{
+		if ( _ragdoll.IsValid() )
+			_ragdoll.Destroy();
+
+		if ( Controller.IsValid() )
+			_ragdoll = Controller.CreateRagdoll( string.IsNullOrWhiteSpace( Name ) ? "player_ragdoll" : $"{Name}_ragdoll" );
+
+		if ( Controller.IsValid() )
+		{
+			Controller.Enabled = false;
+
+			if ( Controller.Renderer.IsValid() )
+				Controller.Renderer.Enabled = false;
+		}
+
+		if ( Grabber.IsValid() )
+			Grabber.Enabled = false;
+	}
+
+	[Rpc.Broadcast( NetFlags.HostOnly | NetFlags.Reliable )]
+	private void ApplySpawnPresentationRpc()
+	{
+		if ( _ragdoll.IsValid() )
+		{
+			_ragdoll.Destroy();
+			_ragdoll = null;
+		}
+
+		ApplyRoleState();
+	}
+
+	protected override void OnStart()
+	{
+		CreateSingleton();
+		ApplyRoleState();
+
+		if ( !IsProxy )
+		{
+			Name = Connection.Local.DisplayName;
+			Prepare();
+		}
+
+		RoundManager.Instance?.RegisterPlayerServer( this );
+	}
+
+	protected override void OnDestroy()
+	{
+		RemoveSingleton();
+	}
 }

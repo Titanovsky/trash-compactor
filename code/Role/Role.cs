@@ -1,22 +1,35 @@
-﻿using System;
+using System;
+using TrashCompactor.System;
 
 public abstract class Role
 {
 	public virtual string Name { get; set; } = "none";
-	public virtual List<GameObject> Spawns { get; set; }
+	public abstract RoleTrashCompactor RoleEnum { get; }
 
-	public virtual void Setup(Player player) 
-    { 
-        //player.WorldPosition = SpawnTransform.Position;
-    }
+	public virtual List<GameObject> GetSpawns( MapInfo mapInfo ) => new();
 
-	public virtual bool Check(Type type)
+	public virtual bool Check( Type type )
 	{
-        return type == GetType();
-    }
+		return type == GetType();
+	}
 
-    public virtual bool Check(string type)
-    {
-        return type.ToLower() == GetType().ToString().ToLower();
-    }
+	public virtual bool Check( string type )
+	{
+		return type.ToLower() == GetType().ToString().ToLower();
+	}
+
+	public bool Check( RoleTrashCompactor role )
+	{
+		return RoleEnum == role;
+	}
+
+	public static Role Create( RoleTrashCompactor role )
+	{
+		return role switch
+		{
+			RoleTrashCompactor.Trashman => new Trashman(),
+			RoleTrashCompactor.Spectator => new Spectator(),
+			_ => new Survival()
+		};
+	}
 }

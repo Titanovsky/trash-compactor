@@ -1,156 +1,208 @@
-﻿using System;
+using System;
+using System.Linq;
 
 public class RoundManager : Component
 {
-    public static RoundManager Instance { get; private set; }
+	public static RoundManager Instance { get; private set; }
 
-    [Property] public bool EnablePreRound { get; set; } = true;
-    [Property] public bool EnablePostRound { get; set; } = true;
+	[Property] public float RoundTime { get; set; } = 60f;
+	[Property] public float SoloRoundTime { get; set; } = 60f;
+	[Property] public float IntermissionTime { get; set; } = 5f;
+	[Property] public int MaxRoundsBeforeVote { get; set; } = 10;
 
-    [Property] public float PreRoundTime { get; set; } = 5f;
-    [Property] public float RoundTime { get; set; } = 120f;
-    [Property] public float PostRoundTime { get; set; } = 10f;
+	[Sync( SyncFlags.FromHost )] public RoundState State { get; private set; } = RoundState.None;
+	[Sync( SyncFlags.FromHost )] public int RoundNumber { get; private set; } = 0;
+	[Sync( SyncFlags.FromHost )] public float SyncedEndTime { get; private set; } = 0f;
+	[Sync( SyncFlags.FromHost )] public bool IsSoloRound { get; private set; }
 
-    public TimeUntil Timer { get; private set; } = 0;
+	public float TimeLeft => MathF.Max( SyncedEndTime - Time.Now, 0f );
 
-    [Sync(SyncFlags.FromHost)] public RoundState State { get; private set; } = RoundState.None;
+	private readonly List<Player> _trashmanHistory = new();
 
-    public void Start()
-    {
-        if (!Networking.IsHost) return;
+	public void RegisterPlayerServer( Player player )
+	{
+		if ( !Networking.IsHost || !player.IsValid() )
+			return;
 
-        State = RoundState.Started;
+		var role = State == RoundState.Started
+			? RoleTrashCompactor.Spectator
+			: RoleTrashCompactor.Survival;
 
-        Timer = RoundTime;
+		player.RespawnForRoundServer( role );
+	}
 
-        SendSyncToClientsRpc(Timer.Relative);
-        StartRpc();
+	public void CheckRoundEndServer()
+	{
+		if ( !Networking.IsHost || State != RoundState.Started )
+			return;
 
-        Log.Info($"[Round Manager] Started");
-    }
+		var hasAliveSurvival = GetPlayersServer().Any( player => player.IsAlive && player.RoleEnum == RoleTrashCompactor.Survival );
+		if ( !hasAliveSurvival )
+			FinishRoundServer();
+	}
 
-    public void Pause()
-    {
-        if (!Networking.IsHost) return;
+	private void UpdateRoundAuthorityServer()
+	{
+		if ( !Networking.IsHost )
+			return;
 
-        State = RoundState.Paused;
+		if ( State == RoundState.None )
+			StartIntermissionServer();
 
-        Log.Info($"[Round Manager] Paused");
-    }
+		if ( TimeLeft > 0f )
+			return;
 
-    public void Resume()
-    {
-        if (!Networking.IsHost) return;
+		if ( State == RoundState.Started )
+			FinishRoundServer();
+		else
+			StartRoundServer();
+	}
 
-        State = RoundState.Started;
+	private void StartIntermissionServer()
+	{
+		if ( !Networking.IsHost )
+			return;
 
-        Log.Info($"[Round Manager] Resume");
-    }
+		State = RoundState.Finished;
+		SyncedEndTime = Time.Now + IntermissionTime;
+		SpawnerTrash.Instance?.FinishRoundServer();
+	}
 
-    public void Finish()
-    {
-        if (!Networking.IsHost) return;
+	private void StartRoundServer()
+	{
+		if ( !Networking.IsHost )
+			return;
 
-        State = RoundState.Finished;
-        Timer = PostRoundTime;
+		var players = GetPlayersServer();
+		if ( players.Count == 0 )
+		{
+			StartIntermissionServer();
+			return;
+		}
 
-        SendSyncToClientsRpc(Timer.Relative);
-        FinishRpc();
+		RoundNumber++;
+		// TODO: After MaxRoundsBeforeVote, start map vote instead of immediately continuing the round loop.
 
-        Log.Info($"[Round Manager] Finished");
-    }
+		AssignRolesServer( players );
 
-    private void HandleStart()
-    {
-        if (!Networking.IsHost) return;
+		State = RoundState.Started;
+		SyncedEndTime = Time.Now + (IsSoloRound ? SoloRoundTime : RoundTime);
 
-        Start();
-    }
+		SpawnerTrash.Instance?.StartRoundServer( IsSoloRound );
+	}
 
-    private void HandleStartClient()
-    {
-        if (!Networking.IsHost)
-        {
-            Log.Info($"[Round Manager] Send request to host: {Connection.Host.DisplayName}");
+	private void FinishRoundServer()
+	{
+		if ( !Networking.IsHost || State != RoundState.Started )
+			return;
 
-            RequestSyncToHostRpc();
-        }
-    }
+		State = RoundState.Finished;
+		SyncedEndTime = Time.Now + IntermissionTime;
 
-    private void HandleUpdate()
-    {
-        if (!Networking.IsHost) return;
-        if (!Timer) return;
+		SpawnerTrash.Instance?.FinishRoundServer();
+	}
 
-        if (State == RoundState.Started)
-            Finish();
-        else if (State == RoundState.Finished)
-            Start();
-    }
+	private void AssignRolesServer( List<Player> players )
+	{
+		IsSoloRound = players.Count <= 1;
 
-    [Rpc.Host(NetFlags.Reliable)]
-    private void RequestSyncToHostRpc()
-    {
-        var time = Timer.Relative;
-        Log.Info($"[Round Manager] Take request from {Rpc.Caller.DisplayName} and send {time}");
+		if ( IsSoloRound )
+		{
+			foreach ( var player in players )
+				player.RespawnForRoundServer( RoleTrashCompactor.Survival );
 
-        SendSyncToClientsRpc(time);
-    }
+			return;
+		}
 
-    [Rpc.Broadcast(NetFlags.HostOnly | NetFlags.Reliable)]
-    private void SendSyncToClientsRpc(float time)
-    {
-        Timer = time;
+		var trashmanCount = Math.Max( 1, players.Count / 4 );
+		var trashmen = SelectTrashmenServer( players, trashmanCount );
 
-        Log.Info($"[Round Manager] Sync from {Rpc.Caller.DisplayName}, Time: {time}");
-    }
+		foreach ( var player in players )
+		{
+			var role = trashmen.Contains( player )
+				? RoleTrashCompactor.Trashman
+				: RoleTrashCompactor.Survival;
 
-    [Rpc.Broadcast(NetFlags.HostOnly | NetFlags.Reliable)]
-    private void StartRpc()
-    { 
-        Log.Info($"[Round Manager] RPC Start");
-    }
+			player.RespawnForRoundServer( role );
+		}
+	}
 
-    [Rpc.Broadcast(NetFlags.HostOnly | NetFlags.Reliable)]
-    private void FinishRpc()
-    {
-        Player.Local.Spawn();
+	private List<Player> SelectTrashmenServer( List<Player> players, int trashmanCount )
+	{
+		var candidates = players;
 
-        Log.Info($"[Round Manager] RPC Finished");
-    }
+		if ( players.Count > 2 )
+		{
+			_trashmanHistory.RemoveAll( player => !player.IsValid() || !players.Contains( player ) );
+			candidates = players.Where( player => !_trashmanHistory.Contains( player ) ).ToList();
 
-    private void CreateSingleton()
-    {
-        if (Instance != null) return;
+			if ( candidates.Count < trashmanCount )
+			{
+				_trashmanHistory.Clear();
+				candidates = players;
+			}
+		}
 
-        Instance = this;
-    }
+		var selected = candidates
+			.OrderBy( _ => Random.Shared.Next() )
+			.Take( trashmanCount )
+			.ToList();
 
-    private void RemoveSingleton()
-    {
-        if (Instance == null) return;
+		if ( players.Count > 2 )
+		{
+			foreach ( var player in selected )
+			{
+				if ( !_trashmanHistory.Contains( player ) )
+					_trashmanHistory.Add( player );
+			}
 
-        Instance = null;
-    }
+			if ( _trashmanHistory.Count >= players.Count )
+				_trashmanHistory.Clear();
+		}
 
-    protected override void OnAwake()
-    {
-        CreateSingleton();
-    }
+		return selected;
+	}
 
-    protected override void OnDestroy()
-    {
-        RemoveSingleton();
-    }
+	private List<Player> GetPlayersServer()
+	{
+		return Scene.GetAllComponents<Player>()
+			.Where( player => player.IsValid() )
+			.ToList();
+	}
 
-    protected override void OnStart()
-    {
-        HandleStart();
-        HandleStartClient();
-    }
+	private void CreateSingleton()
+	{
+		if ( Instance != null )
+			return;
 
-    protected override void OnUpdate()
-    {
-        HandleUpdate();
-    }
+		Instance = this;
+	}
+
+	private void RemoveSingleton()
+	{
+		if ( Instance != this )
+			return;
+
+		Instance = null;
+	}
+
+	protected override void OnAwake()
+	{
+		CreateSingleton();
+	}
+
+	protected override void OnDestroy()
+	{
+		RemoveSingleton();
+	}
+
+	protected override void OnStart()
+	{
+		StartIntermissionServer();
+	}
+
+	protected override void OnUpdate()
+	{
+		UpdateRoundAuthorityServer();
+	}
 }

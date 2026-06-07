@@ -5,7 +5,8 @@
 
 <root class="player-hud">
 	<div class="name">@Name</div>
-	<div class="name">@RoundManager.Instance.State</div>
+	<div class="name">@RoleName</div>
+	<div class="name">@RoundStateName</div>
 
 	<div class="card">
 		<div class="stat">
@@ -20,7 +21,7 @@
 
 		<div class="stat">
 			<div class="emoji">⌛</div>
-			<div class="value">@RoundManager.Instance.Timer.Relative.ToString("F0")</div>
+			<div class="value">@TimeLeftValue</div>
 		</div>
 	</div>
 </root>
@@ -29,6 +30,9 @@
 	private float HealthValue => Player.Local.IsValid() ? Player.Local.Health : 0f;
 	private float ArmorValue => Player.Local.IsValid() ? Player.Local.Armor : 0f;
 	private string Name => Player.Local.IsValid() ? Player.Local.Name : "";
+	private string RoleName => Player.Local.IsValid() ? Player.Local.RoleEnum.ToString() : "";
+	private string RoundStateName => RoundManager.Instance.IsValid() ? RoundManager.Instance.State.ToString() : "";
+	private string TimeLeftValue => RoundManager.Instance.IsValid() ? RoundManager.Instance.TimeLeft.ToString("F0") : "0";
 
 	protected override void OnStart()
 	{
@@ -39,6 +43,8 @@
 		  (int)System.MathF.Round(HealthValue),
 		  (int)System.MathF.Round(ArmorValue),
 		  Name,
-		  RoundManager.Instance.Timer.Relative
+		  RoleName,
+		  RoundStateName,
+		  TimeLeftValue
 	);
 }

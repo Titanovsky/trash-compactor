@@ -2,8 +2,8 @@
   <Configurations>
     <Platform Name="Any CPU" />
   </Configurations>
-  <Project Path="code/trash_compactor.csproj" />
-  <Project Path="Editor/trash_compactor.editor.csproj" />
+  <Project Path="code/tc.csproj" />
+  <Project Path="Editor/tc.editor.csproj" />
   <Folder Name="/Addons/">
     <Project Path="C:/Program Files (x86)/Steam/steamapps/common/sbox/addons/base/code/Base Library.csproj" />
   </Folder>

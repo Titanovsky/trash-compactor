@@ -1,9 +1,12 @@
-﻿public class Survival : Role
+using TrashCompactor.System;
+
+public class Survival : Role
 {
-    public override string Name { get; set; } = "Survival";
+	public override string Name { get; set; } = "Survival";
+	public override RoleTrashCompactor RoleEnum => RoleTrashCompactor.Survival;
 
-    public override void Setup(Player player)
-    {
-
-    }
+	public override List<GameObject> GetSpawns( MapInfo mapInfo )
+	{
+		return mapInfo?.SpawnSurvivals ?? new();
+	}
 }
