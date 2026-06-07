@@ -2,8 +2,8 @@ using Sandbox;
 
 public sealed class TriggerPropPush : Component, Component.ITriggerListener
 {
-	[Property] public Vector3 PushDirection { get; set; } = Vector3.Forward;
-	[Property] public float SpeedMultiplier { get; set; } = 1000f;
+	[Property, Description( "World-space direction in which trash props are pushed when entering the trigger volume." )] public Vector3 PushDirection { get; set; } = Vector3.Forward;
+	[Property, Description( "Speed applied to a trash prop's velocity when pushed by this trigger, in units per second." )] public float SpeedMultiplier { get; set; } = 1000f;
 
 	public void OnTriggerEnter( Collider other )
 	{

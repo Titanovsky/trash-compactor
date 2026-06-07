@@ -1,12 +1,13 @@
+using System;
 using TrashCompactor.System;
 
 public sealed class Player : Component, Component.IDamageable
 {
 	public static Player Local { get; private set; }
 
-	[Property] public PlayerController Controller { get; private set; }
-	[Property] public FpPlayerGrabber Grabber { get; private set; }
-	[Property] public CameraComponent Camera { get; set; }
+	[Property, Description( "Reference to the PlayerController component that handles movement and physics." )] public PlayerController Controller { get; private set; }
+	[Property, Description( "Reference to the FpPlayerGrabber component used by the Trashman to grab and throw trash props." )] public FpPlayerGrabber Grabber { get; private set; }
+	[Property, Description( "Reference to the player's first-person camera component." )] public CameraComponent Camera { get; set; }
 
 	public Role Role { get; private set; } = Role.Create( RoleTrashCompactor.Survival );
 
@@ -21,7 +22,12 @@ public sealed class Player : Component, Component.IDamageable
 	public bool CanFly { get; private set; }
 	public bool Godmode { get; private set; }
 
-	public int Health = 0;
+	[Sync( SyncFlags.FromHost )]
+	public int MaxHealth { get; private set; } = 100;
+
+	[Sync( SyncFlags.FromHost )]
+	public int Health { get; private set; } = 100;
+
 	public int Armor = 0;
 
 	private readonly Vector3 _jumpForceSpawn = new( .1f, .1f, .1f );
@@ -58,6 +64,23 @@ public sealed class Player : Component, Component.IDamageable
 
 	public void OnDamage( in DamageInfo damage )
 	{
+		if ( !Networking.IsHost )
+			return;
+
+		if ( !IsAlive || Godmode )
+			return;
+
+		if ( RoleEnum != RoleTrashCompactor.Survival )
+			return;
+
+		var amount = (int)MathF.Ceiling( damage.Damage );
+		if ( amount <= 0 )
+			return;
+
+		Health = Math.Max( 0, Health - amount );
+
+		if ( Health <= 0 )
+			KillByTrashServer();
 	}
 
 	public void SetRoleServer( RoleTrashCompactor role )
@@ -76,6 +99,7 @@ public sealed class Player : Component, Component.IDamageable
 
 		IsAlive = role != RoleTrashCompactor.Spectator;
 		RoleEnum = role;
+		Health = MaxHealth;
 
 		SpawnForCurrentRoleServer();
 		ApplySpawnPresentationRpc();
@@ -88,8 +112,10 @@ public sealed class Player : Component, Component.IDamageable
 			return;
 
 		var spawns = Role.Create( RoleEnum ).GetSpawns( MapInfo.Instance );
-		if ( spawns.Count > 0 )
-			WorldPosition = spawns.GetRandom().WorldPosition;
+		var spawn = spawns.Count > 0 ? spawns.GetRandom() : null;
+
+		if ( spawn.IsValid() )
+			WorldPosition = spawn.WorldPosition;
 
 		if ( Controller.IsValid() )
 		{
@@ -102,6 +128,9 @@ public sealed class Player : Component, Component.IDamageable
 				Controller.Body.AngularVelocity = Vector3.Zero;
 			}
 		}
+
+		if ( spawn.IsValid() && IsAlive && ( IsSurvival || IsTrashman ) )
+			ApplySpawnEyeYawRpc( spawn.WorldRotation.Angles().yaw );
 	}
 
 	public void KillByTrashServer()
@@ -199,6 +228,20 @@ public sealed class Player : Component, Component.IDamageable
 		}
 
 		ApplyRoleState();
+	}
+
+	[Rpc.Broadcast( NetFlags.HostOnly | NetFlags.Reliable )]
+	private void ApplySpawnEyeYawRpc( float yaw )
+	{
+		ApplySpawnEyeYaw( yaw );
+	}
+
+	private void ApplySpawnEyeYaw( float yaw )
+	{
+		if ( !Controller.IsValid() )
+			return;
+
+		Controller.EyeAngles = Controller.EyeAngles.WithYaw( yaw );
 	}
 
 	protected override void OnStart()

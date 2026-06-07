@@ -27,12 +27,12 @@ public sealed class OldRoundManager : Component
     // ========================
     // Settings (Inspector)
     // ========================
-    [Property] public bool EnablePreRound { get; set; } = true;
-    [Property] public bool EnablePostRound { get; set; } = true;
+    [Property, Description( "Whether the pre-round countdown phase is enabled before the round starts." )] public bool EnablePreRound { get; set; } = true;
+    [Property, Description( "Whether the post-round cooldown phase is enabled after the round ends." )] public bool EnablePostRound { get; set; } = true;
 
-    [Property] public float PreRoundTime { get; set; } = 5f;
-    [Property] public float RoundTime { get; set; } = 120f;
-    [Property] public float PostRoundTime { get; set; } = 10f;
+    [Property, Description( "Duration of the pre-round phase in seconds." )] public float PreRoundTime { get; set; } = 5f;
+    [Property, Description( "Duration of the main round phase in seconds." )] public float RoundTime { get; set; } = 120f;
+    [Property, Description( "Duration of the post-round phase in seconds." )] public float PostRoundTime { get; set; } = 10f;
 
     // ========================
     // Networking

@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Sandbox;
 using TrashCompactor.System;
@@ -6,11 +7,11 @@ public sealed class SpawnerTrash : Component
 {
 	public static SpawnerTrash Instance { get; private set; }
 
-	[Property] public GameObject TrashPrefab { get; set; }
+	[Property, Description( "Trash prop prefabs used by this spawner." )] public List<GameObject> TrashPrefabs { get; set; } = new();
 
-	[Property, Group( "Round Stock" )] public int PropsPerRound { get; set; } = 12;
-	[Property, Group( "Solo" )] public float SoloAutoSpawnInterval { get; set; } = 3f;
-	[Property, Group( "Cleanup" )] public float TrashLifetime { get; set; } = 30f;
+	[Property, Group( "Round Stock" ), Description( "Number of trash props spawned at the beginning of each standard round." )] public int PropsPerRound { get; set; } = 12;
+	[Property, Group( "Solo" ), Description( "Time in seconds between automatic trash prop spawns during a solo round." )] public float SoloAutoSpawnInterval { get; set; } = 3f;
+	[Property, Group( "Cleanup" ), Description( "Time in seconds after which a spawned trash prop is automatically destroyed." )] public float TrashLifetime { get; set; } = 30f;
 
 	private readonly List<GameObject> _spawnedTrash = new();
 	private bool _soloAutoSpawnEnabled;
@@ -23,7 +24,7 @@ public sealed class SpawnerTrash : Component
 
 		ClearSpawnedTrashServer();
 		_soloAutoSpawnEnabled = soloRound;
-		_nextSoloAutoSpawn = 0f;
+		_nextSoloAutoSpawn = SoloAutoSpawnInterval;
 
 		if ( !soloRound )
 			SpawnRoundStockServer();
@@ -62,17 +63,27 @@ public sealed class SpawnerTrash : Component
 
 	private GameObject SpawnTrashServer( Vector3 position, Rotation rotation )
 	{
-		if ( !TrashPrefab.IsValid() )
+		var prefab = GetTrashPrefab();
+		if ( !prefab.IsValid() )
 		{
-			Log.Warning( "[Trash] TrashPrefab is not set." );
+			Log.Warning( "[Trash] TrashPrefabs is empty." );
 			return null;
 		}
 
-		var trash = TrashPrefab.Clone( position, rotation );
+		var trash = prefab.Clone( position, rotation );
 		_spawnedTrash.Add( trash );
 
 		_ = RemoveTrashDelayServer( trash );
 		return trash;
+	}
+
+	private GameObject GetTrashPrefab()
+	{
+		var prefabs = TrashPrefabs.Where( prefab => prefab.IsValid() ).ToList();
+		if ( prefabs.Count == 0 )
+			return null;
+
+		return prefabs.GetRandom();
 	}
 
 	private async Task RemoveTrashDelayServer( GameObject trash )

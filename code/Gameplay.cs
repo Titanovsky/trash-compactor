@@ -4,8 +4,8 @@ public class Gameplay : Component
 {
 	public static Gameplay Instance { get; private set; }
 
-	[Property] public MapInfo MapInfo { get; set; }
-	[Property] public GameObject Spawn;
+	[Property, Description( "Reference to the MapInfo component that provides spawn point data for the current map." )] public MapInfo MapInfo { get; set; }
+	[Property, Description( "Default fallback spawn point used when no role-specific spawn is available." )] public GameObject Spawn;
 
 	public void Init()
 	{

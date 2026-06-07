@@ -1,19 +1,32 @@
 {
   "RootObject": {
     "__guid": "7b2aca5a-173e-4412-8b5d-41edeaed7d91",
+    "__version": 2,
     "Flags": 0,
-    "Name": "trash",
-    "Scale": "0.8746566,0.8746566,0.8746566",
+    "Name": "trash_emoji",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "0.874656618,0.874656618,0.874656618",
+    "Tags": "",
     "Enabled": true,
+    "NetworkMode": 2,
+    "NetworkFlags": 0,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
     "Components": [
       {
         "__type": "Sandbox.ModelRenderer",
         "__guid": "2f399e16-9ee9-481a-b680-aeb9d4f8f7a7",
+        "__enabled": true,
+        "Flags": 0,
         "BodyGroups": 18446744073709551615,
         "CreateAttachments": false,
+        "LodOverride": null,
         "MaterialGroup": null,
         "MaterialOverride": null,
-        "Model": "models/dev/box.vmdl",
+        "Materials": null,
+        "Model": "models/lowobjects/smiley.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -27,14 +40,18 @@
           "AfterUILayer": false
         },
         "RenderType": "On",
-        "Tint": "0.86512,0.66393,0.66393,1"
+        "Tint": "1,1,1,1"
       },
       {
-        "__type": "Sandbox.BoxCollider",
-        "__guid": "5274b3b5-992b-4ae5-be76-7477ac8663ed",
-        "Center": "0,0,0",
+        "__type": "Sandbox.ModelCollider",
+        "__guid": "ad06b3b3-f6f9-40a9-a0fa-b4cbdd90203a",
+        "__enabled": true,
+        "Flags": 0,
+        "ColliderFlags": 0,
+        "Elasticity": null,
         "Friction": null,
         "IsTrigger": false,
+        "Model": "models/lowobjects/smiley.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -45,7 +62,7 @@
         "OnObjectTriggerExit": null,
         "OnTriggerEnter": null,
         "OnTriggerExit": null,
-        "Scale": "50,50,50",
+        "RollingResistance": null,
         "Static": false,
         "Surface": null,
         "SurfaceVelocity": "0,0,0"
@@ -53,8 +70,14 @@
       {
         "__type": "Sandbox.Rigidbody",
         "__guid": "cd103e46-135f-418f-ad59-2fe8d403e56e",
+        "__enabled": true,
+        "Flags": 0,
         "AngularDamping": 0,
+        "EnableImpactDamage": true,
+        "EnhancedCcd": false,
         "Gravity": true,
+        "GravityScale": 1,
+        "ImpactDamage": 0,
         "LinearDamping": 0,
         "Locking": {
           "X": false,
@@ -66,6 +89,7 @@
         },
         "MassCenterOverride": "0,0,0",
         "MassOverride": 0,
+        "MinImpactDamageSpeed": 500,
         "MotionEnabled": true,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -75,11 +99,14 @@
         "OnComponentUpdate": null,
         "OverrideMassCenter": false,
         "RigidbodyFlags": 0,
+        "SleepThreshold": 2,
         "StartAsleep": false
       },
       {
         "__type": "Trash",
         "__guid": "ddfbdc74-7d55-4258-9ce5-2f1215188d51",
+        "__enabled": true,
+        "Flags": 0,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -89,36 +116,35 @@
       }
     ],
     "Children": [],
-    "__variables": [],
     "__properties": {
-      "FixedUpdateFrequency": 50,
-      "MaxFixedUpdates": 5,
-      "NetworkFrequency": 30,
       "NetworkInterpolation": true,
-      "PhysicsSubSteps": 1,
-      "ThreadedAnimation": true,
       "TimeScale": 1,
-      "UseFixedUpdate": true,
+      "WantsSystemScene": true,
       "Metadata": {},
       "NavMesh": {
         "Enabled": false,
         "IncludeStaticBodies": true,
         "IncludeKeyframedBodies": true,
-        "EditorAutoUpdate": true,
+        "EditorAutoUpdate": false,
         "AgentHeight": 64,
         "AgentRadius": 16,
         "AgentStepSize": 18,
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
-        "IncludedBodies": ""
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
       }
-    }
+    },
+    "__variables": []
   },
+  "ResourceVersion": 2,
   "ShowInMenu": false,
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "ResourceVersion": 1,
-  "__references": [],
-  "__version": 1
+  "__references": [
+    "titanovsky.lo_smiley#79175"
+  ],
+  "__version": 2
 }

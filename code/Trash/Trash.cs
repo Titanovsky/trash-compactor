@@ -1,4 +1,5 @@
 using Sandbox;
+using System;
 
 public sealed class Trash : Component, Component.ICollisionListener
 {
@@ -11,7 +12,23 @@ public sealed class Trash : Component, Component.ICollisionListener
 		if ( !player.IsValid() || !player.IsAlive || player.RoleEnum != RoleTrashCompactor.Survival )
 			return;
 
-		player.KillByTrashServer();
+		var speed = MathF.Abs( collision.Contact.NormalSpeed );
+		const float minSpeed = 150f;
+		if ( speed < minSpeed )
+			return;
+
+		var damage = (speed - minSpeed) * 0.25f;
+		if ( damage <= 0f )
+			return;
+
+		var info = new DamageInfo
+		{
+			Damage = damage,
+			Attacker = GameObject,
+			Position = collision.Contact.Point,
+		};
+
+		((Component.IDamageable)player).OnDamage( info );
 	}
 
 	private Player FindPlayer( GameObject gameObject )

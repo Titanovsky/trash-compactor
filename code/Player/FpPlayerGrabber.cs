@@ -2,12 +2,12 @@ using Sandbox;
 
 public sealed class FpPlayerGrabber : Component
 {
-	[Property] public GameObject ImpactEffect { get; set; }
-	[Property] public GameObject DecalEffect { get; set; }
-	[Property] public float ShootDamage { get; set; } = 9.0f;
-	[Property] public float MaxGrabDistance { get; set; } = 450f;
+	[Property, Description( "Particle effect spawned at the point of impact when shooting." )] public GameObject ImpactEffect { get; set; }
+	[Property, Description( "Decal effect applied to the surface at the point of impact when shooting." )] public GameObject DecalEffect { get; set; }
+	[Property, Description( "Damage dealt to a target per shot." )] public float ShootDamage { get; set; } = 9.0f;
+	[Property, Description( "Maximum distance in units at which the player can grab or shoot a trash prop." )] public float MaxGrabDistance { get; set; } = 450f;
 
-	[Property, Range( 1, 16 )]
+	[Property, Range( 1, 16 ), Description( "Smoothness factor applied when moving a grabbed prop towards the target position. Higher values feel snappier." )]
 	public float MovementSmoothness { get; set; } = 3.0f;
 
 	private Rigidbody _grabbedBody;

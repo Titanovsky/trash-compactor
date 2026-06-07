@@ -155,7 +155,12 @@
           "__guid": "c143e512-7085-4207-a187-73c46999ddc9",
           "__enabled": true,
           "Flags": 0,
-          "MapInfo": null,
+          "MapInfo": {
+            "_type": "component",
+            "component_id": "835c96e1-12c2-45f1-abc4-2aecf0d13af7",
+            "go": "308b21ba-d1b8-47a5-8a2a-e9ca655de30c",
+            "component_type": "MapInfo"
+          },
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -212,7 +217,12 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "SoloTrashPropSpawns": [],
+          "SoloTrashPropSpawns": [
+            {
+              "_type": "gameobject",
+              "go": "dcebb31a-5053-4bb4-99b7-b727f7657830"
+            }
+          ],
           "SpawnSpectors": [
             {
               "_type": "gameobject",
@@ -255,7 +265,24 @@
               "go": "0c4c7fb1-7ab2-4c2d-9fdb-7842a33d42d8"
             }
           ],
-          "TrashPropSpawns": []
+          "TrashPropSpawns": [
+            {
+              "_type": "gameobject",
+              "go": "65677b14-1f1e-4339-ac57-4d949b6b5d86"
+            },
+            {
+              "_type": "gameobject",
+              "go": "3bdc4ab1-41f2-40db-979f-00743dd5c51a"
+            },
+            {
+              "_type": "gameobject",
+              "go": "307b8aa8-210d-4909-9883-4fd6b3752d0e"
+            },
+            {
+              "_type": "gameobject",
+              "go": "cab6a1d9-0fec-4f0b-ac2c-3368775d0761"
+            }
+          ]
         }
       ],
       "Children": [
@@ -353,7 +380,7 @@
               "__version": 2,
               "Flags": 0,
               "Name": "Spawn Surv",
-              "Position": "0,536,64",
+              "Position": "0,-224,64",
               "Rotation": "0,0,0,1",
               "Scale": "1,1,1",
               "Tags": "",
@@ -371,7 +398,7 @@
               "__version": 2,
               "Flags": 0,
               "Name": "Spawn Surv (1)",
-              "Position": "0,352,64",
+              "Position": "0,-104,64",
               "Rotation": "0,0,0,1",
               "Scale": "1,1,1",
               "Tags": "",
@@ -2293,6 +2320,78 @@
           ],
           "Children": [
             {
+              "__guid": "65677b14-1f1e-4339-ac57-4d949b6b5d86",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Spawn Prop",
+              "Position": "-16.0000305,143.999878,104.000122",
+              "Rotation": "0,0,0,1",
+              "Scale": "0.397739708,0.434998393,0.346301407",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "3bdc4ab1-41f2-40db-979f-00743dd5c51a",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Spawn Prop (1)",
+              "Position": "2712,2362.06055,-543.999878",
+              "Rotation": "0,0,0,1",
+              "Scale": "0.397739708,0.434998393,0.346301407",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "307b8aa8-210d-4909-9883-4fd6b3752d0e",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Spawn Prop (2)",
+              "Position": "2711.56689,1295.99988,-543.999878",
+              "Rotation": "0,0,0,1",
+              "Scale": "0.397739708,0.434998393,0.346301407",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
+              "__guid": "cab6a1d9-0fec-4f0b-ac2c-3368775d0761",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Spawn Prop (3)",
+              "Position": "4640,1215.78723,-543.999878",
+              "Rotation": "0,0,0,1",
+              "Scale": "0.397739708,0.434998393,0.346301407",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            },
+            {
               "__guid": "c4d505b3-4d9f-402c-9298-8776427d9538",
               "__version": 2,
               "Flags": 0,
@@ -2404,7 +2503,7 @@
               "__version": 2,
               "Flags": 0,
               "Name": "TestFpSphere",
-              "Position": "-16.0000191,-224,24",
+              "Position": "-16.0000191,143.999878,104.000122",
               "Rotation": "0,0,0,1",
               "Scale": "0.397739708,0.434998393,0.346301407",
               "Tags": "",
@@ -2513,7 +2612,7 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Props Spawn Point",
-          "Position": "343.675995,-731.308472,-237.132996",
+          "Position": "343.675995,-688.442017,-237.132996",
           "Rotation": "0,0,0,1",
           "Scale": "1.45463705,0.285258502,1.35883296",
           "Tags": "",
@@ -2538,10 +2637,16 @@
               "PropsPerRound": 12,
               "SoloAutoSpawnInterval": 3,
               "TrashLifetime": 30,
-              "TrashPrefab": {
-                "_type": "gameobject",
-                "prefab": "prefabs/trash.prefab"
-              }
+              "TrashPrefabs": [
+                {
+                  "_type": "gameobject",
+                  "prefab": "prefabs/trash/trash_emoji.prefab"
+                },
+                {
+                  "_type": "gameobject",
+                  "prefab": "prefabs/trash/trash_bread.prefab"
+                }
+              ]
             }
           ],
           "Children": []
@@ -2770,6 +2875,196 @@
         }
       ],
       "Children": []
+    },
+    {
+      "__guid": "29f95ed8-a85d-418a-87ea-7f14a17df100",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Block",
+      "Position": "-8,660,32.0030518",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "world",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.MeshComponent",
+          "__guid": "b2aec65e-ea58-46f9-88d1-f260c698b4f2",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Collision": "Hull",
+          "Color": "0.26667,1,0,0.54",
+          "Elasticity": null,
+          "Friction": null,
+          "HideInGame": false,
+          "IsTrigger": true,
+          "Mesh": {
+            "Topology": "H4sIAAAAAAAACl2QCQ7CMAwEp4Qj3NBy/f+laMRGsohUVbFn1+t04ANs+Z0VsM69AwfgBFyAKZ9MPXdgk3qLnsI+Um/h/me9i2ZXfFvYOazafTJN0XRgKZmPyWtfXvYVL73PZRd52WdYPa7xtC8veys7u6t17/7t6Tn0ZtFjvIXZR895zjKjPWf4NiOrGt+ivpXZ3XnozaOndVn9vvVkkTjEAQAA",
+            "Positions": [
+              "-152,-108,39.9969482",
+              "152,-108,39.9969482",
+              "152,108,39.9969482",
+              "-152,108,39.9969482",
+              "-152,108,-39.9969482",
+              "152,108,-39.9969482",
+              "152,-108,-39.9969482",
+              "-152,-108,-39.9969482"
+            ],
+            "Blends": [
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0"
+            ],
+            "Colors": [
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0"
+            ],
+            "TextureCoord": [
+              "1.125,-4.3125",
+              "-1.25,-0.5625",
+              "1.125,-6",
+              "4.3125,-0.5625",
+              "-1.25,-6",
+              "-1.125,-0.5625",
+              "-1.25,-4.3125",
+              "-6,-0.5625",
+              "1.125,-6",
+              "1.25,0.0624523163",
+              "1.125,-4.3125",
+              "6,0.0624523163",
+              "-1.25,-4.3125",
+              "1.125,0.0624523163",
+              "-1.25,-6",
+              "-4.3125,0.0624523163",
+              "-4.3125,-0.5625",
+              "-1.25,0.0624523163",
+              "-6,0.0624523163",
+              "1.25,-0.5625",
+              "4.3125,0.0624523163",
+              "1.125,-0.5625",
+              "6,-0.5625",
+              "-1.125,0.0624523163"
+            ],
+            "MaterialIndex": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "EdgeFlags": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "Materials": [
+              "materials/dev/reflectivity_30.vmat"
+            ]
+          },
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RenderType": "On",
+          "RollingResistance": null,
+          "SmoothingAngle": 40,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        },
+        {
+          "__type": "TriggerPropPush",
+          "__guid": "f7efe126-2d0f-4356-a6ae-6f41d9da79e3",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "PushDirection": "0,-1,0",
+          "SpeedMultiplier": 1000
+        }
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {
@@ -2794,14 +3089,14 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.SelectionSetsSystem": {
-        "Data": {
-          "SelectionSets": []
-        }
-      },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
           "$blob": "e061c5fe-a89d-4356-ab95-f3be0e132f25"
+        }
+      },
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
         }
       }
     }

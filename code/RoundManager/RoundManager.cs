@@ -5,10 +5,10 @@ public class RoundManager : Component
 {
 	public static RoundManager Instance { get; private set; }
 
-	[Property] public float RoundTime { get; set; } = 60f;
-	[Property] public float SoloRoundTime { get; set; } = 60f;
-	[Property] public float IntermissionTime { get; set; } = 5f;
-	[Property] public int MaxRoundsBeforeVote { get; set; } = 10;
+	[Property, Description( "Duration of a standard round in seconds." )] public float RoundTime { get; set; } = 60f;
+	[Property, Description( "Duration of a solo round (single player) in seconds." )] public float SoloRoundTime { get; set; } = 60f;
+	[Property, Description( "Duration of the intermission phase between rounds in seconds." )] public float IntermissionTime { get; set; } = 5f;
+	[Property, Description( "Number of rounds played before a map vote is triggered." )] public int MaxRoundsBeforeVote { get; set; } = 10;
 
 	[Sync( SyncFlags.FromHost )] public RoundState State { get; private set; } = RoundState.None;
 	[Sync( SyncFlags.FromHost )] public int RoundNumber { get; private set; } = 0;
