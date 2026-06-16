@@ -5,16 +5,102 @@ ScoreMenu
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: #444;
 	justify-content: center;
 	align-items: center;
-	font-weight: bold;
-	border-radius: 20px;
+	font-family: Poppins;
+	pointer-events: none;
 
-	.title
+	.scoreboard
 	{
-		font-size: 25px;
-		font-family: Poppins;
+		width: 620px;
+		max-height: 72%;
+		flex-direction: column;
+		background-color: rgba( 12, 14, 18, 0.88 );
+		border-radius: 8px;
+		padding: 16px;
+		gap: 12px;
+		pointer-events: all;
+	}
+
+	.scoreboard-header
+	{
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0 4px 8px 4px;
+		border-bottom: 1px solid rgba( 255, 255, 255, 0.18 );
+	}
+
+	.scoreboard-title,
+	.scoreboard-count
+	{
 		color: #fff;
+		font-weight: 700;
+	}
+
+	.scoreboard-title
+	{
+		font-size: 24px;
+	}
+
+	.scoreboard-count
+	{
+		font-size: 22px;
+	}
+
+	.scoreboard-list
+	{
+		flex-direction: column;
+		gap: 6px;
+		overflow: scroll;
+	}
+
+	.scoreboard-row
+	{
+		height: 56px;
+		flex-direction: row;
+		align-items: center;
+		gap: 14px;
+		padding: 6px 10px;
+		background-color: rgba( 255, 255, 255, 0.06 );
+		border-radius: 6px;
+	}
+
+	.avatar
+	{
+		width: 42px;
+		height: 42px;
+		border-radius: 6px;
+		cursor: pointer;
+		flex-shrink: 0;
+	}
+
+	.player-name
+	{
+		flex-grow: 1;
+		min-width: 0;
+		color: #fff;
+		font-size: 20px;
+		font-weight: 600;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+
+	.player-role
+	{
+		width: 120px;
+		font-size: 18px;
+		font-weight: 700;
+		text-align: center;
+	}
+
+	.player-ping
+	{
+		width: 56px;
+		color: #fff;
+		font-size: 18px;
+		font-weight: 600;
+		text-align: right;
 	}
 }

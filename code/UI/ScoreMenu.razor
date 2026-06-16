@@ -1,19 +1,91 @@
+@using System;
+@using System.Linq;
 @using Sandbox;
 @using Sandbox.UI;
 @inherits PanelComponent
 @namespace Sandbox
 
+@if ( !IsOpen )
+	return;
+
 <root>
-	<div class="title">@MyStringValue</div>
+	<div class="scoreboard">
+		<div class="scoreboard-header">
+			<div class="scoreboard-title">Players</div>
+			<div class="scoreboard-count">@Connection.All.Count()</div>
+		</div>
+
+		<div class="scoreboard-list">
+			@foreach ( var user in Connection.All )
+			{
+				var player = FindPlayer( user );
+				var role = player?.RoleEnum ?? RoleTrashCompactor.Spectator;
+
+				<div class="scoreboard-row">
+					<img class="avatar" src="avatar:@user.SteamId" onclick=@( () => OpenProfile( user ) ) />
+					<div class="player-name">@user.DisplayName</div>
+					<div class="player-role" style="color: @RoleColor( role )">@RoleName( role )</div>
+					<div class="player-ping">@user.Ping</div>
+				</div>
+			}
+		</div>
+	</div>
 </root>
 
 @code
 {
+	private bool IsOpen => Input.Down( "Score" );
 
-	[Property, TextArea] public string MyStringValue { get; set; } = "Hello World!";
+	private Player FindPlayer( Connection user )
+	{
+		return Scene.GetAllComponents<Player>()
+			.FirstOrDefault( player => player.IsValid() && player.GameObject.Network.OwnerConnection == user );
+	}
 
-	/// <summary>
-	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
-	/// </summary>
-	protected override int BuildHash() => System.HashCode.Combine( MyStringValue );
+	private string RoleName( RoleTrashCompactor role )
+	{
+		return role switch
+		{
+			RoleTrashCompactor.Trashman => "Trashman",
+			RoleTrashCompactor.Spectator => "Spectator",
+			_ => "Survival"
+		};
+	}
+
+	private string RoleColor( RoleTrashCompactor role )
+	{
+		return role switch
+		{
+			RoleTrashCompactor.Trashman => "#df5151",
+			RoleTrashCompactor.Spectator => "#dfa151",
+			_ => "#5191df"
+		};
+	}
+
+	private void OpenProfile( Connection user )
+	{
+		Game.Overlay.ShowPlayer( user.SteamId );
+	}
+
+	protected override int BuildHash()
+	{
+		var hash = new HashCode();
+		hash.Add( IsOpen );
+
+		if ( !IsOpen )
+			return hash.ToHashCode();
+
+		hash.Add( RealTime.Now.CeilToInt() );
+		hash.Add( Connection.All.Count() );
+
+		foreach ( var user in Connection.All )
+		{
+			hash.Add( user.SteamId );
+			hash.Add( user.DisplayName );
+			hash.Add( user.Ping );
+			hash.Add( FindPlayer( user )?.RoleEnum ?? RoleTrashCompactor.Spectator );
+		}
+
+		return hash.ToHashCode();
+	}
 }

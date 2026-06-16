@@ -1,0 +1,53 @@
+@using System;
+@using Sandbox;
+@using Sandbox.UI;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="round-status">
+		@if ( IsFinished )
+		{
+			<div class="round-result" style="color: @ResultColor">@ResultText</div>
+		}
+		else
+		{
+			<div class="round-time">@RoundTimeText</div>
+		}
+	</div>
+</root>
+
+@code
+{
+	private RoundManager Manager => RoundManager.Instance;
+	private bool IsFinished => Manager?.State == RoundState.Finished;
+
+	private string RoundTimeText
+	{
+		get
+		{
+			var seconds = Manager != null && Manager.IsValid() ? (int)MathF.Ceiling( Manager.TimeLeft ) : 0;
+			return $"{seconds / 60:00}:{seconds % 60:00}";
+		}
+	}
+
+	private string ResultText => Manager?.LastWinner switch
+	{
+		RoundWinner.Trashman => "Trashman Wins",
+		RoundWinner.Survival => "Survivor Wins",
+		_ => "Round Finished"
+	};
+
+	private string ResultColor => Manager?.LastWinner switch
+	{
+		RoundWinner.Trashman => "#df5151",
+		RoundWinner.Survival => "#5191df",
+		_ => "#fff"
+	};
+
+	protected override int BuildHash()
+	{
+		var seconds = Manager != null && Manager.IsValid() ? (int)MathF.Ceiling( Manager.TimeLeft ) : 0;
+		return HashCode.Combine( Manager?.State, Manager?.LastWinner, seconds );
+	}
+}

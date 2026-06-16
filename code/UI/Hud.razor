@@ -1,50 +1,22 @@
-﻿@using Sandbox
-@using Sandbox.UI
+@using Sandbox;
+@using Sandbox.UI;
 @inherits PanelComponent
 @namespace Sandbox
 
-<root class="player-hud">
-	<div class="name">@Name</div>
-	<div class="name">@RoleName</div>
-	<div class="name">@RoundStateName</div>
-
-	<div class="card">
-		<div class="stat">
-			<div class="emoji">❤️</div>
-			<div class="value">@HealthValue</div>
-		</div>
-
-		<div class="stat">
-			<div class="emoji">🛡️</div>
-			<div class="value">@ArmorValue</div>
-		</div>
-
-		<div class="stat">
-			<div class="emoji">⌛</div>
-			<div class="value">@TimeLeftValue</div>
-		</div>
-	</div>
+<root>
+	<img class="role-icon" src="@RoleIcon" />
 </root>
 
-@code {
-	private float HealthValue => Player.Local.IsValid() ? Player.Local.Health : 0f;
-	private float ArmorValue => Player.Local.IsValid() ? Player.Local.Armor : 0f;
-	private string Name => Player.Local.IsValid() ? Player.Local.Name : "";
-	private string RoleName => Player.Local.IsValid() ? Player.Local.RoleEnum.ToString() : "";
-	private string RoundStateName => RoundManager.Instance.IsValid() ? RoundManager.Instance.State.ToString() : "";
-	private string TimeLeftValue => RoundManager.Instance.IsValid() ? RoundManager.Instance.TimeLeft.ToString("F0") : "0";
+@code
+{
+	private RoleTrashCompactor LocalRole => Player.Local?.RoleEnum ?? RoleTrashCompactor.Survival;
 
-	protected override void OnStart()
+	private string RoleIcon => LocalRole switch
 	{
-	}
+		RoleTrashCompactor.Trashman => "materials/icons/trashman.vtex",
+		RoleTrashCompactor.Spectator => "materials/icons/spectator.vtex",
+		_ => "materials/icons/survival.vtex"
+	};
 
-	protected override int BuildHash()
-	=> System.HashCode.Combine(
-		  (int)System.MathF.Round(HealthValue),
-		  (int)System.MathF.Round(ArmorValue),
-		  Name,
-		  RoleName,
-		  RoundStateName,
-		  TimeLeftValue
-	);
+	protected override int BuildHash() => System.HashCode.Combine( LocalRole );
 }
