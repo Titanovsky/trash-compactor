@@ -11,6 +11,7 @@ public sealed class SpawnerTrash : Component
 
 	[Property, Group( "Round Stock" ), Description( "Number of trash props spawned at the beginning of each standard round." )] public int PropsPerRound { get; set; } = 12;
 	[Property, Group( "Solo" ), Description( "Time in seconds between automatic trash prop spawns during a solo round." )] public float SoloAutoSpawnInterval { get; set; } = 3f;
+	[Property, Group( "Solo" ), Description( "Maximum positional offset applied to solo trash spawn positions. Each axis is randomized in range [-value, +value] every spawn." )] public Vector3 SoloSpawnOffset { get; set; } = Vector3.Zero;
 	[Property, Group( "Cleanup" ), Description( "Time in seconds after which a spawned trash prop is automatically destroyed." )] public float TrashLifetime { get; set; } = 30f;
 
 	private readonly List<GameObject> _spawnedTrash = new();
@@ -57,7 +58,12 @@ public sealed class SpawnerTrash : Component
 		var spawns = MapInfo.Instance?.SoloTrashPropSpawns ?? new();
 		var spawn = spawns.Count > 0 ? spawns.GetRandom() : GameObject;
 
-		SpawnTrashServer( spawn.WorldPosition, Rotation.Random );
+		var offset = new Vector3(
+			Game.Random.Float( -SoloSpawnOffset.x, SoloSpawnOffset.x ),
+			Game.Random.Float( -SoloSpawnOffset.y, SoloSpawnOffset.y ),
+			Game.Random.Float( -SoloSpawnOffset.z, SoloSpawnOffset.z )
+		);
+		SpawnTrashServer( spawn.WorldPosition + offset, Rotation.Random );
 		_nextSoloAutoSpawn = SoloAutoSpawnInterval;
 	}
 

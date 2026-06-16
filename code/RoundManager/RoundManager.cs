@@ -14,6 +14,7 @@ public class RoundManager : Component
 	[Sync( SyncFlags.FromHost )] public int RoundNumber { get; private set; } = 0;
 	[Sync( SyncFlags.FromHost )] public float SyncedEndTime { get; private set; } = 0f;
 	[Sync( SyncFlags.FromHost )] public bool IsSoloRound { get; private set; }
+	[Sync( SyncFlags.FromHost )] public RoundWinner LastWinner { get; private set; } = RoundWinner.None;
 
 	public float TimeLeft => MathF.Max( SyncedEndTime - Time.Now, 0f );
 
@@ -38,7 +39,7 @@ public class RoundManager : Component
 
 		var hasAliveSurvival = GetPlayersServer().Any( player => player.IsAlive && player.RoleEnum == RoleTrashCompactor.Survival );
 		if ( !hasAliveSurvival )
-			FinishRoundServer();
+			FinishRoundServer( RoundWinner.Trashman );
 	}
 
 	private void UpdateRoundAuthorityServer()
@@ -53,7 +54,7 @@ public class RoundManager : Component
 			return;
 
 		if ( State == RoundState.Started )
-			FinishRoundServer();
+			FinishRoundServer( RoundWinner.Survival );
 		else
 			StartRoundServer();
 	}
@@ -64,7 +65,9 @@ public class RoundManager : Component
 			return;
 
 		State = RoundState.Finished;
-		SyncedEndTime = Time.Now + IntermissionTime;
+		LastWinner = RoundWinner.None;
+		var isSolo = GetPlayersServer().Count <= 1;
+		SyncedEndTime = Time.Now + (isSolo ? 0f : IntermissionTime);
 		SpawnerTrash.Instance?.FinishRoundServer();
 	}
 
@@ -85,18 +88,20 @@ public class RoundManager : Component
 
 		AssignRolesServer( players );
 
+		LastWinner = RoundWinner.None;
 		State = RoundState.Started;
 		SyncedEndTime = Time.Now + (IsSoloRound ? SoloRoundTime : RoundTime);
 
 		SpawnerTrash.Instance?.StartRoundServer( IsSoloRound );
 	}
 
-	private void FinishRoundServer()
+	private void FinishRoundServer( RoundWinner winner )
 	{
 		if ( !Networking.IsHost || State != RoundState.Started )
 			return;
 
 		State = RoundState.Finished;
+		LastWinner = winner;
 		SyncedEndTime = Time.Now + IntermissionTime;
 
 		SpawnerTrash.Instance?.FinishRoundServer();
