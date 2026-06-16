@@ -3,10 +3,10 @@
     "__guid": "7b2aca5a-173e-4412-8b5d-41edeaed7d91",
     "__version": 2,
     "Flags": 0,
-    "Name": "trash_emoji",
+    "Name": "trash_chkao",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
-    "Scale": "1,1,1",
+    "Scale": "2,2,2",
     "Tags": "",
     "Enabled": true,
     "NetworkMode": 2,
@@ -26,7 +26,7 @@
         "MaterialGroup": null,
         "MaterialOverride": null,
         "Materials": null,
-        "Model": "models/lowobjects/smiley.vmdl",
+        "Model": "models/citizen_props/pickle/picklerick.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -51,7 +51,7 @@
         "Elasticity": null,
         "Friction": null,
         "IsTrigger": false,
-        "Model": "models/lowobjects/smiley.vmdl",
+        "Model": "models/citizen_props/pickle/picklerick.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -72,7 +72,7 @@
         "__guid": "cd103e46-135f-418f-ad59-2fe8d403e56e",
         "__enabled": true,
         "Flags": 0,
-        "AngularDamping": 5,
+        "AngularDamping": 0,
         "EnableImpactDamage": true,
         "EnhancedCcd": false,
         "Gravity": true,
@@ -144,7 +144,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "titanovsky.lo_smiley#79175"
+    "stnkybo.picklerick#10193"
   ],
   "__version": 2
 }

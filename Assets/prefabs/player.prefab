@@ -58,6 +58,39 @@
         "OnComponentUpdate": null
       },
       {
+        "__type": "PlayerViewBob",
+        "__guid": "6d0c09ca-41b7-4ff7-a31d-9dfb31d31b58",
+        "__enabled": true,
+        "Flags": 0,
+        "Controller": {
+          "_type": "component",
+          "component_id": "fb90b976-6409-44f5-b596-672ba5461642",
+          "go": "2dd04f9b-91b1-435a-b6d4-466a029bc0ae",
+          "component_type": "PlayerController"
+        },
+        "EnableBob": true,
+        "Frequency": 0.88000005,
+        "HorizontalAmount": 0.45,
+        "Intensity": 0.71666664,
+        "MinSpeed": 12,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "PitchAmount": 0.25,
+        "PlayerState": {
+          "_type": "component",
+          "component_id": "a5fcb72b-e643-4e18-a2d7-958e46abb3c8",
+          "go": "2dd04f9b-91b1-435a-b6d4-466a029bc0ae",
+          "component_type": "Player"
+        },
+        "RollAmount": 0.55,
+        "Smoothness": 12,
+        "VerticalAmount": 4.5333333
+      },
+      {
         "__type": "Sandbox.PlayerController",
         "__guid": "fb90b976-6409-44f5-b596-672ba5461642",
         "__enabled": true,
@@ -67,7 +100,7 @@
         "AimStrengthEyes": 1,
         "AimStrengthHead": 1,
         "AirFriction": 0.1,
-        "AltMoveButton": "run",
+        "AltMoveButton": "",
         "Body": {
           "_type": "component",
           "component_id": "c9072cbf-3429-41da-982e-44fb3a697e89",
@@ -116,7 +149,7 @@
         "RotationAngleLimit": 45,
         "RotationSpeed": 1,
         "RunByDefault": false,
-        "RunSpeed": 320,
+        "RunSpeed": 0,
         "ShowColliderComponents": false,
         "ShowRigidbodyComponent": false,
         "ThirdPerson": false,
@@ -127,7 +160,7 @@
         "UseFovFromPreferences": true,
         "UseInputControls": true,
         "UseLookControls": true,
-        "WalkSpeed": 110
+        "WalkSpeed": 140
       },
       {
         "__type": "Sandbox.Rigidbody",
