@@ -1,5 +1,3 @@
-using TrashCompactor.System;
-
 public class Spectator : Role
 {
 	public override string Name { get; set; } = "Spectator";

@@ -1,5 +1,4 @@
 using System;
-using TrashCompactor.System;
 
 public abstract class Role
 {

@@ -134,12 +134,15 @@ public sealed class FpPlayerGrabber : Component
 	[Rpc.Host( NetFlags.Reliable )]
 	private void RequestStartGrabRpc( GameObject target )
 	{
-		if ( !CanGrabServer( target ) )
+		var trash = FindTrash( target );
+		if ( !CanGrabServer( target ) || !trash.IsValid() )
 			return;
 
 		var body = target.Components.Get<Rigidbody>();
 		if ( !body.IsValid() )
 			return;
+
+		SpawnerTrash.Instance?.StartTrashLifetimeServer( trash.GameObject );
 
 		_grabbedBody = body;
 		_grabbedBody.MotionEnabled = true;

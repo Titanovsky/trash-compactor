@@ -1,8 +1,20 @@
 using Sandbox;
 using System;
+using System.Threading.Tasks;
 
 public sealed class Trash : Component, Component.ICollisionListener
 {
+	private bool _lifetimeStarted;
+
+	public void StartLifetimeTimerOnce( float lifetime )
+	{
+		if ( !Networking.IsHost || _lifetimeStarted )
+			return;
+
+		_lifetimeStarted = true;
+		_ = DestroyAfterLifetime( lifetime );
+	}
+
 	public void OnCollisionStart( Collision collision )
 	{
 		if ( !Networking.IsHost )
@@ -31,6 +43,16 @@ public sealed class Trash : Component, Component.ICollisionListener
 		((Component.IDamageable)player).OnDamage( info );
 	}
 
+	private async Task DestroyAfterLifetime( float lifetime )
+	{
+		await Task.DelaySeconds( lifetime );
+		if ( !GameObject.IsValid() )
+			return;
+
+		SpawnerTrash.Instance?.ForgetTrashServer( GameObject );
+		GameObject.Destroy();
+	}
+
 	private Player FindPlayer( GameObject gameObject )
 	{
 		var current = gameObject;
@@ -44,5 +66,11 @@ public sealed class Trash : Component, Component.ICollisionListener
 		}
 
 		return null;
+	}
+
+	protected override void OnDestroy()
+	{
+		if ( Networking.IsHost )
+			SpawnerTrash.Instance?.ForgetTrashServer( GameObject );
 	}
 }

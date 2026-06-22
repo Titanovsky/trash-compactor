@@ -91,7 +91,27 @@
           "SpawnPoints": [
             {
               "_type": "gameobject",
-              "go": "c0af7a1d-9170-4dd3-8d16-e0c1e7bdd1a2"
+              "go": "73fab9eb-aeda-4ea4-b969-c7863cd0d0f3"
+            },
+            {
+              "_type": "gameobject",
+              "go": "c0fee8c6-92e7-4b91-bc45-3f70fcb4428d"
+            },
+            {
+              "_type": "gameobject",
+              "go": "402b4ad0-e1c7-42ad-b7d1-0a95d55d4ff2"
+            },
+            {
+              "_type": "gameobject",
+              "go": "63922a37-e03e-4b8c-8983-664d029526d7"
+            },
+            {
+              "_type": "gameobject",
+              "go": "beb6eee9-bbad-4194-a7e8-6eeadbc45d05"
+            },
+            {
+              "_type": "gameobject",
+              "go": "7a0a7a9e-75cc-41ae-b168-87ba19fe4621"
             }
           ],
           "StartServer": true
@@ -128,8 +148,8 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "RoundTime": 60,
-          "SoloRoundTime": 60
+          "RoundTime": 70,
+          "SoloRoundTime": 70
         }
       ],
       "Children": []
@@ -157,7 +177,7 @@
           "Flags": 0,
           "MapInfo": {
             "_type": "component",
-            "component_id": "c7145a40-2a13-46bf-8fa9-ef9f5efd4ff5",
+            "component_id": "0d28c5d2-b733-4933-9fd9-24a2b0e778cd",
             "go": "9165f755-2042-4c47-8870-0e72a350e64f",
             "component_type": "MapInfo"
           },
@@ -370,8 +390,8 @@
           "UseMapFromLaunch": false
         },
         {
-          "__type": "TrashCompactor.System.MapInfo",
-          "__guid": "c7145a40-2a13-46bf-8fa9-ef9f5efd4ff5",
+          "__type": "MapInfo",
+          "__guid": "0d28c5d2-b733-4933-9fd9-24a2b0e778cd",
           "__enabled": true,
           "Flags": 0,
           "OnComponentDestroy": null,
@@ -883,7 +903,7 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Spawn Surv (5)",
-          "Position": "-103.999985,-778.757385,48.1178589",
+          "Position": "-103.999985,-778.757385,64",
           "Rotation": "0,0,0.707106769,0.707106769",
           "Scale": "1,1,1",
           "Tags": "",

@@ -1,5 +1,4 @@
 using System;
-using TrashCompactor.System;
 
 public sealed class Player : Component, Component.IDamageable
 {
@@ -28,10 +27,14 @@ public sealed class Player : Component, Component.IDamageable
 	[Sync( SyncFlags.FromHost )]
 	public int Health { get; private set; } = 100;
 
+	[Sync( SyncFlags.FromHost )]
+	public bool HasRoundSpawn { get; private set; }
+
 	public int Armor = 0;
 
 	private readonly Vector3 _jumpForceSpawn = new( .1f, .1f, .1f );
 	private GameObject _ragdoll;
+	private TimeUntil _nextRegistrationRequest;
 
 	public bool IsTrashman => RoleEnum == RoleTrashCompactor.Trashman;
 	public bool IsSurvival => RoleEnum == RoleTrashCompactor.Survival;
@@ -115,7 +118,16 @@ public sealed class Player : Component, Component.IDamageable
 		var spawn = spawns.Count > 0 ? spawns.GetRandom() : null;
 
 		if ( spawn.IsValid() )
+		{
 			WorldPosition = spawn.WorldPosition;
+			HasRoundSpawn = true;
+			ApplySpawnTransformRpc( spawn.WorldPosition, spawn.WorldRotation.Angles().yaw );
+		}
+		else
+		{
+			HasRoundSpawn = false;
+			Log.Warning( $"[Player] No spawn point found for role {RoleEnum}. Keeping current fallback position." );
+		}
 
 		if ( Controller.IsValid() )
 		{
@@ -130,7 +142,7 @@ public sealed class Player : Component, Component.IDamageable
 		}
 
 		if ( spawn.IsValid() && IsAlive && ( IsSurvival || IsTrashman ) )
-			ApplySpawnEyeYawRpc( spawn.WorldRotation.Angles().yaw );
+			ApplySpawnEyeYaw( spawn.WorldRotation.Angles().yaw );
 	}
 
 	public void KillByTrashServer()
@@ -231,8 +243,16 @@ public sealed class Player : Component, Component.IDamageable
 	}
 
 	[Rpc.Broadcast( NetFlags.HostOnly | NetFlags.Reliable )]
-	private void ApplySpawnEyeYawRpc( float yaw )
+	private void ApplySpawnTransformRpc( Vector3 position, float yaw )
 	{
+		WorldPosition = position;
+
+		if ( Controller.IsValid() && Controller.Body.IsValid() )
+		{
+			Controller.Body.Velocity = Vector3.Zero;
+			Controller.Body.AngularVelocity = Vector3.Zero;
+		}
+
 		ApplySpawnEyeYaw( yaw );
 	}
 
@@ -255,11 +275,39 @@ public sealed class Player : Component, Component.IDamageable
 			Prepare();
 		}
 
-		RoundManager.Instance?.RegisterPlayerServer( this );
+		TryRegisterWithRoundManager();
+	}
+
+	protected override void OnUpdate()
+	{
+		TryRegisterWithRoundManager();
 	}
 
 	protected override void OnDestroy()
 	{
 		RemoveSingleton();
+	}
+
+	[Rpc.Host( NetFlags.Reliable )]
+	private void RequestRegisterPlayerRpc()
+	{
+		RoundManager.Instance?.RegisterPlayerServer( this );
+	}
+
+	private void TryRegisterWithRoundManager()
+	{
+		if ( HasRoundSpawn || !_nextRegistrationRequest )
+			return;
+
+		_nextRegistrationRequest = 0.25f;
+
+		if ( Networking.IsHost )
+		{
+			RoundManager.Instance?.RegisterPlayerServer( this );
+			return;
+		}
+
+		if ( !IsProxy )
+			RequestRegisterPlayerRpc();
 	}
 }

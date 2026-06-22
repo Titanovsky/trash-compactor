@@ -1,5 +1,3 @@
-using TrashCompactor.System;
-
 public class Gameplay : Component
 {
 	public static Gameplay Instance { get; private set; }
@@ -8,15 +6,13 @@ public class Gameplay : Component
 
 	public void Init()
 	{
-		SpawnPlayers();
+		// RoundManager owns player spawn and role placement.
 	}
 
 	[Rpc.Broadcast(NetFlags.Reliable | NetFlags.HostOnly)]
 	public void SpawnPlayers()
 	{
-		if (IsProxy) return;
-
-		Player.Local.Spawn();
+		// Legacy entry point kept for scene/API compatibility.
 	}
 
     protected override void OnAwake()

@@ -1,5 +1,4 @@
-﻿namespace TrashCompactor.System;
-
+﻿
 public class MapInfo() : Component
 {
     public static MapInfo Instance { get; private set; }

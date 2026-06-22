@@ -1,5 +1,3 @@
-using TrashCompactor.System;
-
 public class Trashman : Role
 {
 	public override string Name { get; set; } = "Trashman";

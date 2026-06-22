@@ -1,7 +1,5 @@
 using System.Linq;
-using System.Threading.Tasks;
 using Sandbox;
-using TrashCompactor.System;
 
 public sealed class SpawnerTrash : Component
 {
@@ -46,7 +44,7 @@ public sealed class SpawnerTrash : Component
 		for ( var i = 0; i < PropsPerRound; i++ )
 		{
 			var spawn = spawns.Count > 0 ? spawns[i % spawns.Count] : GameObject;
-			SpawnTrashServer( spawn.WorldPosition, Rotation.Random );
+			SpawnTrashServer( spawn.WorldPosition, Rotation.Random, false );
 		}
 	}
 
@@ -63,11 +61,11 @@ public sealed class SpawnerTrash : Component
 			Game.Random.Float( -SoloSpawnOffset.y, SoloSpawnOffset.y ),
 			Game.Random.Float( -SoloSpawnOffset.z, SoloSpawnOffset.z )
 		);
-		SpawnTrashServer( spawn.WorldPosition + offset, Rotation.Random );
+		SpawnTrashServer( spawn.WorldPosition + offset, Rotation.Random, true );
 		_nextSoloAutoSpawn = SoloAutoSpawnInterval;
 	}
 
-	private GameObject SpawnTrashServer( Vector3 position, Rotation rotation )
+	private GameObject SpawnTrashServer( Vector3 position, Rotation rotation, bool startLifetimeImmediately )
 	{
 		var prefab = GetTrashPrefab();
 		if ( !prefab.IsValid() )
@@ -77,9 +75,12 @@ public sealed class SpawnerTrash : Component
 		}
 
 		var trash = prefab.Clone( position, rotation );
+		trash.NetworkSpawn();
 		_spawnedTrash.Add( trash );
 
-		_ = RemoveTrashDelayServer( trash );
+		if ( startLifetimeImmediately )
+			StartTrashLifetimeServer( trash );
+
 		return trash;
 	}
 
@@ -92,14 +93,21 @@ public sealed class SpawnerTrash : Component
 		return prefabs.GetRandom();
 	}
 
-	private async Task RemoveTrashDelayServer( GameObject trash )
+	public void ForgetTrashServer( GameObject trash )
 	{
-		await Task.DelaySeconds( TrashLifetime );
-		if ( !trash.IsValid() )
+		_spawnedTrash.Remove( trash );
+	}
+
+	public void StartTrashLifetimeServer( GameObject trash )
+	{
+		if ( !Networking.IsHost || !trash.IsValid() )
 			return;
 
-		_spawnedTrash.Remove( trash );
-		trash.Destroy();
+		var trashComponent = trash.Components.Get<Trash>();
+		if ( !trashComponent.IsValid() )
+			return;
+
+		trashComponent.StartLifetimeTimerOnce( TrashLifetime );
 	}
 
 	private void ClearSpawnedTrashServer()

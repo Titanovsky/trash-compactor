@@ -71,7 +71,7 @@
         "EnableBob": true,
         "Frequency": 0.88000005,
         "HorizontalAmount": 0.45,
-        "Intensity": 0.71666664,
+        "Intensity": 0.43930635,
         "MinSpeed": 12,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,

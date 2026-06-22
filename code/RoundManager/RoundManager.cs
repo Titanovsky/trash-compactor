@@ -19,17 +19,32 @@ public class RoundManager : Component
 	public float TimeLeft => MathF.Max( SyncedEndTime - Time.Now, 0f );
 
 	private readonly List<Player> _trashmanHistory = new();
+	private readonly List<Player> _registeredPlayers = new();
+	private readonly List<Player> _pendingRegistrations = new();
 
 	public void RegisterPlayerServer( Player player )
 	{
 		if ( !Networking.IsHost || !player.IsValid() )
 			return;
 
+		if ( _registeredPlayers.Contains( player ) || _pendingRegistrations.Contains( player ) )
+			return;
+
 		var role = State == RoundState.Started
 			? RoleTrashCompactor.Spectator
 			: RoleTrashCompactor.Survival;
 
-		player.RespawnForRoundServer( role );
+		if ( !CanSpawnRoleServer( role ) )
+		{
+			_pendingRegistrations.Add( player );
+			Log.Warning( $"[RoundManager] Delaying registration for {player.GameObject.Name}: no {role} spawn points are ready yet." );
+			return;
+		}
+
+		CompletePlayerRegistrationServer( player, role );
+
+		if ( State == RoundState.Started && IsSoloRound && GetPlayersServer().Count > 1 )
+			RestartSoloRoundForNewPlayerServer();
 	}
 
 	public void CheckRoundEndServer()
@@ -49,6 +64,8 @@ public class RoundManager : Component
 
 		if ( State == RoundState.None )
 			StartIntermissionServer();
+
+		ProcessPendingRegistrationsServer();
 
 		if ( TimeLeft > 0f )
 			return;
@@ -105,6 +122,19 @@ public class RoundManager : Component
 		SyncedEndTime = Time.Now + IntermissionTime;
 
 		SpawnerTrash.Instance?.FinishRoundServer();
+	}
+
+	private void RestartSoloRoundForNewPlayerServer()
+	{
+		if ( !Networking.IsHost || State != RoundState.Started || !IsSoloRound )
+			return;
+
+		State = RoundState.Finished;
+		LastWinner = RoundWinner.None;
+		SyncedEndTime = Time.Now;
+
+		SpawnerTrash.Instance?.FinishRoundServer();
+		StartRoundServer();
 	}
 
 	private void AssignRolesServer( List<Player> players )
@@ -173,6 +203,49 @@ public class RoundManager : Component
 		return Scene.GetAllComponents<Player>()
 			.Where( player => player.IsValid() )
 			.ToList();
+	}
+
+	private void ProcessPendingRegistrationsServer()
+	{
+		if ( _pendingRegistrations.Count == 0 )
+			return;
+
+		foreach ( var player in _pendingRegistrations.ToArray() )
+		{
+			if ( !player.IsValid() )
+			{
+				_pendingRegistrations.Remove( player );
+				continue;
+			}
+
+			var role = State == RoundState.Started
+				? RoleTrashCompactor.Spectator
+				: RoleTrashCompactor.Survival;
+
+			if ( !CanSpawnRoleServer( role ) )
+				continue;
+
+			CompletePlayerRegistrationServer( player, role );
+
+			if ( State == RoundState.Started && IsSoloRound && GetPlayersServer().Count > 1 )
+				RestartSoloRoundForNewPlayerServer();
+		}
+	}
+
+	private void CompletePlayerRegistrationServer( Player player, RoleTrashCompactor role )
+	{
+		_pendingRegistrations.Remove( player );
+
+		if ( !_registeredPlayers.Contains( player ) )
+			_registeredPlayers.Add( player );
+
+		player.RespawnForRoundServer( role );
+	}
+
+	private bool CanSpawnRoleServer( RoleTrashCompactor role )
+	{
+		var spawns = Role.Create( role ).GetSpawns( MapInfo.Instance );
+		return spawns.Any( spawn => spawn.IsValid() );
 	}
 
 	private void CreateSingleton()
