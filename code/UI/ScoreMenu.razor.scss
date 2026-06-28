@@ -51,8 +51,41 @@ ScoreMenu
 	.scoreboard-list
 	{
 		flex-direction: column;
-		gap: 6px;
+		gap: 14px;
 		overflow: scroll;
+	}
+
+	.team-section
+	{
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	.team-section.separated
+	{
+		padding-top: 12px;
+		border-top: 1px solid rgba( 255, 255, 255, 0.18 );
+	}
+
+	.team-header
+	{
+		height: 30px;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0 10px;
+	}
+
+	.team-title,
+	.team-count
+	{
+		font-size: 19px;
+		font-weight: 800;
+	}
+
+	.team-count
+	{
+		color: #fff;
 	}
 
 	.scoreboard-row

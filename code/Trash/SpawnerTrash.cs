@@ -23,11 +23,26 @@ public sealed class SpawnerTrash : Component
 		if ( !Networking.IsHost )
 			return;
 
+		PrepareRoundServer( soloRound );
+		FinalizeRoundStartServer();
+	}
+
+	public void PrepareRoundServer( bool soloRound )
+	{
+		if ( !Networking.IsHost )
+			return;
+
 		ClearSpawnedTrashServer();
 		_soloAutoSpawnEnabled = soloRound;
 		_nextSoloAutoSpawn = SoloAutoSpawnInterval;
+	}
 
-		if ( !soloRound )
+	public void FinalizeRoundStartServer()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		if ( !_soloAutoSpawnEnabled )
 			SpawnRoundStockServer();
 	}
 

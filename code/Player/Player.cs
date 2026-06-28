@@ -4,11 +4,29 @@ public sealed class Player : Component, Component.IDamageable
 {
 	public static Player Local { get; private set; }
 
+	[ConCmd( "kill" )]
+	public static void KillCommand()
+	{
+		var player = Local;
+		if ( !player.IsValid() )
+			return;
+
+		if ( Networking.IsHost )
+		{
+			player.TryKillByConsoleServer( player, player.Network.Owner );
+			return;
+		}
+
+		if ( !player.IsProxy )
+			player.RequestKillRpc( player );
+	}
+
 	[Property, Description( "Reference to the PlayerController component that handles movement and physics." )] public PlayerController Controller { get; private set; }
 	[Property, Description( "Reference to the FpPlayerGrabber component used by the Trashman to grab and throw trash props." )] public FpPlayerGrabber Grabber { get; private set; }
 	[Property, Description( "Reference to the player's first-person camera component." )] public CameraComponent Camera { get; set; }
+    [Property] public PlayerHudWorld WorldHud { get; set; }
 
-	public Role Role { get; private set; } = Role.Create( RoleTrashCompactor.Survival );
+    public Role Role { get; private set; } = Role.Create( RoleTrashCompactor.Survival );
 
 	[Sync( SyncFlags.FromHost ), Change( nameof( OnRoleChanged ) )]
 	public RoleTrashCompactor RoleEnum { get; private set; } = RoleTrashCompactor.Survival;
@@ -95,7 +113,7 @@ public sealed class Player : Component, Component.IDamageable
 		Health = Math.Max( 0, Health - amount );
 
 		if ( Health <= 0 )
-			KillByTrashServer( GetDeathVelocity( damage ) );
+			KillByTrashServer( GetDeathVelocity( damage ), trash?.LastTrashman );
 	}
 
 	public void SetRoleServer( RoleTrashCompactor role )
@@ -159,12 +177,20 @@ public sealed class Player : Component, Component.IDamageable
 			ApplySpawnEyeYaw( spawn.WorldRotation.Angles().yaw );
 	}
 
-	public void KillByTrashServer( Vector3 deathVelocity )
+	public void KillByTrashServer( Vector3 deathVelocity, Player trashman )
 	{
 		if ( !Networking.IsHost )
 			return;
 
 		if ( !IsAlive || RoleEnum != RoleTrashCompactor.Survival )
+			return;
+
+		KillServer( deathVelocity, trashman, false );
+	}
+
+	private void KillServer( Vector3 deathVelocity, Player killer, bool isSuicide )
+	{
+		if ( !Networking.IsHost || !IsAlive || IsSpectator )
 			return;
 
 		var spectatorSpawn = GetSpectatorSpawn();
@@ -174,6 +200,7 @@ public sealed class Player : Component, Component.IDamageable
 
 		CreateDeathRagdollServer( deathVelocity );
 		RoundManager.Instance?.PlayPlayerDeathSoundServer( deathPosition );
+		RoundManager.Instance?.PublishKillFeedServer( killer, this, isSuicide );
 
 		IsAlive = false;
 		RoleEnum = RoleTrashCompactor.Spectator;
@@ -184,7 +211,7 @@ public sealed class Player : Component, Component.IDamageable
 		RoundManager.Instance?.CheckRoundEndServer();
 	}
 
-    [Rpc.Host]
+    [Rpc.Broadcast]
     private void DressForHost(Dresser dresser)
     {
         Log.Info($"Dresser from: {Rpc.Caller.DisplayName} - {dresser.Network.Owner.DisplayName}");
@@ -218,6 +245,7 @@ public sealed class Player : Component, Component.IDamageable
 		}
 
 		SetCharacterRenderersEnabled( IsAlive );
+		SetWorldHudEnabled( IsAlive );
 
 		if ( Grabber.IsValid() )
 			Grabber.Enabled = canGrab;
@@ -249,6 +277,7 @@ public sealed class Player : Component, Component.IDamageable
 			Grabber.Enabled = false;
 
 		SetCharacterRenderersEnabled( false );
+		SetWorldHudEnabled( false );
 
 		if ( !IsProxy )
 			LockSpectatorCamera( spectatorPosition, spectatorRotation );
@@ -259,6 +288,7 @@ public sealed class Player : Component, Component.IDamageable
 	{
 		_lockSpectatorCamera = false;
 		SetCharacterRenderersEnabled( true );
+		SetWorldHudEnabled( true );
 		ApplyRoleState();
 	}
 
@@ -299,6 +329,12 @@ public sealed class Player : Component, Component.IDamageable
 		}
 	}
 
+	private void SetWorldHudEnabled( bool enabled )
+	{
+		if ( WorldHud.IsValid() )
+			WorldHud.Enabled = enabled;
+	}
+
 	protected override void OnStart()
 	{
 		CreateSingleton();
@@ -309,6 +345,8 @@ public sealed class Player : Component, Component.IDamageable
 			Name = Connection.Local.DisplayName;
 			Prepare();
 			DressForHost(Dresser);
+
+			WorldHud.MyStringValue = Name;
         }
 
 		TryRegisterWithRoundManager();
@@ -329,6 +367,12 @@ public sealed class Player : Component, Component.IDamageable
 	private void RequestRegisterPlayerRpc()
 	{
 		RoundManager.Instance?.RegisterPlayerServer( this );
+	}
+
+	[Rpc.Host( NetFlags.Reliable )]
+	private void RequestKillRpc( Player player )
+	{
+		TryKillByConsoleServer( player, Rpc.Caller );
 	}
 
 	private void TryRegisterWithRoundManager()
@@ -359,6 +403,32 @@ public sealed class Player : Component, Component.IDamageable
 			return body.Velocity.Normal * 1000f;
 
 		return Vector3.Up * 1000f;
+	}
+
+	private Vector3 GetSelfDeathVelocity()
+	{
+		var body = Controller?.Body;
+		if ( body.IsValid() && body.Velocity.Length > 0.1f )
+			return body.Velocity.Normal * 1000f;
+
+		return Vector3.Up * 1000f;
+	}
+
+	private void TryKillByConsoleServer( Player player, Connection caller )
+	{
+		if ( !Networking.IsHost || !player.IsValid() )
+			return;
+
+		if ( player != this )
+			return;
+
+		if ( caller != player.Network.Owner )
+			return;
+
+		if ( !player.IsAlive || player.IsSpectator )
+			return;
+
+		player.KillServer( player.GetSelfDeathVelocity(), null, true );
 	}
 
 	private Trash FindTrash( GameObject gameObject )

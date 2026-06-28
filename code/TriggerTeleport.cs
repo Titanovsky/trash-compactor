@@ -6,9 +6,6 @@ public sealed class TriggerTeleport : Component, Component.ITriggerListener
 
 	public void OnTriggerEnter( Collider other )
 	{
-		if ( !Networking.IsHost || !Spawn.IsValid() )
-			return;
-
 		if ( !TryGetPlayer( other.GameObject, out var player ) )
 			return;
 
@@ -25,10 +22,6 @@ public sealed class TriggerTeleport : Component, Component.ITriggerListener
 				player.Controller.Body.AngularVelocity = Vector3.Zero;
 			}
 		}
-	}
-
-	public void OnTriggerExit( Collider other )
-	{
 	}
 
 	private bool TryGetPlayer( GameObject gameObject, out Player player )

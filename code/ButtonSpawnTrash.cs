@@ -1,5 +1,4 @@
 using System;
-using Sandbox;
 using Sandbox.Platform;
 
 public sealed class ButtonSpawnTrash : Component, Component.IPressable
@@ -13,64 +12,61 @@ public sealed class ButtonSpawnTrash : Component, Component.IPressable
 		if ( !TryGetPlayerFromPress( e, out var player ) )
 			return false;
 
-		if ( Networking.IsHost )
-			return HandlePressServer( player );
+        PlaySound();
 
-		RequestPressRpc( player.GameObject );
+        RequestPressRpc( player.GameObject );
+
 		return true;
 	}
 
-	[Rpc.Host( NetFlags.Reliable )]
+	[Rpc.Host]
 	private void RequestPressRpc( GameObject playerObject )
 	{
-		if ( !playerObject.IsValid() || !playerObject.Components.TryGet( out Player player, FindMode.EverythingInSelfAndParent ) )
+		if (!playerObject.Components.TryGet( out Player player, FindMode.EverythingInSelfAndParent ))
 			return;
 
-		HandlePressServer( player );
-	}
+        if (!Networking.IsHost || !player.IsValid())
+            return;
 
-	private bool HandlePressServer( Player player )
-	{
-		if ( !Networking.IsHost || !player.IsValid() )
-			return false;
+        if (!player.CanUseTrashmanTools)
+        {
+            ShowChatMessageRpc(Rpc.Caller, "Only Trashman can use this button.");
+            return;
+        }
 
-		if ( !player.CanUseTrashmanTools )
-		{
-			ShowChatMessageRpc( "Only Trashman can use this button." );
-			return false;
-		}
+        if (!_spawnDelay)
+        {
+            var secondsLeft = MathF.Max((float)_spawnDelay, 0.1f);
+            ShowChatMessageRpc(Rpc.Caller, $"Trash spawn is on cooldown. Wait {secondsLeft:0.0}s.");
+            return;
+        }
 
-		if ( !_spawnDelay )
-		{
-			var secondsLeft = MathF.Max( (float)_spawnDelay, 0.1f );
-			ShowChatMessageRpc( $"Trash spawn is on cooldown. Wait {secondsLeft:0.0}s." );
-			return false;
-		}
+        var trash = SpawnerTrash.Instance?.SpawnBaseTrashServer();
+        if (!trash.IsValid())
+        {
+            ShowChatMessageRpc(Rpc.Caller, "Trash spawn failed.");
+            return;
+        }
 
-		var trash = SpawnerTrash.Instance?.SpawnBaseTrashServer();
-		if ( !trash.IsValid() )
-		{
-			ShowChatMessageRpc( "Trash spawn failed." );
-			return false;
-		}
+        ShowChatMessageRpc(Rpc.Caller, "Trash spawned!");
 
-		PlaySound();
-
-        _spawnDelay = MathF.Max( Delay, 0.1f );
-		return true;
-	}
+        _spawnDelay = MathF.Max(Delay, 0.1f);
+    }
 
 	[Rpc.Broadcast( NetFlags.Reliable )]
-	private void ShowChatMessageRpc( string message )
+	private void ShowChatMessageRpc(Connection ply, string message )
 	{
-		Chat.AddText( message );
+		using (Rpc.FilterInclude(c => c == ply))
+		{
+			Chat.AddText(message);
+		};
 	}
 
-    [Rpc.Broadcast()]
-    private void PlaySound()
-    {
-        Sound.Play(RoundManager.Instance.ButtonClickSound);
-    }
+	[Rpc.Broadcast]
+	private void PlaySound()
+	{
+		Sound.Play(RoundManager.Instance.ButtonClickSound, WorldPosition);
+	}
 
     private bool TryGetPlayerFromPress( IPressable.Event e, out Player player )
 	{

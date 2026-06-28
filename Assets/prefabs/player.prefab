@@ -7,7 +7,7 @@
     "Position": "0,0,0",
     "Rotation": "0,0,-0.707106709,0.707106829",
     "Scale": "1,1,1",
-    "Tags": "",
+    "Tags": "player",
     "Enabled": true,
     "NetworkMode": 2,
     "NetworkFlags": 0,
@@ -61,7 +61,13 @@
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null
+        "OnComponentUpdate": null,
+        "WorldHud": {
+          "_type": "component",
+          "component_id": "22cec45f-7280-4a15-b799-716404bc6616",
+          "go": "09faa042-c72a-4d3f-af8c-d4436ced220f",
+          "component_type": "PlayerHudWorld"
+        }
       },
       {
         "__type": "PlayerViewBob",
@@ -464,6 +470,61 @@
             "Static": false,
             "Surface": null,
             "SurfaceVelocity": "0,0,0"
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "09faa042-c72a-4d3f-af8c-d4436ced220f",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "3D Text",
+        "Position": "0,0,78.4662476",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.WorldPanel",
+            "__guid": "e744d3b5-2627-47fe-8c93-120e96e4ccf7",
+            "__enabled": true,
+            "Flags": 0,
+            "HorizontalAlign": "Center",
+            "InteractionRange": 1000,
+            "LookAtCamera": true,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "PanelSize": "1024,256",
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderScale": 1,
+            "VerticalAlign": "Center"
+          },
+          {
+            "__type": "Sandbox.PlayerHudWorld",
+            "__guid": "22cec45f-7280-4a15-b799-716404bc6616",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
           }
         ],
         "Children": []

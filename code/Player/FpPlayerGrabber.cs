@@ -147,6 +147,9 @@ public sealed class FpPlayerGrabber : Component
 		if ( !body.IsValid() )
 			return;
 
+		var player = Components.Get<Player>();
+		trash.SetLastTrashmanServer( player );
+
 		SpawnerTrash.Instance?.StartTrashLifetimeServer( trash.GameObject );
 		SpawnerTrash.Instance?.StartTrashSafetyServer( trash.GameObject, SpawnerTrash.Instance.GrabbedSafetyDelay );
 

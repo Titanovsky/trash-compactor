@@ -1,0 +1,104 @@
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using Sandbox;
+@using Sandbox.UI;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="kill-feed">
+		@foreach ( var entry in VisibleEntries )
+		{
+			<div class="kill-entry">
+				@if ( entry.IsSuicide )
+				{
+					<span class="victim">@entry.VictimName</span>
+					<span class="action"> committed suicide </span>
+				}
+				else
+				{
+					<span class="killer">@entry.KillerName</span>
+					<span class="action"> killed </span>
+					<span class="victim">@entry.VictimName</span>
+				}
+			</div>
+		}
+	</div>
+</root>
+
+@code
+{
+	private const int MaxEntries = 6;
+	private const float EntryLifetime = 5f;
+	private static KillFeed Instance { get; set; }
+	private readonly List<KillFeedEntry> _entries = new();
+
+	private IEnumerable<KillFeedEntry> VisibleEntries => _entries
+		.Where( entry => entry.ExpiresAt > RealTime.Now )
+		.OrderBy( entry => entry.CreatedAt );
+
+	public static void AddEntry( string killerName, string victimName, bool isSuicide = false )
+	{
+		Instance?.AddLocalEntry( killerName, victimName, isSuicide );
+	}
+
+	private void AddLocalEntry( string killerName, string victimName, bool isSuicide )
+	{
+		TrimExpired();
+
+		while ( _entries.Count >= MaxEntries )
+			_entries.RemoveAt( 0 );
+
+		_entries.Add( new KillFeedEntry
+		{
+			KillerName = killerName,
+			VictimName = victimName,
+			IsSuicide = isSuicide,
+			CreatedAt = RealTime.Now,
+			ExpiresAt = RealTime.Now + EntryLifetime
+		} );
+	}
+
+	private void TrimExpired()
+	{
+		_entries.RemoveAll( entry => entry.ExpiresAt <= RealTime.Now );
+	}
+
+	protected override void OnStart()
+	{
+		Instance = this;
+	}
+
+	protected override void OnDestroy()
+	{
+		if ( Instance == this )
+			Instance = null;
+	}
+
+	protected override int BuildHash()
+	{
+		TrimExpired();
+		var hash = new HashCode();
+		hash.Add( (int)MathF.Ceiling( RealTime.Now * 10f ) );
+
+		foreach ( var entry in _entries )
+		{
+			hash.Add( entry.KillerName );
+			hash.Add( entry.VictimName );
+			hash.Add( entry.IsSuicide );
+			hash.Add( entry.ExpiresAt );
+		}
+
+		return hash.ToHashCode();
+	}
+
+	private sealed class KillFeedEntry
+	{
+		public string KillerName { get; set; }
+		public string VictimName { get; set; }
+		public bool IsSuicide { get; set; }
+		public float CreatedAt { get; set; }
+		public float ExpiresAt { get; set; }
+	}
+}

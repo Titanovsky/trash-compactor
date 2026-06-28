@@ -55,7 +55,15 @@ public class RoundManager : Component
 		if ( !Networking.IsHost || State != RoundState.Started )
 			return;
 
+		var hasAliveTrashman = GetPlayersServer().Any( player => player.IsAlive && player.RoleEnum == RoleTrashCompactor.Trashman );
 		var hasAliveSurvival = GetPlayersServer().Any( player => player.IsAlive && player.RoleEnum == RoleTrashCompactor.Survival );
+
+		if ( !IsSoloRound && !hasAliveTrashman )
+		{
+			FinishRoundServer( RoundWinner.Survival );
+			return;
+		}
+
 		if ( !hasAliveSurvival )
 			FinishRoundServer( RoundWinner.Trashman );
 	}
@@ -110,13 +118,14 @@ public class RoundManager : Component
 		RoundNumber++;
 		// TODO: After MaxRoundsBeforeVote, start map vote instead of immediately continuing the round loop.
 
+		SpawnerTrash.Instance?.PrepareRoundServer( players.Count <= 1 );
 		AssignRolesServer( players );
 
 		LastWinner = RoundWinner.None;
 		State = RoundState.Started;
 		SyncedEndTime = Time.Now + (IsSoloRound ? SoloRoundTime : RoundTime);
 
-		SpawnerTrash.Instance?.StartRoundServer( IsSoloRound );
+		SpawnerTrash.Instance?.FinalizeRoundStartServer();
 		PlayRoundStartSoundRpc();
 	}
 
@@ -312,6 +321,33 @@ public class RoundManager : Component
 			return;
 
 		PlayPlayerDeathSoundRpc( position );
+	}
+
+	public void PublishKillFeedServer( Player killer, Player victim, bool isSuicide = false )
+	{
+		if ( !Networking.IsHost || !victim.IsValid() )
+			return;
+
+		var victimName = string.IsNullOrWhiteSpace( victim.Name ) ? "Survivor" : victim.Name;
+
+		if ( isSuicide )
+		{
+			PublishKillFeedRpc( victimName, victimName, true );
+			return;
+		}
+
+		if ( !killer.IsValid() || !killer.IsTrashman )
+			return;
+
+		var killerName = string.IsNullOrWhiteSpace( killer.Name ) ? "Trashman" : killer.Name;
+
+		PublishKillFeedRpc( killerName, victimName, false );
+	}
+
+	[Rpc.Broadcast( NetFlags.Reliable )]
+	private void PublishKillFeedRpc( string killerName, string victimName, bool isSuicide )
+	{
+		KillFeed.AddEntry( killerName, victimName, isSuicide );
 	}
 
 	[Rpc.Broadcast( NetFlags.Reliable )]

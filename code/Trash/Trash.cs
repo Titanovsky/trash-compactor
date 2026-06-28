@@ -9,6 +9,7 @@ public sealed class Trash : Component, Component.ICollisionListener
 	private TimeUntil _timeUntilSafetyMode;
 
 	public bool SafetyModeEnabled { get; private set; }
+	public Player LastTrashman { get; private set; }
 
 	public void StartLifetimeTimerOnce( float lifetime )
 	{
@@ -35,6 +36,14 @@ public sealed class Trash : Component, Component.ICollisionListener
 
 		SafetyModeEnabled = false;
 		_safetyTimerStarted = false;
+	}
+
+	public void SetLastTrashmanServer( Player trashman )
+	{
+		if ( !Networking.IsHost || !trashman.IsValid() || !trashman.IsTrashman )
+			return;
+
+		LastTrashman = trashman;
 	}
 
 	public void StartSafetyModeTimerOnce( float delay )

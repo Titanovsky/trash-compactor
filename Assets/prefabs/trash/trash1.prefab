@@ -72,7 +72,7 @@
         "__guid": "cd103e46-135f-418f-ad59-2fe8d403e56e",
         "__enabled": true,
         "Flags": 0,
-        "AngularDamping": 0,
+        "AngularDamping": 10,
         "EnableImpactDamage": true,
         "EnhancedCcd": false,
         "Gravity": true,

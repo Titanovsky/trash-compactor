@@ -1,0 +1,50 @@
+KillFeed
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	justify-content: flex-start;
+	align-items: flex-end;
+	flex-direction: column;
+	padding: 30px;
+	font-weight: bold;
+	pointer-events: none;
+
+	.kill-feed
+	{
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 4px;
+	}
+
+	.kill-entry
+	{
+		flex-direction: row;
+		justify-content: flex-end;
+		gap: 6px;
+		font-size: 20px;
+		font-family: Poppins;
+		font-weight: 800;
+		text-stroke: 4px black;
+	}
+
+	.killer
+	{
+		color: #df5151;
+		text-stroke: 4px black;
+	}
+
+	.action
+	{
+		color: #fff;
+		text-stroke: 4px black;
+	}
+
+	.victim
+	{
+		color: #5191df;
+		text-stroke: 4px black;
+	}
+}

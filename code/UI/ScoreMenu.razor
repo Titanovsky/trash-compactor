@@ -1,4 +1,5 @@
 @using System;
+@using System.Collections.Generic;
 @using System.Linq;
 @using Sandbox;
 @using Sandbox.UI;
@@ -10,22 +11,30 @@
 
 <root>
 	<div class="scoreboard">
-		<div class="scoreboard-header">
-			<div class="scoreboard-title">Players</div>
-			<div class="scoreboard-count">@Connection.All.Count()</div>
-		</div>
-
 		<div class="scoreboard-list">
-			@foreach ( var user in Connection.All )
-			{
-				var player = FindPlayer( user );
-				var role = player?.RoleEnum ?? RoleTrashCompactor.Spectator;
+			@{
+				var groups = TeamGroups;
+			}
 
-				<div class="scoreboard-row">
-					<img class="avatar" src="avatar:@user.SteamId" onclick=@( () => OpenProfile( user ) ) />
-					<div class="player-name">@user.DisplayName</div>
-					<div class="player-role" style="color: @RoleColor( role )">@RoleName( role )</div>
-					<div class="player-ping">@user.Ping</div>
+			@for ( var i = 0; i < groups.Count; i++ )
+			{
+				var group = groups[i];
+				var role = group.Role;
+				var users = group.Users;
+
+				<div class="team-section @(i > 0 ? "separated" : "")">
+					<div class="team-header">
+						<div class="team-title" style="color: @RoleColor( role )">@TeamName( role )</div>
+					</div>
+
+					@foreach ( var user in users )
+					{
+						<div class="scoreboard-row">
+							<img class="avatar" src="avatar:@user.SteamId" onclick=@( () => OpenProfile( user ) ) />
+							<div class="player-name">@user.DisplayName</div>
+							<div class="player-ping">@user.Ping</div>
+						</div>
+					}
 				</div>
 			}
 		</div>
@@ -35,11 +44,46 @@
 @code
 {
 	private bool IsOpen => Input.Down( "Score" );
+	private static readonly RoleTrashCompactor[] TeamRoles =
+	[
+		RoleTrashCompactor.Trashman,
+		RoleTrashCompactor.Survival,
+		RoleTrashCompactor.Spectator
+	];
+
+	private List<TeamGroup> TeamGroups => TeamRoles
+		.Select( role => new TeamGroup
+		{
+			Role = role,
+			Users = UsersForRole( role ).ToList()
+		} )
+		.Where( group => group.Users.Count > 0 )
+		.ToList();
+
+	private IEnumerable<Connection> UsersForRole( RoleTrashCompactor role )
+	{
+		return Connection.All.Where( user => GetRole( user ) == role );
+	}
 
 	private Player FindPlayer( Connection user )
 	{
 		return Scene.GetAllComponents<Player>()
 			.FirstOrDefault( player => player.IsValid() && player.GameObject.Network.Owner == user );
+	}
+
+	private RoleTrashCompactor GetRole( Connection user )
+	{
+		return FindPlayer( user )?.RoleEnum ?? RoleTrashCompactor.Spectator;
+	}
+
+	private string TeamName( RoleTrashCompactor role )
+	{
+		return role switch
+		{
+			RoleTrashCompactor.Trashman => "Trashman",
+			RoleTrashCompactor.Spectator => "Spectator",
+			_ => "Survivor"
+		};
 	}
 
 	private string RoleName( RoleTrashCompactor role )
@@ -48,7 +92,7 @@
 		{
 			RoleTrashCompactor.Trashman => "Trashman",
 			RoleTrashCompactor.Spectator => "Spectator",
-			_ => "Survival"
+			_ => "Survivor"
 		};
 	}
 
@@ -83,9 +127,15 @@
 			hash.Add( user.SteamId );
 			hash.Add( user.DisplayName );
 			hash.Add( user.Ping );
-			hash.Add( FindPlayer( user )?.RoleEnum ?? RoleTrashCompactor.Spectator );
+			hash.Add( GetRole( user ) );
 		}
 
 		return hash.ToHashCode();
+	}
+
+	private sealed class TeamGroup
+	{
+		public RoleTrashCompactor Role { get; set; }
+		public List<Connection> Users { get; set; }
 	}
 }

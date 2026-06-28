@@ -6,7 +6,7 @@
     "Name": "trash9",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
-    "Scale": "4,4,4",
+    "Scale": "6,6,6",
     "Tags": "",
     "Enabled": true,
     "NetworkMode": 2,
@@ -26,7 +26,7 @@
         "MaterialGroup": null,
         "MaterialOverride": null,
         "Materials": null,
-        "Model": "pr/hamburger_01.vmdl",
+        "Model": "models/3dmodelscc0/food&drinkspack/hamburger/hamburger.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -90,15 +90,15 @@
         "OnComponentUpdate": null
       },
       {
-        "__type": "Sandbox.SphereCollider",
-        "__guid": "b8fe24fb-cc25-4f1e-8517-4e46a1e456a0",
+        "__type": "Sandbox.ModelCollider",
+        "__guid": "bc5a89d4-32ad-482b-a405-19de56e75c2a",
         "__enabled": true,
         "Flags": 0,
-        "Center": "0,0,2.30000114",
         "ColliderFlags": 0,
         "Elasticity": null,
         "Friction": null,
         "IsTrigger": false,
+        "Model": "models/3dmodelscc0/food&drinkspack/hamburger/hamburger.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -109,7 +109,6 @@
         "OnObjectTriggerExit": null,
         "OnTriggerEnter": null,
         "OnTriggerExit": null,
-        "Radius": 3.2,
         "RollingResistance": null,
         "Static": false,
         "Surface": null,
@@ -145,7 +144,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "smallboxstudio.hamburger01#114726"
+    "titanovsky.hamburger#53768"
   ],
   "__version": 2
 }
