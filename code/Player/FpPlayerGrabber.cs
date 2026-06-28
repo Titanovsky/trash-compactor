@@ -1,4 +1,5 @@
 using Sandbox;
+using System;
 
 public sealed class FpPlayerGrabber : Component
 {
@@ -11,6 +12,10 @@ public sealed class FpPlayerGrabber : Component
 	public float MovementSmoothness { get; set; } = 3.0f;
 
 	private Rigidbody _grabbedBody;
+	private Vector3 _grabReleaseVelocity;
+	private Vector3 _lastGrabTargetPosition;
+	private float _lastGrabMoveTime;
+	private bool _hasGrabMoveSample;
 
 	private bool _clientHasGrab;
 	private Transform _clientGrabbedOffset;
@@ -143,9 +148,14 @@ public sealed class FpPlayerGrabber : Component
 			return;
 
 		SpawnerTrash.Instance?.StartTrashLifetimeServer( trash.GameObject );
+		SpawnerTrash.Instance?.StartTrashSafetyServer( trash.GameObject, SpawnerTrash.Instance.GrabbedSafetyDelay );
 
 		_grabbedBody = body;
 		_grabbedBody.MotionEnabled = true;
+		_grabReleaseVelocity = Vector3.Zero;
+		_lastGrabTargetPosition = body.WorldPosition;
+		_lastGrabMoveTime = Time.Now;
+		_hasGrabMoveSample = false;
 	}
 
 	[Rpc.Host( NetFlags.Unreliable )]
@@ -154,6 +164,8 @@ public sealed class FpPlayerGrabber : Component
 		if ( !_grabbedBody.IsValid() || !CanGrabServer( _grabbedBody.GameObject ) )
 			return;
 
+		UpdateGrabReleaseVelocity( targetPosition );
+
 		var targetTransform = new Transform( targetPosition, targetRotation );
 		_grabbedBody.SmoothMove( targetTransform, 0.02f * MovementSmoothness, Time.Delta );
 	}
@@ -161,7 +173,36 @@ public sealed class FpPlayerGrabber : Component
 	[Rpc.Host( NetFlags.Reliable )]
 	private void RequestReleaseGrabRpc()
 	{
+		if ( _grabbedBody.IsValid() && _grabReleaseVelocity.Length > 0.1f )
+		{
+			_grabbedBody.MotionEnabled = true;
+			_grabbedBody.Velocity = _grabReleaseVelocity;
+		}
+
 		_grabbedBody = null;
+		_grabReleaseVelocity = Vector3.Zero;
+		_hasGrabMoveSample = false;
+	}
+
+	private void UpdateGrabReleaseVelocity( Vector3 targetPosition )
+	{
+		var now = Time.Now;
+		var dt = MathF.Max( now - _lastGrabMoveTime, 0.001f );
+
+		if ( _hasGrabMoveSample )
+		{
+			var velocity = (targetPosition - _lastGrabTargetPosition) / dt;
+			const float maxThrowSpeed = 2500f;
+
+			if ( velocity.Length > maxThrowSpeed )
+				velocity = velocity.Normal * maxThrowSpeed;
+
+			_grabReleaseVelocity = velocity;
+		}
+
+		_lastGrabTargetPosition = targetPosition;
+		_lastGrabMoveTime = now;
+		_hasGrabMoveSample = true;
 	}
 
 	private bool CanGrabServer( GameObject target )

@@ -44,6 +44,12 @@
           "go": "2dd04f9b-91b1-435a-b6d4-466a029bc0ae",
           "component_type": "PlayerController"
         },
+        "Dresser": {
+          "_type": "component",
+          "component_id": "7b5bfae7-02b8-4b94-b4c3-60d2a27b4876",
+          "go": "2dd04f9b-91b1-435a-b6d4-466a029bc0ae",
+          "component_type": "Dresser"
+        },
         "Grabber": {
           "_type": "component",
           "component_id": "a69d63bb-2f59-4cf6-837d-2fd0ed04beac",
@@ -264,7 +270,7 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "RemoveUnownedItems": true,
+        "RemoveUnownedItems": false,
         "Source": "OwnerConnection",
         "WorkshopItems": []
       },

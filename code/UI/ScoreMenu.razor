@@ -39,7 +39,7 @@
 	private Player FindPlayer( Connection user )
 	{
 		return Scene.GetAllComponents<Player>()
-			.FirstOrDefault( player => player.IsValid() && player.GameObject.Network.OwnerConnection == user );
+			.FirstOrDefault( player => player.IsValid() && player.GameObject.Network.Owner == user );
 	}
 
 	private string RoleName( RoleTrashCompactor role )

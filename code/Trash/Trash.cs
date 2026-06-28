@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 public sealed class Trash : Component, Component.ICollisionListener
 {
 	private bool _lifetimeStarted;
+	private bool _safetyTimerStarted;
+	private TimeUntil _timeUntilSafetyMode;
+
+	public bool SafetyModeEnabled { get; private set; }
 
 	public void StartLifetimeTimerOnce( float lifetime )
 	{
@@ -15,16 +19,46 @@ public sealed class Trash : Component, Component.ICollisionListener
 		_ = DestroyAfterLifetime( lifetime );
 	}
 
+	public void EnableSafetyModeServer()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		SafetyModeEnabled = true;
+		_safetyTimerStarted = false;
+	}
+
+	public void DisableSafetyModeServer()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		SafetyModeEnabled = false;
+		_safetyTimerStarted = false;
+	}
+
+	public void StartSafetyModeTimerOnce( float delay )
+	{
+		if ( !Networking.IsHost || SafetyModeEnabled || _safetyTimerStarted )
+			return;
+
+		_safetyTimerStarted = true;
+		_timeUntilSafetyMode = delay;
+	}
+
 	public void OnCollisionStart( Collision collision )
 	{
 		if ( !Networking.IsHost )
 			return;
 
-		var player = FindPlayer( collision.Other.GameObject );
-		if ( !player.IsValid() || !player.IsAlive || player.RoleEnum != RoleTrashCompactor.Survival )
+		if ( SafetyModeEnabled )
 			return;
 
-		var speed = MathF.Abs( collision.Contact.NormalSpeed );
+		var player = FindPlayer( collision.Other.GameObject );
+		if ( !player.IsValid() || !player.IsAlive || player.IsTrashman )
+			return;
+
+		var speed = GetImpactSpeed( collision, player );
 		const float minSpeed = 150f;
 		if ( speed < minSpeed )
 			return;
@@ -41,6 +75,22 @@ public sealed class Trash : Component, Component.ICollisionListener
 		};
 
 		((Component.IDamageable)player).OnDamage( info );
+	}
+
+	private float GetImpactSpeed( Collision collision, Player player )
+	{
+		var contactSpeed = MathF.Abs( collision.Contact.NormalSpeed );
+
+		var trashBody = GameObject.Components.Get<Rigidbody>();
+		var trashVelocity = trashBody.IsValid() ? trashBody.Velocity : Vector3.Zero;
+
+		var playerBody = player.Controller?.Body;
+		var playerVelocity = playerBody.IsValid() ? playerBody.Velocity : Vector3.Zero;
+
+		var relativeSpeed = (trashVelocity - playerVelocity).Length;
+		var trashSpeed = trashVelocity.Length;
+
+		return MathF.Max( contactSpeed, MathF.Max( relativeSpeed, trashSpeed ) );
 	}
 
 	private async Task DestroyAfterLifetime( float lifetime )
@@ -72,5 +122,13 @@ public sealed class Trash : Component, Component.ICollisionListener
 	{
 		if ( Networking.IsHost )
 			SpawnerTrash.Instance?.ForgetTrashServer( GameObject );
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( !Networking.IsHost || !_safetyTimerStarted || !_timeUntilSafetyMode )
+			return;
+
+		EnableSafetyModeServer();
 	}
 }

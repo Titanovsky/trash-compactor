@@ -9,7 +9,9 @@ public sealed class SpawnerTrash : Component
 
 	[Property, Group( "Round Stock" ), Description( "Number of trash props spawned at the beginning of each standard round." )] public int PropsPerRound { get; set; } = 12;
 	[Property, Group( "Solo" ), Description( "Time in seconds between automatic trash prop spawns during a solo round." )] public float SoloAutoSpawnInterval { get; set; } = 3f;
+	[Property, Group( "Solo" ), Description( "Time in seconds before solo trash automatically becomes harmless to players." )] public float SoloSafetyDelay { get; set; } = 6f;
 	[Property, Group( "Solo" ), Description( "Maximum positional offset applied to solo trash spawn positions. Each axis is randomized in range [-value, +value] every spawn." )] public Vector3 SoloSpawnOffset { get; set; } = Vector3.Zero;
+	[Property, Group( "Round Stock" ), Description( "Time in seconds before a round-stock trash prop becomes harmless after it is grabbed for the first time." )] public float GrabbedSafetyDelay { get; set; } = 12f;
 	[Property, Group( "Cleanup" ), Description( "Time in seconds after which a spawned trash prop is automatically destroyed." )] public float TrashLifetime { get; set; } = 30f;
 
 	private readonly List<GameObject> _spawnedTrash = new();
@@ -35,7 +37,6 @@ public sealed class SpawnerTrash : Component
 			return;
 
 		_soloAutoSpawnEnabled = false;
-		ClearSpawnedTrashServer();
 	}
 
 	private void SpawnRoundStockServer()
@@ -75,11 +76,15 @@ public sealed class SpawnerTrash : Component
 		}
 
 		var trash = prefab.Clone( position, rotation );
+		trash.Network.SetOrphanedMode( NetworkOrphaned.Host );
 		trash.NetworkSpawn();
 		_spawnedTrash.Add( trash );
 
 		if ( startLifetimeImmediately )
+		{
 			StartTrashLifetimeServer( trash );
+			StartTrashSafetyServer( trash, SoloSafetyDelay );
+		}
 
 		return trash;
 	}
@@ -108,6 +113,29 @@ public sealed class SpawnerTrash : Component
 			return;
 
 		trashComponent.StartLifetimeTimerOnce( TrashLifetime );
+	}
+
+	public void StartTrashSafetyServer( GameObject trash, float delay )
+	{
+		if ( !Networking.IsHost || !trash.IsValid() )
+			return;
+
+		var trashComponent = trash.Components.Get<Trash>();
+		if ( !trashComponent.IsValid() )
+			return;
+
+		trashComponent.StartSafetyModeTimerOnce( delay );
+	}
+
+	public GameObject SpawnBaseTrashServer()
+	{
+		if ( !Networking.IsHost )
+			return null;
+
+		var spawns = MapInfo.Instance?.TrashPropSpawns ?? new();
+		var spawn = spawns.Count > 0 ? spawns.GetRandom() : GameObject;
+
+		return SpawnTrashServer( spawn.WorldPosition, spawn.WorldRotation, false );
 	}
 
 	private void ClearSpawnedTrashServer()

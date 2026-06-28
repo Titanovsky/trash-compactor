@@ -9,8 +9,11 @@ public class RoundManager : Component
 	[Property, Description( "Duration of a solo round (single player) in seconds." )] public float SoloRoundTime { get; set; } = 60f;
 	[Property, Description( "Duration of the intermission phase between rounds in seconds." )] public float IntermissionTime { get; set; } = 5f;
 	[Property, Description( "Number of rounds played before a map vote is triggered." )] public int MaxRoundsBeforeVote { get; set; } = 10;
+    [Property] public SoundEvent PlayerDeadSound { get; set; }
+    [Property] public SoundEvent RoundStartSound { get; set; }
+    [Property] public SoundEvent ButtonClickSound { get; set; }
 
-	[Sync( SyncFlags.FromHost )] public RoundState State { get; private set; } = RoundState.None;
+    [Sync( SyncFlags.FromHost )] public RoundState State { get; private set; } = RoundState.None;
 	[Sync( SyncFlags.FromHost )] public int RoundNumber { get; private set; } = 0;
 	[Sync( SyncFlags.FromHost )] public float SyncedEndTime { get; private set; } = 0f;
 	[Sync( SyncFlags.FromHost )] public bool IsSoloRound { get; private set; }
@@ -65,7 +68,11 @@ public class RoundManager : Component
 		if ( State == RoundState.None )
 			StartIntermissionServer();
 
+		RemoveInvalidPlayersServer();
 		ProcessPendingRegistrationsServer();
+
+		if ( State == RoundState.Started && HandleActiveRoundStateServer() )
+			return;
 
 		if ( TimeLeft > 0f )
 			return;
@@ -110,6 +117,7 @@ public class RoundManager : Component
 		SyncedEndTime = Time.Now + (IsSoloRound ? SoloRoundTime : RoundTime);
 
 		SpawnerTrash.Instance?.StartRoundServer( IsSoloRound );
+		PlayRoundStartSoundRpc();
 	}
 
 	private void FinishRoundServer( RoundWinner winner )
@@ -149,7 +157,7 @@ public class RoundManager : Component
 			return;
 		}
 
-		var trashmanCount = Math.Max( 1, players.Count / 4 );
+		var trashmanCount = Math.Max( 1, (int)MathF.Ceiling( players.Count / 4f ) );
 		var trashmen = SelectTrashmenServer( players, trashmanCount );
 
 		foreach ( var player in players )
@@ -205,6 +213,49 @@ public class RoundManager : Component
 			.ToList();
 	}
 
+	private bool HandleActiveRoundStateServer()
+	{
+		var players = GetPlayersServer();
+
+		if ( players.Count <= 1 && !IsSoloRound )
+		{
+			RestartAsSoloRoundServer();
+			return true;
+		}
+
+		if ( IsSoloRound )
+			return false;
+
+		var hasTrashman = players.Any( player => player.RoleEnum == RoleTrashCompactor.Trashman );
+		if ( !hasTrashman )
+		{
+			FinishRoundServer( RoundWinner.Survival );
+			return true;
+		}
+
+		var hasSurvival = players.Any( player => player.RoleEnum == RoleTrashCompactor.Survival );
+		if ( !hasSurvival )
+		{
+			FinishRoundServer( RoundWinner.Trashman );
+			return true;
+		}
+
+		return false;
+	}
+
+	private void RestartAsSoloRoundServer()
+	{
+		if ( !Networking.IsHost || State != RoundState.Started || IsSoloRound )
+			return;
+
+		State = RoundState.Finished;
+		LastWinner = RoundWinner.None;
+		SyncedEndTime = Time.Now;
+
+		SpawnerTrash.Instance?.FinishRoundServer();
+		StartRoundServer();
+	}
+
 	private void ProcessPendingRegistrationsServer()
 	{
 		if ( _pendingRegistrations.Count == 0 )
@@ -246,6 +297,39 @@ public class RoundManager : Component
 	{
 		var spawns = Role.Create( role ).GetSpawns( MapInfo.Instance );
 		return spawns.Any( spawn => spawn.IsValid() );
+	}
+
+	private void RemoveInvalidPlayersServer()
+	{
+		_registeredPlayers.RemoveAll( player => !player.IsValid() );
+		_pendingRegistrations.RemoveAll( player => !player.IsValid() );
+		_trashmanHistory.RemoveAll( player => !player.IsValid() );
+	}
+
+	public void PlayPlayerDeathSoundServer( Vector3 position )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		PlayPlayerDeathSoundRpc( position );
+	}
+
+	[Rpc.Broadcast( NetFlags.Reliable )]
+	private void PlayPlayerDeathSoundRpc( Vector3 position )
+	{
+		if ( PlayerDeadSound is null )
+			return;
+
+		Sound.Play( PlayerDeadSound, position );
+	}
+
+	[Rpc.Broadcast( NetFlags.Reliable )]
+	private void PlayRoundStartSoundRpc()
+	{
+		if ( RoundStartSound is null )
+			return;
+
+		Sound.Play( RoundStartSound );
 	}
 
 	private void CreateSingleton()
