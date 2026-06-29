@@ -12,11 +12,9 @@ public sealed class ButtonSpawnTrash : Component, Component.IPressable
 		if ( !TryGetPlayerFromPress( e, out var player ) )
 			return false;
 
-        PlaySound();
-
         RequestPressRpc( player.GameObject );
 
-		return true;
+        return true;
 	}
 
 	[Rpc.Host]
@@ -30,39 +28,46 @@ public sealed class ButtonSpawnTrash : Component, Component.IPressable
 
         if (!player.CanUseTrashmanTools)
         {
-            ShowChatMessageRpc(Rpc.Caller, "Only Trashman can use this button.");
+            ShowChatMessage(playerObject, "Only Trashman can use this button.");
             return;
         }
 
         if (!_spawnDelay)
         {
             var secondsLeft = MathF.Max((float)_spawnDelay, 0.1f);
-            ShowChatMessageRpc(Rpc.Caller, $"Trash spawn is on cooldown. Wait {secondsLeft:0.0}s.");
+            ShowChatMessage(playerObject, $"Trash spawn is on cooldown. Wait {secondsLeft:0.0}s.");
             return;
         }
 
         var trash = SpawnerTrash.Instance?.SpawnBaseTrashServer();
         if (!trash.IsValid())
         {
-            ShowChatMessageRpc(Rpc.Caller, "Trash spawn failed.");
+            ShowChatMessage(playerObject, "Trash spawn failed.");
             return;
         }
 
-        ShowChatMessageRpc(Rpc.Caller, "Trash spawned!");
+        ShowChatMessage(playerObject, "Trash spawned!");
+
+        PlaySound();
 
         _spawnDelay = MathF.Max(Delay, 0.1f);
     }
 
-	[Rpc.Broadcast( NetFlags.Reliable )]
-	private void ShowChatMessageRpc(Connection ply, string message )
+	private void ShowChatMessage(GameObject ply, string message )
 	{
-		using (Rpc.FilterInclude(c => c == ply))
+		using (Rpc.FilterInclude(c => c == ply.Network.Owner))
 		{
-			Chat.AddText(message);
+            ShowChatMessageRpc(message);
 		};
 	}
 
-	[Rpc.Broadcast]
+    [Rpc.Broadcast]
+    private void ShowChatMessageRpc(string message) 
+	{
+        Chat.AddText(message);
+    }
+
+    [Rpc.Broadcast]
 	private void PlaySound()
 	{
 		Sound.Play(RoundManager.Instance.ButtonClickSound, WorldPosition);

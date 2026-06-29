@@ -4,12 +4,12 @@
 @namespace Sandbox
 
 <root>
-	<div class="title">@MyStringValue</div>
+	<div class="title">@Name</div>
 </root>
 
 @code
 {
-	public string MyStringValue { get; set; } = "Hello World!";
+	public string Name { get; set; } = "";
 
-	protected override int BuildHash() => System.HashCode.Combine( 0 );
+	protected override int BuildHash() => System.HashCode.Combine(Name);
 }

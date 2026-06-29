@@ -242,7 +242,17 @@ public sealed class Player : Component, Component.IDamageable
 		if ( Controller.IsValid() )
 		{
 			Controller.Enabled = canMove;
-		}
+
+			if (IsTrashman)
+            {
+				Controller.RunSpeed = 280f;
+                Controller.WalkSpeed = 190f;
+            } else
+			{
+                Controller.RunSpeed = 170f;
+                Controller.WalkSpeed = 170f;
+            }
+        }
 
 		SetCharacterRenderersEnabled( IsAlive );
 		SetWorldHudEnabled( IsAlive );
@@ -267,7 +277,7 @@ public sealed class Player : Component, Component.IDamageable
 		Local = null;
 	}
 
-	[Rpc.Broadcast( NetFlags.Reliable )]
+	[Rpc.Broadcast]
 	private void ApplyDeathPresentationRpc( Vector3 spectatorPosition, Rotation spectatorRotation )
 	{
 		if ( Controller.IsValid() )
@@ -283,7 +293,7 @@ public sealed class Player : Component, Component.IDamageable
 			LockSpectatorCamera( spectatorPosition, spectatorRotation );
 	}
 
-	[Rpc.Broadcast( NetFlags.Reliable )]
+	[Rpc.Broadcast]
 	private void ApplySpawnPresentationRpc()
 	{
 		_lockSpectatorCamera = false;
@@ -292,7 +302,7 @@ public sealed class Player : Component, Component.IDamageable
 		ApplyRoleState();
 	}
 
-	[Rpc.Broadcast( NetFlags.Reliable )]
+	[Rpc.Broadcast]
 	private void ApplySpawnTransformRpc( Vector3 position, float yaw )
 	{
 		WorldPosition = position;
@@ -345,8 +355,7 @@ public sealed class Player : Component, Component.IDamageable
 			Name = Connection.Local.DisplayName;
 			Prepare();
 			DressForHost(Dresser);
-
-			WorldHud.MyStringValue = Name;
+            SendNameEveryoneRpc(WorldHud, Name);
         }
 
 		TryRegisterWithRoundManager();
@@ -363,13 +372,19 @@ public sealed class Player : Component, Component.IDamageable
 		RemoveSingleton();
 	}
 
-	[Rpc.Host( NetFlags.Reliable )]
+	[Rpc.Broadcast]
+	private void SendNameEveryoneRpc(PlayerHudWorld worldHud, string name)
+	{
+        worldHud.Name = name;
+    }
+
+	[Rpc.Host]
 	private void RequestRegisterPlayerRpc()
 	{
 		RoundManager.Instance?.RegisterPlayerServer( this );
 	}
 
-	[Rpc.Host( NetFlags.Reliable )]
+	[Rpc.Host]
 	private void RequestKillRpc( Player player )
 	{
 		TryKillByConsoleServer( player, Rpc.Caller );

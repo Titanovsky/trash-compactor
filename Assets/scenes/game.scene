@@ -140,7 +140,7 @@
           "__guid": "6f67e38b-c772-48df-8df6-8934244a3383",
           "__enabled": true,
           "Flags": 0,
-          "ButtonClickSound": "audio/hz_ui_click_button_crisp_01.sound",
+          "ButtonClickSound": "sounds/click.sound",
           "IntermissionTime": 5,
           "MaxRoundsBeforeVote": 10,
           "OnComponentDestroy": null,
@@ -2017,8 +2017,7 @@
   "Title": "game",
   "Description": null,
   "__references": [
-    "facepunch.big_button#141958",
-    "hzgame.hzuiclickbuttoncrisp01#274293"
+    "facepunch.big_button#141958"
   ],
   "__version": 3
 }

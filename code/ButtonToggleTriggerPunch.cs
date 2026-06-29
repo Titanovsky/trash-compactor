@@ -1,6 +1,7 @@
 using Sandbox;
-using System.Linq;
 using Sandbox.Platform;
+using System.Linq;
+using System.Numerics;
 
 public sealed class ButtonToggleTriggerPunch : Component, Component.IPressable
 {
@@ -8,57 +9,54 @@ public sealed class ButtonToggleTriggerPunch : Component, Component.IPressable
 
 	public bool Press( IPressable.Event e )
 	{
-		ResolveTrigger();
-
 		if ( !Trigger.IsValid() )
 			return false;
 
-		if ( Networking.IsHost )
-			return ToggleTriggerServer();
+        if (!e.Source.GameObject.Components.TryGet<Player>(out var ply, FindMode.EverythingInSelfAndParent))
+            return false;
 
-		RequestToggleRpc();
-		return true;
+        RequestToggleRpc(ply);
+
+        return true;
 	}
 
-	[Rpc.Host( NetFlags.Reliable )]
-	private void RequestToggleRpc()
+	[Rpc.Host]
+	private void RequestToggleRpc(Player ply)
 	{
-		ToggleTriggerServer();
+		ToggleTriggerServer(ply);
 	}
 
-	private bool ToggleTriggerServer()
+	private bool ToggleTriggerServer(Player ply)
 	{
-		ResolveTrigger();
-
 		if ( !Networking.IsHost || !Trigger.IsValid() )
 			return false;
 
 		var newEnabled = !Trigger.Enabled;
 		Trigger.Enabled = newEnabled;
 
-		ShowChatMessageRpc( newEnabled ? "Trigger punch enabled." : "Trigger punch disabled." );
+        ShowChatMessage(ply.GameObject, newEnabled ? "Trigger punch enabled." : "Trigger punch disabled." );
 		PlaySound();
 
         return true;
 	}
 
-	[Rpc.Broadcast( NetFlags.Reliable )]
-	private void ShowChatMessageRpc( string message )
-	{
-		Chat.AddText( message );
-	}
-
-    [Rpc.Broadcast()]
-    private void PlaySound()
+    private void ShowChatMessage(GameObject ply, string message)
     {
-		Sound.Play(RoundManager.Instance.ButtonClickSound);
+        using (Rpc.FilterInclude(c => c == ply.Network.Owner))
+        {
+            ShowChatMessageRpc(message);
+        };
     }
 
-    private void ResolveTrigger()
-	{
-		if ( Trigger.IsValid() )
-			return;
+    [Rpc.Broadcast]
+    private void ShowChatMessageRpc(string message)
+    {
+        Chat.AddText(message);
+    }
 
-		Trigger = Scene.GetAllComponents<TriggerPropPush>().FirstOrDefault( component => component.IsValid() );
-	}
+    [Rpc.Broadcast]
+    private void PlaySound()
+    {
+		Sound.Play(RoundManager.Instance.ButtonClickSound, WorldPosition);
+    }
 }
