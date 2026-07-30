@@ -54,6 +54,16 @@ public sealed class SpawnerTrash : Component
 		_soloAutoSpawnEnabled = false;
 	}
 
+	public void ClearForMapUnloadServer()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		_soloAutoSpawnEnabled = false;
+		ClearSpawnedTrashServer();
+		RemoveSingleton();
+	}
+
 	private void SpawnRoundStockServer()
 	{
 		var spawns = MapInfo.Instance?.TrashPropSpawns ?? new();

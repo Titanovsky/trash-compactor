@@ -1,0 +1,1174 @@
+{
+  "RootObject": {
+    "__guid": "ff70a4fa-45ae-464b-86b2-716588ec6863",
+    "__version": 2,
+    "Flags": 0,
+    "Name": "dmgames.trashcompactor",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "NetworkFlags": 0,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
+    "Components": [],
+    "Children": [
+      {
+        "__guid": "f4010823-4158-4c86-ade8-fbd34dbd0437",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Map Info",
+        "Position": "1297.06653,7.3674469,370.86261",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "MapInfo",
+            "__guid": "dd7ff934-4805-4289-b3e0-df82a7549b32",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "SoloTrashPropSpawns": [
+              {
+                "_type": "gameobject",
+                "go": "bf151454-f7d3-4645-b10f-22859208ed76"
+              }
+            ],
+            "SpawnSpectors": [
+              {
+                "_type": "gameobject",
+                "go": "d4530591-d3fe-48a2-b079-6e75506c06eb"
+              }
+            ],
+            "SpawnSurvivals": [
+              {
+                "_type": "gameobject",
+                "go": "5e25e4da-187f-4b40-909f-2758b25546a0"
+              },
+              {
+                "_type": "gameobject",
+                "go": "c093dbbe-79df-4122-ae6d-0036583e141a"
+              },
+              {
+                "_type": "gameobject",
+                "go": "4d2ee5a2-d734-453c-b58d-b3cad8635325"
+              },
+              {
+                "_type": "gameobject",
+                "go": "0fade90a-6c17-486c-96a8-818de9fd194a"
+              },
+              {
+                "_type": "gameobject",
+                "go": "788094ad-e159-410b-9d62-409dfe7d262e"
+              },
+              {
+                "_type": "gameobject",
+                "go": "3c7431cf-0079-48ca-8e5a-d9ecf3db1599"
+              }
+            ],
+            "SpawnTrashmans": [
+              {
+                "_type": "gameobject",
+                "go": "b8f725df-e30f-46cd-a460-4fc95f8ca2b9"
+              },
+              {
+                "_type": "gameobject",
+                "go": "a554e8e1-8215-448d-bfc9-94dab15b945b"
+              },
+              {
+                "_type": "gameobject",
+                "go": "409e61c9-3af3-41f0-8572-f675e8a4b5ee"
+              },
+              {
+                "_type": "gameobject",
+                "go": "ab63729d-2270-49af-b15c-b0c07c5a737c"
+              }
+            ],
+            "TrashPropSpawns": [
+              {
+                "_type": "gameobject",
+                "go": "8d56113c-00a4-443c-ae9d-81807edab073"
+              },
+              {
+                "_type": "gameobject",
+                "go": "bfe5bfe1-d39a-486a-9a3e-7302712b5fed"
+              },
+              {
+                "_type": "gameobject",
+                "go": "e3074134-9a30-4700-be28-fff2b32bdb59"
+              },
+              {
+                "_type": "gameobject",
+                "go": "6d23396c-a672-4bd5-8495-73e63e8fc275"
+              }
+            ]
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "bf151454-f7d3-4645-b10f-22859208ed76",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Solo Spawner Props",
+        "Position": "25.0192566,757.646729,629.416077",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "SpawnerTrash",
+            "__guid": "75bd3c3e-57df-47fc-98c2-ed8da6e74e36",
+            "__enabled": true,
+            "Flags": 0,
+            "GrabbedSafetyDelay": 12,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "PropsPerRound": 12,
+            "SoloAutoSpawnInterval": 0.8,
+            "SoloSafetyDelay": 6,
+            "SoloSpawnOffset": "110,66,0",
+            "TrashLifetime": 10,
+            "TrashPrefabs": [
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/trash/trash_emoji.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/trash/trash_bread.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/trash/trash_chkao.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/trash/trash1.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/trash/trash2.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/trash/trash3.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/trash/trash4.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/trash/trash5.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/trash/trash6.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/trash/trash7.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/trash/trash8.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/trash/trash9.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/trash/trash10.prefab"
+              }
+            ]
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "345edc1d-19cc-48eb-abb6-350183895ae5",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Button: Trigger Punch",
+        "Position": "-224.79686,1044.44519,1025.08228",
+        "Rotation": "-0.0544185042,-0.00765227899,0.024308946,0.998192966",
+        "Scale": "1,1,1",
+        "Tags": "world",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.MeshComponent",
+            "__guid": "11078c01-2235-4ef8-a324-54eb97a0b335",
+            "__enabled": true,
+            "Flags": 0,
+            "ColliderFlags": 0,
+            "Collision": "Mesh",
+            "Color": "1,1,1,1",
+            "Elasticity": null,
+            "Friction": null,
+            "HideInGame": false,
+            "IsTrigger": false,
+            "Mesh": {
+              "Data": "AQAAAAcAAAAIAAAAdG9wb2xvZ3nEAQAACAAAABgAAAAGAAAAAAAAAAIAAAAEAAAABgAAAAgAAAAKAAAADAAAAA4AAAABAAAAAQAAAAIAAAAAAAAAAAAAAAAAAAARAAAABQAAAAIAAAADAAAABAAAAAAAAAABAAAAAgAAABQAAAADAAAAAwAAAAUAAAAGAAAAAAAAAAIAAAAEAAAAFwAAAAQAAAAAAAAABwAAAAAAAAAAAAAAAwAAAAYAAAASAAAAAgAAAAUAAAAJAAAACgAAAAEAAAAEAAAACAAAABMAAAAEAAAABgAAAAsAAAAMAAAAAQAAAAUAAAAKAAAAFgAAAAMAAAAHAAAADQAAAA4AAAABAAAABgAAAAwAAAAVAAAABQAAAAQAAAAPAAAACAAAAAEAAAAHAAAADgAAABAAAAACAAAAAAAAABEAAAAHAAAAAgAAAAcAAAAQAAAADQAAAAUAAAAEAAAAEwAAAA8AAAACAAAAAwAAABIAAAAFAAAABAAAAAYAAAAVAAAACwAAAAMAAAABAAAAFAAAAAEAAAAFAAAAAgAAABcAAAADAAAAAwAAAAUAAAAWAAAACQAAAAQAAAAGAAAADgAAABIAAAAWAAAAFwAAABUAAAAJAAAAcG9zaXRpb25zYAAAAAAAAMEAAIDAAADIQQAAAEEAAIDAAADIQQAAAEEAAIBAAADIQQAAAMEAAIBAAADIQQAAAMEAAIBAAADIwQAAAEEAAIBAAADIwQAAAEEAAIDAAADIwQAAAMEAAIDAAADIwQYAAABibGVuZHNgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAGNvbG9yc2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAdGV4Y29vcmTAAAAAAAAwvwAAAsEAAFC/AAAEwQAAML8AAAPBAAACQQAABMEAAFC/AAADwQAAMD8AAATBAABQvwAAAsEAAAPBAAAEwQAAML8AAAPBAABQPwCA+8AAADC/AAACwQAAA0EAgPvAAABQvwAAAsEAADC/AID7wAAAUL8AAAPBAAACwQCA+8AAAALBAAAEwQAAUL8AgPvAAAADwQCA+8AAAFA/AAAEwQAAAkEAgPvAAAAwvwAABMEAAANBAAAEwQAAMD8AgPvADQAAAG1hdGVyaWFsaW5kZXgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQAAAGVkZ2VmbGFnc2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+              "Materials": [
+                "materials/dev/reflectivity_30.vmat"
+              ]
+            },
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "OnObjectTriggerEnter": null,
+            "OnObjectTriggerExit": null,
+            "OnTriggerEnter": null,
+            "OnTriggerExit": null,
+            "RenderType": "On",
+            "RollingResistance": null,
+            "SmoothingAngle": 40,
+            "Static": true,
+            "Surface": null,
+            "SurfaceVelocity": "0,0,0"
+          }
+        ],
+        "Children": [
+          {
+            "__guid": "b6e3cb87-c601-45d9-99ea-8fe95b272fe5",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Text (2)",
+            "Position": "-0.530197322,1.78813934E-07,40.0000153",
+            "Rotation": "0,0,-0.707106888,0.707106888",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Sandbox.TextRenderer",
+                "__guid": "1c7de418-a457-4c8f-89e1-f11b0bb6ce1d",
+                "__enabled": true,
+                "Flags": 0,
+                "__version": 2,
+                "Billboard": "None",
+                "BlendMode": "Normal",
+                "FogStrength": 1,
+                "HorizontalAlignment": "Center",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "RenderOptions": {
+                  "GameLayer": true,
+                  "OverlayLayer": false,
+                  "BloomLayer": false,
+                  "AfterUILayer": false
+                },
+                "Scale": 0.1,
+                "TextScope": {
+                  "Text": "On/Off Trigger Push",
+                  "TextColor": "1,1,1,1",
+                  "FontName": "Poppins",
+                  "FontSize": 38,
+                  "FontWeight": 800,
+                  "FontItalic": false,
+                  "FontVariantNumeric": "Normal",
+                  "LineHeight": 1,
+                  "LetterSpacing": 0,
+                  "WordSpacing": 0,
+                  "FilterMode": "Bilinear",
+                  "FontSmooth": "Auto",
+                  "Outline": {
+                    "Enabled": false,
+                    "Size": 4,
+                    "Color": "0,0,1,1"
+                  },
+                  "Shadow": {
+                    "Enabled": false,
+                    "Size": 4,
+                    "Color": "0,0,0,1",
+                    "Offset": "4,4"
+                  },
+                  "OutlineUnder": {
+                    "Enabled": false,
+                    "Size": 4,
+                    "Color": "0,1,0,1"
+                  },
+                  "ShadowUnder": {
+                    "Enabled": false,
+                    "Size": 4,
+                    "Color": "0,0,0,1",
+                    "Offset": "4,4"
+                  }
+                },
+                "VerticalAlignment": "Center"
+              }
+            ],
+            "Children": []
+          },
+          {
+            "__guid": "8dde2dd6-f7c7-4d40-b004-dcb61c509d46",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "big_button (2)",
+            "Position": "1.31130219E-06,3.86889744,16.0000057",
+            "Rotation": "-0.707106769,0,0,0.707106769",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Sandbox.SkinnedModelRenderer",
+                "__guid": "e8f4335f-a758-4507-8fc4-47d0fcda07f5",
+                "__enabled": true,
+                "Flags": 0,
+                "AnimationGraph": null,
+                "BodyGroups": 18446744073709551615,
+                "BoneMergeTarget": null,
+                "CreateAttachments": false,
+                "CreateBoneObjects": false,
+                "LodOverride": null,
+                "MaterialGroup": null,
+                "MaterialOverride": null,
+                "Materials": null,
+                "Model": "models/props/big_button/big_button.vmdl",
+                "Morphs": {},
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "Parameters": {
+                  "bools": {},
+                  "ints": {},
+                  "floats": {},
+                  "vectors": {},
+                  "rotations": {}
+                },
+                "PlaybackRate": 1,
+                "RenderOptions": {
+                  "GameLayer": true,
+                  "OverlayLayer": false,
+                  "BloomLayer": false,
+                  "AfterUILayer": false
+                },
+                "RenderType": "On",
+                "Sequence": {
+                  "Name": null,
+                  "Looping": true,
+                  "Blending": false
+                },
+                "Tint": "1,1,1,1",
+                "UseAnimGraph": true
+              },
+              {
+                "__type": "Sandbox.ModelCollider",
+                "__guid": "fc3ece07-0f15-421f-be4f-95da47fc5b42",
+                "__enabled": true,
+                "Flags": 0,
+                "ColliderFlags": 0,
+                "Elasticity": null,
+                "Friction": null,
+                "IsTrigger": false,
+                "Model": "models/props/big_button/big_button.vmdl",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "OnObjectTriggerEnter": null,
+                "OnObjectTriggerExit": null,
+                "OnTriggerEnter": null,
+                "OnTriggerExit": null,
+                "RollingResistance": null,
+                "Static": false,
+                "Surface": null,
+                "SurfaceVelocity": "0,0,0"
+              },
+              {
+                "__type": "ButtonToggleTriggerPunch",
+                "__guid": "3a0a8023-2b25-401d-abdc-fd3bb5cf3704",
+                "__enabled": true,
+                "Flags": 0,
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "Trigger": {
+                  "_type": "component",
+                  "component_id": "43eb4878-fce7-42d5-bb12-f8fef4814013",
+                  "go": "175471b6-b286-4a3b-8b80-2b5bb821d146",
+                  "component_type": "TriggerPropPush"
+                }
+              }
+            ],
+            "Children": []
+          }
+        ]
+      },
+      {
+        "__guid": "55c5b4cf-b1d3-479a-b873-e58ee0c000b4",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Button: Spawn Trash",
+        "Position": "-278.240143,1045.80334,1032.44116",
+        "Rotation": "-0.0235585682,0.000473076478,-0.0200711787,0.999520898",
+        "Scale": "1,1,1",
+        "Tags": "world",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.MeshComponent",
+            "__guid": "631ebb16-c512-4869-baa6-baaa7a955907",
+            "__enabled": true,
+            "Flags": 0,
+            "ColliderFlags": 0,
+            "Collision": "Mesh",
+            "Color": "1,1,1,1",
+            "Elasticity": null,
+            "Friction": null,
+            "HideInGame": false,
+            "IsTrigger": false,
+            "Mesh": {
+              "Data": "AQAAAAcAAAAIAAAAdG9wb2xvZ3nEAQAACAAAABgAAAAGAAAAAAAAAAIAAAAEAAAABgAAAAgAAAAKAAAADAAAAA4AAAABAAAAAQAAAAIAAAAAAAAAAAAAAAAAAAARAAAABQAAAAIAAAADAAAABAAAAAAAAAABAAAAAgAAABQAAAADAAAAAwAAAAUAAAAGAAAAAAAAAAIAAAAEAAAAFwAAAAQAAAAAAAAABwAAAAAAAAAAAAAAAwAAAAYAAAASAAAAAgAAAAUAAAAJAAAACgAAAAEAAAAEAAAACAAAABMAAAAEAAAABgAAAAsAAAAMAAAAAQAAAAUAAAAKAAAAFgAAAAMAAAAHAAAADQAAAA4AAAABAAAABgAAAAwAAAAVAAAABQAAAAQAAAAPAAAACAAAAAEAAAAHAAAADgAAABAAAAACAAAAAAAAABEAAAAHAAAAAgAAAAcAAAAQAAAADQAAAAUAAAAEAAAAEwAAAA8AAAACAAAAAwAAABIAAAAFAAAABAAAAAYAAAAVAAAACwAAAAMAAAABAAAAFAAAAAEAAAAFAAAAAgAAABcAAAADAAAAAwAAAAUAAAAWAAAACQAAAAQAAAAGAAAADgAAABIAAAAWAAAAFwAAABUAAAAJAAAAcG9zaXRpb25zYAAAAAAAAMEAAIDAAADIQQAAAEEAAIDAAADIQQAAAEEAAIBAAADIQQAAAMEAAIBAAADIQQAAAMEAAIBAAADIwQAAAEEAAIBAAADIwQAAAEEAAIDAAADIwQAAAMEAAIDAAADIwQYAAABibGVuZHNgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAGNvbG9yc2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAdGV4Y29vcmTAAAAAAAAwvwAAAsEAAFC/AAAEwQAAML8AAAPBAAACQQAABMEAAFC/AAADwQAAMD8AAATBAABQvwAAAsEAAAPBAAAEwQAAML8AAAPBAABQPwCA+8AAADC/AAACwQAAA0EAgPvAAABQvwAAAsEAADC/AID7wAAAUL8AAAPBAAACwQCA+8AAAALBAAAEwQAAUL8AgPvAAAADwQCA+8AAAFA/AAAEwQAAAkEAgPvAAAAwvwAABMEAAANBAAAEwQAAMD8AgPvADQAAAG1hdGVyaWFsaW5kZXgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQAAAGVkZ2VmbGFnc2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+              "Materials": [
+                "materials/dev/reflectivity_30.vmat"
+              ]
+            },
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "OnObjectTriggerEnter": null,
+            "OnObjectTriggerExit": null,
+            "OnTriggerEnter": null,
+            "OnTriggerExit": null,
+            "RenderType": "On",
+            "RollingResistance": null,
+            "SmoothingAngle": 40,
+            "Static": true,
+            "Surface": null,
+            "SurfaceVelocity": "0,0,0"
+          }
+        ],
+        "Children": [
+          {
+            "__guid": "87e779ef-f6c9-4bed-a173-563c9214613f",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Text (1)",
+            "Position": "0,0,32.0000076",
+            "Rotation": "0,0,-0.707106888,0.707106888",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Sandbox.TextRenderer",
+                "__guid": "b106616d-e7fa-4207-8e2a-4ebe79ca8cf7",
+                "__enabled": true,
+                "Flags": 0,
+                "__version": 2,
+                "Billboard": "None",
+                "BlendMode": "Normal",
+                "FogStrength": 1,
+                "HorizontalAlignment": "Center",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "RenderOptions": {
+                  "GameLayer": true,
+                  "OverlayLayer": false,
+                  "BloomLayer": false,
+                  "AfterUILayer": false
+                },
+                "Scale": 0.1,
+                "TextScope": {
+                  "Text": "Spawn Trash",
+                  "TextColor": "1,1,1,1",
+                  "FontName": "Poppins",
+                  "FontSize": 38,
+                  "FontWeight": 800,
+                  "FontItalic": false,
+                  "FontVariantNumeric": "Normal",
+                  "LineHeight": 1,
+                  "LetterSpacing": 0,
+                  "WordSpacing": 0,
+                  "FilterMode": "Bilinear",
+                  "FontSmooth": "Auto",
+                  "Outline": {
+                    "Enabled": false,
+                    "Size": 4,
+                    "Color": "0,0,1,1"
+                  },
+                  "Shadow": {
+                    "Enabled": false,
+                    "Size": 4,
+                    "Color": "0,0,0,1",
+                    "Offset": "4,4"
+                  },
+                  "OutlineUnder": {
+                    "Enabled": false,
+                    "Size": 4,
+                    "Color": "0,1,0,1"
+                  },
+                  "ShadowUnder": {
+                    "Enabled": false,
+                    "Size": 4,
+                    "Color": "0,0,0,1",
+                    "Offset": "4,4"
+                  }
+                },
+                "VerticalAlignment": "Center"
+              }
+            ],
+            "Children": []
+          },
+          {
+            "__guid": "6d3818af-71bc-403b-8d64-5f53a3ffeced",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "big_button",
+            "Position": "1.31130219E-06,3.86889744,16.0000057",
+            "Rotation": "-0.707106769,0,0,0.707106769",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Sandbox.SkinnedModelRenderer",
+                "__guid": "d8f93e6e-712e-4eaf-b7ae-9b6c9447f06b",
+                "__enabled": true,
+                "Flags": 0,
+                "AnimationGraph": null,
+                "BodyGroups": 18446744073709551615,
+                "BoneMergeTarget": null,
+                "CreateAttachments": false,
+                "CreateBoneObjects": false,
+                "LodOverride": null,
+                "MaterialGroup": null,
+                "MaterialOverride": null,
+                "Materials": null,
+                "Model": "models/props/big_button/big_button.vmdl",
+                "Morphs": {},
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "Parameters": {
+                  "bools": {},
+                  "ints": {},
+                  "floats": {},
+                  "vectors": {},
+                  "rotations": {}
+                },
+                "PlaybackRate": 1,
+                "RenderOptions": {
+                  "GameLayer": true,
+                  "OverlayLayer": false,
+                  "BloomLayer": false,
+                  "AfterUILayer": false
+                },
+                "RenderType": "On",
+                "Sequence": {
+                  "Name": null,
+                  "Looping": true,
+                  "Blending": false
+                },
+                "Tint": "1,1,1,1",
+                "UseAnimGraph": true
+              },
+              {
+                "__type": "Sandbox.ModelCollider",
+                "__guid": "aeabfd19-b980-479e-ab6a-a2f21ed309a1",
+                "__enabled": true,
+                "Flags": 0,
+                "ColliderFlags": 0,
+                "Elasticity": null,
+                "Friction": null,
+                "IsTrigger": false,
+                "Model": "models/props/big_button/big_button.vmdl",
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "OnObjectTriggerEnter": null,
+                "OnObjectTriggerExit": null,
+                "OnTriggerEnter": null,
+                "OnTriggerExit": null,
+                "RollingResistance": null,
+                "Static": false,
+                "Surface": null,
+                "SurfaceVelocity": "0,0,0"
+              },
+              {
+                "__type": "ButtonSpawnTrash",
+                "__guid": "54fe3353-bc55-41c9-9da3-208b76e0349a",
+                "__enabled": true,
+                "Flags": 0,
+                "Delay": 3,
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null
+              }
+            ],
+            "Children": []
+          }
+        ]
+      },
+      {
+        "__guid": "650243fd-c7d3-4e10-afa5-00d2eff7db76",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Spawns",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [],
+        "Children": [
+          {
+            "__guid": "b8f725df-e30f-46cd-a460-4fc95f8ca2b9",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Spawn Trashman",
+            "Position": "-268.917603,1160.03015,1071.57654",
+            "Rotation": "-0.00226688408,-0.00372098153,-0.520266652,0.85399276",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "a554e8e1-8215-448d-bfc9-94dab15b945b",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Spawn Trashman (1)",
+            "Position": "81.9302826,1195.47742,1077.30774",
+            "Rotation": "0.0242331252,0.0226369761,-0.730361581,0.682255268",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "409e61c9-3af3-41f0-8572-f675e8a4b5ee",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Spawn Trashman (2)",
+            "Position": "215.48851,1250.00574,1091.50403",
+            "Rotation": "0.0321291015,0.0193811171,-0.855668724,0.516161799",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "ab63729d-2270-49af-b15c-b0c07c5a737c",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Spawn Trashman (3)",
+            "Position": "337.782898,1037.80579,1080.02881",
+            "Rotation": "0.0854211673,0.0122323781,-0.986209333,0.141225949",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "5e25e4da-187f-4b40-909f-2758b25546a0",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Spawn Surv",
+            "Position": "3.47964978,-779.474731,133.006424",
+            "Rotation": "0.00866368879,-0.00860350672,0.709514081,0.704585433",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "c093dbbe-79df-4122-ae6d-0036583e141a",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Spawn Surv (1)",
+            "Position": "76.9146957,-616.250732,119.395554",
+            "Rotation": "0.00498283422,-0.00487961434,0.714450777,0.699650943",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "4d2ee5a2-d734-453c-b58d-b3cad8635325",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Spawn Surv (2)",
+            "Position": "-75.0520096,-619.432007,119.395554",
+            "Rotation": "0.00498283422,-0.00487961434,0.714450777,0.699650943",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "0fade90a-6c17-486c-96a8-818de9fd194a",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Spawn Surv (3)",
+            "Position": "11.1409922,-617.627625,119.395554",
+            "Rotation": "0.00498283422,-0.00487961434,0.714450777,0.699650943",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "788094ad-e159-410b-9d62-409dfe7d262e",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Spawn Surv (4)",
+            "Position": "10.141139,-569.865906,136.063507",
+            "Rotation": "0.00498283422,-0.00487961434,0.714450777,0.699650943",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "3c7431cf-0079-48ca-8e5a-d9ecf3db1599",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Spawn Surv (5)",
+            "Position": "-68.3861465,-555.619446,144.285904",
+            "Rotation": "0.00498283422,-0.00487961434,0.714450777,0.699650943",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "d4530591-d3fe-48a2-b079-6e75506c06eb",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Spawn Spectator",
+            "Position": "39.4459076,-864.060486,320.031769",
+            "Rotation": "-0.102632292,0.0965481699,0.721099138,0.67835182",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          }
+        ]
+      },
+      {
+        "__guid": "2500c74c-cce1-407b-888f-95558cf81270",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "TriggerTeleport",
+        "Position": "100.442062,944,632",
+        "Rotation": "0.707106769,0,0,0.707106769",
+        "Scale": "1,1,1",
+        "Tags": "world",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.MeshComponent",
+            "__guid": "376ffc62-7e41-4482-9a18-384868dc49a8",
+            "__enabled": true,
+            "Flags": 0,
+            "ColliderFlags": 0,
+            "Collision": "Hull",
+            "Color": "0.29398,0.33354,0.5907,0.54",
+            "Elasticity": null,
+            "Friction": null,
+            "HideInGame": true,
+            "IsTrigger": true,
+            "Mesh": {
+              "Data": "AQAAAAcAAAAIAAAAdG9wb2xvZ3nEAQAACAAAABgAAAAGAAAAAAAAAAIAAAAEAAAABgAAAAgAAAAKAAAADAAAAA4AAAABAAAAAQAAAAIAAAAAAAAAAAAAAAAAAAARAAAABQAAAAIAAAADAAAABAAAAAAAAAABAAAAAgAAABQAAAADAAAAAwAAAAUAAAAGAAAAAAAAAAIAAAAEAAAAFwAAAAQAAAAAAAAABwAAAAAAAAAAAAAAAwAAAAYAAAASAAAAAgAAAAUAAAAJAAAACgAAAAEAAAAEAAAACAAAABMAAAAEAAAABgAAAAsAAAAMAAAAAQAAAAUAAAAKAAAAFgAAAAMAAAAHAAAADQAAAA4AAAABAAAABgAAAAwAAAAVAAAABQAAAAQAAAAPAAAACAAAAAEAAAAHAAAADgAAABAAAAACAAAAAAAAABEAAAAHAAAAAgAAAAcAAAAQAAAADQAAAAUAAAAEAAAAEwAAAA8AAAACAAAAAwAAABIAAAAFAAAABAAAAAYAAAAVAAAACwAAAAMAAAABAAAAFAAAAAEAAAAFAAAAAgAAABcAAAADAAAAAwAAAAUAAAAWAAAACQAAAAQAAAAGAAAADgAAABIAAAAWAAAAFwAAABUAAAAJAAAAcG9zaXRpb25zYAAAAJc4zsPiiGxD6GHgQtSOO0PdiGxD4mHgQteOO0N7RIRD42HgQpc4zsN+RIRD4mHgQpc4zsN+RIRDeUQVw9eOO0N8RIRDekQVw9SOO0PeiGxDekQVw5c4zsPiiGxDekQVwwYAAABibGVuZHNgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAGNvbG9yc2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAdGV4Y29vcmTAAAAAaMcZQDci4MCUOBLAkvPbQGrHGUA9IufAHBEAQZLz20CUOBLAPiLnwNSOs7+S89tAlDgSwDgi4MA+IufAkvPbQGrHGUA+IufAljhSQHaoDkFoxxlANyLgwCCRA0F2qA5BlDgSwDgi4MBoxxlAdqgOQZQ4EsA/IufAOCLgwHaoDkE4IuDAkvPbQJQ4EsB2qA5BPyLnwHaoDkGWOFJAkvPbQBwRAEF2qA5BaMcZQJLz20AfkQNBkvPbQNSOs792qA5BDQAAAG1hdGVyaWFsaW5kZXgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQAAAGVkZ2VmbGFnc2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+              "Materials": [
+                "materials/dev/reflectivity_30.vmat"
+              ]
+            },
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "OnObjectTriggerEnter": null,
+            "OnObjectTriggerExit": null,
+            "OnTriggerEnter": null,
+            "OnTriggerExit": null,
+            "RenderType": "Off",
+            "RollingResistance": null,
+            "SmoothingAngle": 40,
+            "Static": true,
+            "Surface": null,
+            "SurfaceVelocity": "0,0,0"
+          },
+          {
+            "__type": "TriggerTeleport",
+            "__guid": "6466df6f-f01a-4ed0-a349-f5d7807611f9",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Spawn": {
+              "_type": "gameobject",
+              "go": "b8f725df-e30f-46cd-a460-4fc95f8ca2b9"
+            }
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "175471b6-b286-4a3b-8b80-2b5bb821d146",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "TriggerPunch",
+        "Position": "-88,712,-24",
+        "Rotation": "0,0,0.707106769,0.707106769",
+        "Scale": "1,2.78947353,2.84210539",
+        "Tags": "world",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.MeshComponent",
+            "__guid": "425b7adc-8663-46d0-9dfb-04e676bacf7a",
+            "__enabled": true,
+            "Flags": 0,
+            "ColliderFlags": 0,
+            "Collision": "Hull",
+            "Color": "0.26667,1,0,0.54",
+            "Elasticity": null,
+            "Friction": null,
+            "HideInGame": true,
+            "IsTrigger": true,
+            "Mesh": {
+              "Data": "AQAAAAcAAAAIAAAAdG9wb2xvZ3nEAQAACAAAABgAAAAGAAAAAAAAAAIAAAAEAAAABgAAAAgAAAAKAAAADAAAAA4AAAABAAAAAQAAAAIAAAAAAAAAAAAAAAAAAAARAAAABQAAAAIAAAADAAAABAAAAAAAAAABAAAAAgAAABQAAAADAAAAAwAAAAUAAAAGAAAAAAAAAAIAAAAEAAAAFwAAAAQAAAAAAAAABwAAAAAAAAAAAAAAAwAAAAYAAAASAAAAAgAAAAUAAAAJAAAACgAAAAEAAAAEAAAACAAAABMAAAAEAAAABgAAAAsAAAAMAAAAAQAAAAUAAAAKAAAAFgAAAAMAAAAHAAAADQAAAA4AAAABAAAABgAAAAwAAAAVAAAABQAAAAQAAAAPAAAACAAAAAEAAAAHAAAADgAAABAAAAACAAAAAAAAABEAAAAHAAAAAgAAAAcAAAAQAAAADQAAAAUAAAAEAAAAEwAAAA8AAAACAAAAAwAAABIAAAAFAAAABAAAAAYAAAAVAAAACwAAAAMAAAABAAAAFAAAAAEAAAAFAAAAAgAAABcAAAADAAAAAwAAAAUAAAAWAAAACQAAAAQAAAAGAAAADgAAABIAAAAWAAAAFwAAABUAAAAJAAAAcG9zaXRpb25zYAAAAAAAGMMAANjC4PwfQgAAGEMAANjC4PwfQgAAGEMAANhC4PwfQgAAGMMAANhC4PwfQgAAGMMAANhC4PwfwgAAGEMAANhC4PwfwgAAGEMAANjC4PwfwgAAGMMAANjC4PwfwgYAAABibGVuZHNgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAGNvbG9yc2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAdGV4Y29vcmTAAAAAAACQPwAAisAAAKC/AAAQvwAAkD8AAMDAAACKQAAAEL8AAKC/AADAwAAAkL8AABC/AACgvwAAisAAAMDAAAAQvwAAkD8AAMDAAACgPwDOfz0AAJA/AACKwAAAwEAAzn89AACgvwAAisAAAJA/AM5/PQAAoL8AAMDAAACKwADOfz0AAIrAAAAQvwAAoL8Azn89AADAwADOfz0AAKA/AAAQvwAAikAAzn89AACQPwAAEL8AAMBAAAAQvwAAkL8Azn89DQAAAG1hdGVyaWFsaW5kZXgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQAAAGVkZ2VmbGFnc2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+              "Materials": [
+                "materials/dev/reflectivity_30.vmat"
+              ]
+            },
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "OnObjectTriggerEnter": null,
+            "OnObjectTriggerExit": null,
+            "OnTriggerEnter": null,
+            "OnTriggerExit": null,
+            "RenderType": "On",
+            "RollingResistance": null,
+            "SmoothingAngle": 40,
+            "Static": true,
+            "Surface": null,
+            "SurfaceVelocity": "0,0,0"
+          },
+          {
+            "__type": "TriggerPropPush",
+            "__guid": "43eb4878-fce7-42d5-bb12-f8fef4814013",
+            "__enabled": true,
+            "Flags": 0,
+            "DirectionOffset": "0.100000001,0,0.100000001",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "PushDirection": "0,-1,0",
+            "SpeedMultiplierMax": 2300,
+            "SpeedMultiplierMin": 1800
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "21d2e4ff-6fe8-4efc-9261-e055f027841b",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Spawn Props",
+        "Position": "-189.316986,1992.87341,1762.15356",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [],
+        "Children": [
+          {
+            "__guid": "8d56113c-00a4-443c-ae9d-81807edab073",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Spawn Prop (3)",
+            "Position": "-217.946014,-489.419678,-652.659058",
+            "Rotation": "0.00843336619,0.00884038024,-0.690202534,0.723513246",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "bfe5bfe1-d39a-486a-9a3e-7302712b5fed",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Spawn Prop (2)",
+            "Position": "549.201904,-453.248047,-652.659058",
+            "Rotation": "0.00843336619,0.00884038024,-0.690202534,0.723513246",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "e3074134-9a30-4700-be28-fff2b32bdb59",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Spawn Prop (1)",
+            "Position": "389.379486,-460.783813,-652.65918",
+            "Rotation": "0.00843336619,0.00884038024,-0.690202534,0.723513246",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "6d23396c-a672-4bd5-8495-73e63e8fc275",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Spawn Prop",
+            "Position": "157.773163,-471.704468,-652.65918",
+            "Rotation": "0.00843336619,0.00884038024,-0.690202534,0.723513246",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          }
+        ]
+      }
+    ],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [
+    "facepunch.big_button#141958"
+  ],
+  "__version": 2
+}

@@ -141,6 +141,20 @@ public sealed class Player : Component, Component.IDamageable
 		ApplyRoleState();
 	}
 
+	public void PrepareForMapLoadingServer()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		DestroyRagdollServer();
+		IsAlive = false;
+		RoleEnum = RoleTrashCompactor.Spectator;
+		Health = MaxHealth;
+		HasRoundSpawn = false;
+		_lockSpectatorCamera = false;
+		ApplyRoleState();
+	}
+
 	public void SpawnForCurrentRoleServer()
 	{
 		if ( !Networking.IsHost )

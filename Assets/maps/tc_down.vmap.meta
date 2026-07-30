@@ -1,0 +1,26 @@
+{
+  "publish": {
+    "Enabled": true,
+    "ProjectConfig": {
+      "Title": "Down | Trash Compactor",
+      "Type": "map",
+      "Org": "titanovsky",
+      "Ident": "tc_down",
+      "Schema": 0,
+      "IncludeSourceFiles": false,
+      "Resources": null,
+      "PackageReferences": [],
+      "EditorReferences": [
+        "facepunch.rustc#292989",
+        "rustextended.roof_plating_a#43365",
+        "twothieves.tconcretefloor013c#159135"
+      ],
+      "Mounts": null,
+      "IsStandaloneOnly": false,
+      "Metadata": {
+        "SingleAssetSource": "maps/tc_down.vmap",
+        "ParentPackage": "ambi.tc"
+      }
+    }
+  }
+}

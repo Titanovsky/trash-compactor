@@ -12,7 +12,7 @@
   "IsStandaloneOnly": false,
   "Metadata": {
     "MaxPlayers": 20,
-    "MinPlayers": 2,
+    "MinPlayers": 1,
     "TickRate": 50,
     "GameNetworkType": "Multiplayer",
     "MapSelect": "Unrestricted",
@@ -24,12 +24,13 @@
     "LeaderboardType": "None",
     "CsProjName": "",
     "StartupScene": "scenes/game.scene",
-    "LaunchMode": "QuickPlay",
+    "LaunchMode": "Launcher",
     "DedicatedServerStartupScene": "scenes/game.scene",
     "ControlModes": {
       "Keyboard": true,
       "VR": false,
       "Gamepad": false
-    }
+    },
+    "MapStartupScene": "scenes/game.scene"
   }
 }

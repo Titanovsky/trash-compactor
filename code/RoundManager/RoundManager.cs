@@ -24,6 +24,7 @@ public class RoundManager : Component
 	private readonly List<Player> _trashmanHistory = new();
 	private readonly List<Player> _registeredPlayers = new();
 	private readonly List<Player> _pendingRegistrations = new();
+	private bool _isMapReadyServer;
 
 	public void RegisterPlayerServer( Player player )
 	{
@@ -32,6 +33,13 @@ public class RoundManager : Component
 
 		if ( _registeredPlayers.Contains( player ) || _pendingRegistrations.Contains( player ) )
 			return;
+
+		if ( !_isMapReadyServer )
+		{
+			_pendingRegistrations.Add( player );
+			player.PrepareForMapLoadingServer();
+			return;
+		}
 
 		var role = State == RoundState.Started
 			? RoleTrashCompactor.Spectator
@@ -73,11 +81,20 @@ public class RoundManager : Component
 		if ( !Networking.IsHost )
 			return;
 
-		if ( State == RoundState.None )
-			StartIntermissionServer();
-
 		RemoveInvalidPlayersServer();
+
+		if ( !_isMapReadyServer )
+			return;
+
 		ProcessPendingRegistrationsServer();
+
+		if ( State is RoundState.None or RoundState.PreStarted )
+		{
+			if ( GetPlayersServer().Count > 0 )
+				StartRoundServer();
+
+			return;
+		}
 
 		if ( State == RoundState.Started && HandleActiveRoundStateServer() )
 			return;
@@ -127,6 +144,40 @@ public class RoundManager : Component
 
 		SpawnerTrash.Instance?.FinalizeRoundStartServer();
 		PlayRoundStartSoundRpc();
+	}
+
+	public void SetMapLoadingServer()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		_isMapReadyServer = false;
+		State = RoundState.PreStarted;
+		RoundNumber = 0;
+		LastWinner = RoundWinner.None;
+		IsSoloRound = false;
+		SyncedEndTime = 0f;
+
+		SpawnerTrash.Instance?.ClearForMapUnloadServer();
+		_trashmanHistory.Clear();
+		_registeredPlayers.Clear();
+		_pendingRegistrations.Clear();
+
+		foreach ( var player in GetPlayersServer() )
+		{
+			player.PrepareForMapLoadingServer();
+			_pendingRegistrations.Add( player );
+		}
+	}
+
+	public void SetMapReadyServer()
+	{
+		if ( !Networking.IsHost || !MapInfo.Instance.IsValid() )
+			return;
+
+		_isMapReadyServer = true;
+		State = RoundState.PreStarted;
+		SyncedEndTime = 0f;
 	}
 
 	private void FinishRoundServer( RoundWinner winner )
@@ -304,6 +355,9 @@ public class RoundManager : Component
 
 	private bool CanSpawnRoleServer( RoleTrashCompactor role )
 	{
+		if ( !_isMapReadyServer || !MapInfo.Instance.IsValid() )
+			return false;
+
 		var spawns = Role.Create( role ).GetSpawns( MapInfo.Instance );
 		return spawns.Any( spawn => spawn.IsValid() );
 	}
@@ -396,7 +450,7 @@ public class RoundManager : Component
 
 	protected override void OnStart()
 	{
-		StartIntermissionServer();
+		SetMapLoadingServer();
 	}
 
 	protected override void OnUpdate()
