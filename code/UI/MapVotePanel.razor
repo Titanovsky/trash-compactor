@@ -1,19 +1,152 @@
+@using System;
+@using System.Collections.Generic;
+@using System.Threading.Tasks;
 @using Sandbox;
 @using Sandbox.UI;
 @inherits PanelComponent
 @namespace Sandbox
 
-<root>
-	<div class="title">@MyStringValue</div>
+<root class="@(IsOpen ? "open" : "closed")">
+	@if ( IsOpen )
+	{
+		<div class="vote-panel">
+			<div class="header">
+				<div class="title">VOTE MAP</div>
+				<div class="timer">@VoteSecondsLeft</div>
+			</div>
+
+			<div class="current-map">CURRENT MAP: @GetMapTitle( Manager?.CurrentMapPackageId ?? string.Empty )</div>
+
+			@if ( HasVoted )
+			{
+				<div class="selected">
+					<div class="selected-label">YOU CHOSE</div>
+					<div class="selected-map">@GetMapTitle( _selectedMapName )</div>
+				</div>
+			}
+
+			<div class="map-list">
+				@foreach ( var mapName in GameManager.MapVoteChoices )
+				{
+					<button class="@GetMapButtonClass( mapName )" onclick=@(() => VoteForMap( mapName ))>
+						@if ( !string.IsNullOrWhiteSpace( GetMapThumbnail( mapName ) ) )
+						{
+							<img class="map-thumbnail" src="@GetMapThumbnail( mapName )" />
+						}
+						else
+						{
+							<div class="map-thumbnail map-thumbnail-placeholder"></div>
+						}
+
+						<div class="map-info">
+							<div class="map-name">@GetMapTitle( mapName )</div>
+							<div class="vote-count">@GetVotes( mapName ) VOTES</div>
+						</div>
+					</button>
+				}
+			</div>
+		</div>
+	}
 </root>
 
 @code
 {
+	private GameManager Manager => GameManager.Instance;
+	private bool IsOpen => Manager?.IsMapVoteOpen == true;
+	private bool HasVoted => IsOpen && !string.IsNullOrWhiteSpace( _selectedMapName );
+	private int VoteSecondsLeft => (int)MathF.Ceiling( Manager?.MapVoteSecondsLeft ?? 0f );
 
-	[Property, TextArea] public string MyStringValue { get; set; } = "Hello World!";
+	private readonly Dictionary<string, Package> _packages = new();
+	private string _selectedMapName;
+	private bool _wasOpen;
 
-	/// <summary>
-	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
-	/// </summary>
-	protected override int BuildHash() => System.HashCode.Combine( MyStringValue );
+	protected override void OnStart()
+	{
+		_ = LoadPackagesAsync();
+	}
+
+	protected override void OnUpdate()
+	{
+		var isOpen = IsOpen;
+		if ( !isOpen && _wasOpen )
+			_selectedMapName = null;
+
+		_wasOpen = isOpen;
+		Mouse.Visibility = isOpen || Input.Down( "Score" )
+			? MouseVisibility.Visible
+			: MouseVisibility.Hidden;
+	}
+
+	private async Task LoadPackagesAsync()
+	{
+		foreach ( var mapName in GameManager.MapVoteChoices )
+		{
+			try
+			{
+				var package = await Package.FetchAsync( mapName, true );
+				if ( package is null )
+					continue;
+
+				_packages[mapName] = package;
+				StateHasChanged();
+			}
+			catch ( Exception exception )
+			{
+				Log.Warning( $"[MapVotePanel] Failed to load package info for {mapName}: {exception.Message}" );
+			}
+		}
+	}
+
+	private void VoteForMap( string mapName )
+	{
+		if ( !IsOpen )
+			return;
+
+		_selectedMapName = mapName;
+		Log.Info( $"[MapVotePanel] Vote button clicked: {mapName}" );
+		Manager?.VoteForMap( mapName );
+		StateHasChanged();
+	}
+
+	private string GetMapButtonClass( string mapName )
+	{
+		return string.Equals( _selectedMapName, mapName, StringComparison.OrdinalIgnoreCase )
+			? "map-button chosen"
+			: "map-button";
+	}
+
+	private int GetVotes( string mapName )
+	{
+		return Manager?.GetMapVoteCount( mapName ) ?? 0;
+	}
+
+	private string GetMapTitle( string mapName )
+	{
+		var versionSeparator = mapName.IndexOf( '#' );
+		var packageId = versionSeparator >= 0 ? mapName[..versionSeparator] : mapName;
+		if ( _packages.TryGetValue( packageId, out var package ) && !string.IsNullOrWhiteSpace( package.Title ) )
+			return package.Title;
+
+		return packageId;
+	}
+
+	private string GetMapThumbnail( string mapName )
+	{
+		return _packages.TryGetValue( mapName, out var package ) ? package.Thumb : string.Empty;
+	}
+
+	protected override int BuildHash()
+	{
+		var hash = new HashCode();
+		hash.Add( IsOpen );
+		hash.Add( _selectedMapName );
+		hash.Add( VoteSecondsLeft );
+		hash.Add( Manager?.CurrentMapPackageId );
+		hash.Add( _packages.Count );
+
+		foreach ( var mapName in GameManager.MapVoteChoices )
+			hash.Add( GetVotes( mapName ) );
+
+		return hash.ToHashCode();
+	}
 }

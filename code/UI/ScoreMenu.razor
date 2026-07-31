@@ -11,6 +11,15 @@
 
 <root>
 	<div class="scoreboard">
+		@if ( Networking.IsHost )
+		{
+			<div class="scoreboard-actions">
+				<button class="@ForceVoteButtonClass" onclick=@ForceMapVote>
+					FORCE MAP VOTE
+				</button>
+			</div>
+		}
+
 		<div class="scoreboard-list">
 			@{
 				var groups = TeamGroups;
@@ -20,20 +29,31 @@
 			{
 				var group = groups[i];
 				var role = group.Role;
-				var users = group.Users;
+				var rows = group.Rows;
 
 				<div class="team-section @(i > 0 ? "separated" : "")">
 					<div class="team-header">
 						<div class="team-title" style="color: @RoleColor( role )">@TeamName( role )</div>
 					</div>
 
-					@foreach ( var user in users )
+					@foreach ( var row in rows )
 					{
-						<div class="scoreboard-row">
-							<img class="avatar" src="avatar:@user.SteamId" onclick=@( () => OpenProfile( user ) ) />
-							<div class="player-name">@user.DisplayName</div>
-							<div class="player-ping">@user.Ping</div>
-						</div>
+						if ( row.IsBot )
+						{
+							<div class="scoreboard-row bot @(row.IsDead ? "dead" : "")">
+								<div class="avatar bot"></div>
+								<div class="player-name">@row.Name</div>
+								<div class="player-ping">BOT</div>
+							</div>
+						}
+						else
+						{
+							<div class="scoreboard-row">
+								<img class="avatar" src="avatar:@row.SteamId" onclick=@( () => OpenProfile( row.User ) ) />
+								<div class="player-name">@row.Name</div>
+								<div class="player-ping">@row.PingText</div>
+							</div>
+						}
 					}
 				</div>
 			}
@@ -44,6 +64,8 @@
 @code
 {
 	private bool IsOpen => Input.Down( "Score" );
+	private bool CanForceMapVote => GameManager.Instance?.CanRequestMapVote == true;
+	private string ForceVoteButtonClass => CanForceMapVote ? "force-vote-button" : "force-vote-button disabled";
 	private static readonly RoleTrashCompactor[] TeamRoles =
 	[
 		RoleTrashCompactor.Trashman,
@@ -55,14 +77,47 @@
 		.Select( role => new TeamGroup
 		{
 			Role = role,
-			Users = UsersForRole( role ).ToList()
+			Rows = RowsForRole( role ).ToList()
 		} )
-		.Where( group => group.Users.Count > 0 )
+		.Where( group => group.Rows.Count > 0 )
 		.ToList();
 
-	private IEnumerable<Connection> UsersForRole( RoleTrashCompactor role )
+	private IEnumerable<ScoreRow> RowsForRole( RoleTrashCompactor role )
 	{
-		return Connection.All.Where( user => GetRole( user ) == role );
+		var rows = Connection.All
+			.Where( user => GetRole( user ) == role )
+			.Select( user => new ScoreRow
+			{
+				User = user,
+				Name = user.DisplayName,
+				SteamId = user.SteamId,
+				PingText = user.Ping.ToString(),
+				IsBot = false,
+				IsDead = false
+			} )
+			.ToList();
+
+		if ( role == RoleTrashCompactor.Survival )
+		{
+			rows.AddRange( NpcRows() );
+		}
+
+		return rows;
+	}
+
+	private IEnumerable<ScoreRow> NpcRows()
+	{
+		return NpcSurvivor.All
+			.Where( npc => npc.IsValid() )
+			.Select( npc => new ScoreRow
+			{
+				User = null,
+				Name = npc.GetName(),
+				SteamId = 0,
+				PingText = "BOT",
+				IsBot = true,
+				IsDead = !npc.IsAlive
+			} );
 	}
 
 	private Player FindPlayer( Connection user )
@@ -108,13 +163,26 @@
 
 	private void OpenProfile( Connection user )
 	{
+		if ( user is null )
+			return;
+
 		Game.Overlay.ShowPlayer( user.SteamId );
+	}
+
+	private void ForceMapVote()
+	{
+		if ( !CanForceMapVote )
+			return;
+
+		GameManager.Instance?.RequestMapVote();
 	}
 
 	protected override int BuildHash()
 	{
 		var hash = new HashCode();
 		hash.Add( IsOpen );
+		hash.Add( Networking.IsHost );
+		hash.Add( CanForceMapVote );
 
 		if ( !IsOpen )
 			return hash.ToHashCode();
@@ -130,12 +198,33 @@
 			hash.Add( GetRole( user ) );
 		}
 
+		hash.Add( NpcSurvivor.All.Count );
+
+		foreach ( var npc in NpcSurvivor.All )
+		{
+			if ( !npc.IsValid() )
+				continue;
+
+			hash.Add( npc.GetName() );
+			hash.Add( npc.IsAlive );
+		}
+
 		return hash.ToHashCode();
 	}
 
 	private sealed class TeamGroup
 	{
 		public RoleTrashCompactor Role { get; set; }
-		public List<Connection> Users { get; set; }
+		public List<ScoreRow> Rows { get; set; }
+	}
+
+	private sealed class ScoreRow
+	{
+		public Connection User { get; set; }
+		public string Name { get; set; }
+		public ulong SteamId { get; set; }
+		public string PingText { get; set; } = "";
+		public bool IsBot { get; set; }
+		public bool IsDead { get; set; }
 	}
 }

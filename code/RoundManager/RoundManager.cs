@@ -8,7 +8,7 @@ public class RoundManager : Component
 	[Property, Description( "Duration of a standard round in seconds." )] public float RoundTime { get; set; } = 60f;
 	[Property, Description( "Duration of a solo round (single player) in seconds." )] public float SoloRoundTime { get; set; } = 60f;
 	[Property, Description( "Duration of the intermission phase between rounds in seconds." )] public float IntermissionTime { get; set; } = 5f;
-	[Property, Description( "Number of rounds played before a map vote is triggered." )] public int MaxRoundsBeforeVote { get; set; } = 10;
+	[Property, Description( "Number of completed rounds before a map vote is triggered. Set to 0 to disable automatic voting." )] public int MaxRoundsBeforeVote { get; set; } = 2;
     [Property] public SoundEvent PlayerDeadSound { get; set; }
     [Property] public SoundEvent RoundStartSound { get; set; }
     [Property] public SoundEvent ButtonClickSound { get; set; }
@@ -17,6 +17,7 @@ public class RoundManager : Component
 	[Sync( SyncFlags.FromHost )] public int RoundNumber { get; private set; } = 0;
 	[Sync( SyncFlags.FromHost )] public float SyncedEndTime { get; private set; } = 0f;
 	[Sync( SyncFlags.FromHost )] public bool IsSoloRound { get; private set; }
+	[Sync( SyncFlags.FromHost )] public bool IsSoloTrashmanRound { get; private set; }
 	[Sync( SyncFlags.FromHost )] public RoundWinner LastWinner { get; private set; } = RoundWinner.None;
 
 	public float TimeLeft => MathF.Max( SyncedEndTime - Time.Now, 0f );
@@ -34,7 +35,7 @@ public class RoundManager : Component
 		if ( _registeredPlayers.Contains( player ) || _pendingRegistrations.Contains( player ) )
 			return;
 
-		if ( !_isMapReadyServer )
+		if ( !_isMapReadyServer || State == RoundState.MapVote )
 		{
 			_pendingRegistrations.Add( player );
 			player.PrepareForMapLoadingServer();
@@ -64,7 +65,8 @@ public class RoundManager : Component
 			return;
 
 		var hasAliveTrashman = GetPlayersServer().Any( player => player.IsAlive && player.RoleEnum == RoleTrashCompactor.Trashman );
-		var hasAliveSurvival = GetPlayersServer().Any( player => player.IsAlive && player.RoleEnum == RoleTrashCompactor.Survival );
+		var hasAliveSurvival = GetPlayersServer().Any( player => player.IsAlive && player.RoleEnum == RoleTrashCompactor.Survival )
+			|| HasAliveNpcSurvivorsServer();
 
 		if ( !IsSoloRound && !hasAliveTrashman )
 		{
@@ -76,6 +78,11 @@ public class RoundManager : Component
 			FinishRoundServer( RoundWinner.Trashman );
 	}
 
+	private bool HasAliveNpcSurvivorsServer()
+	{
+		return IsSoloTrashmanRound && NpcManager.Instance.IsValid() && NpcManager.Instance.AliveNpcCountServer() > 0;
+	}
+
 	private void UpdateRoundAuthorityServer()
 	{
 		if ( !Networking.IsHost )
@@ -84,6 +91,9 @@ public class RoundManager : Component
 		RemoveInvalidPlayersServer();
 
 		if ( !_isMapReadyServer )
+			return;
+
+		if ( State == RoundState.MapVote )
 			return;
 
 		ProcessPendingRegistrationsServer();
@@ -104,6 +114,8 @@ public class RoundManager : Component
 
 		if ( State == RoundState.Started )
 			FinishRoundServer( RoundWinner.Survival );
+		else if ( State == RoundState.Finished && IsMapVoteDueServer() )
+			GameManager.Instance?.RequestMapVote();
 		else
 			StartRoundServer();
 	}
@@ -133,10 +145,9 @@ public class RoundManager : Component
 		}
 
 		RoundNumber++;
-		// TODO: After MaxRoundsBeforeVote, start map vote instead of immediately continuing the round loop.
 
-		SpawnerTrash.Instance?.PrepareRoundServer( players.Count <= 1 );
 		AssignRolesServer( players );
+		SpawnerTrash.Instance?.PrepareRoundServer( IsSoloRound && !IsSoloTrashmanRound );
 
 		LastWinner = RoundWinner.None;
 		State = RoundState.Started;
@@ -156,8 +167,10 @@ public class RoundManager : Component
 		RoundNumber = 0;
 		LastWinner = RoundWinner.None;
 		IsSoloRound = false;
+		IsSoloTrashmanRound = false;
 		SyncedEndTime = 0f;
 
+		NpcManager.Instance?.ClearNpcsServer();
 		SpawnerTrash.Instance?.ClearForMapUnloadServer();
 		_trashmanHistory.Clear();
 		_registeredPlayers.Clear();
@@ -176,6 +189,34 @@ public class RoundManager : Component
 			return;
 
 		_isMapReadyServer = true;
+		State = RoundState.PreStarted;
+		SyncedEndTime = 0f;
+	}
+
+	public void BeginMapVoteServer()
+	{
+		if ( !Networking.IsHost || !_isMapReadyServer || State == RoundState.MapVote )
+			return;
+
+		State = RoundState.MapVote;
+		LastWinner = RoundWinner.None;
+		IsSoloRound = false;
+		IsSoloTrashmanRound = false;
+		SyncedEndTime = 0f;
+		NpcManager.Instance?.ClearNpcsServer();
+		SpawnerTrash.Instance?.ClearForMapVoteServer();
+
+		foreach ( var player in GetPlayersServer() )
+			player.PrepareForMapLoadingServer();
+	}
+
+	public void ResumeAfterMapVoteServer()
+	{
+		if ( !Networking.IsHost || !_isMapReadyServer || State != RoundState.MapVote )
+			return;
+
+		RoundNumber = 0;
+		LastWinner = RoundWinner.None;
 		State = RoundState.PreStarted;
 		SyncedEndTime = 0f;
 	}
@@ -201,6 +242,7 @@ public class RoundManager : Component
 		LastWinner = RoundWinner.None;
 		SyncedEndTime = Time.Now;
 
+		NpcManager.Instance?.ClearNpcsServer();
 		SpawnerTrash.Instance?.FinishRoundServer();
 		StartRoundServer();
 	}
@@ -209,13 +251,15 @@ public class RoundManager : Component
 	{
 		IsSoloRound = players.Count <= 1;
 
+		NpcManager.Instance?.ClearNpcsServer();
+
 		if ( IsSoloRound )
 		{
-			foreach ( var player in players )
-				player.RespawnForRoundServer( RoleTrashCompactor.Survival );
-
+			AssignSoloRoleServer( players );
 			return;
 		}
+
+		IsSoloTrashmanRound = false;
 
 		var trashmanCount = Math.Max( 1, (int)MathF.Ceiling( players.Count / 4f ) );
 		var trashmen = SelectTrashmenServer( players, trashmanCount );
@@ -228,6 +272,27 @@ public class RoundManager : Component
 
 			player.RespawnForRoundServer( role );
 		}
+	}
+
+	private void AssignSoloRoleServer( List<Player> players )
+	{
+		var wantsTrashmanRound = RoundNumber % 2 == 0;
+		var canSpawnNpcs = wantsTrashmanRound && NpcManager.Instance.IsValid() && NpcManager.Instance.CanSpawnNpcsServer();
+
+		if ( wantsTrashmanRound && !canSpawnNpcs )
+			Log.Warning( "[RoundManager] Solo Trashman round requested but NPCs cannot be spawned. Falling back to the Survival solo round." );
+
+		IsSoloTrashmanRound = canSpawnNpcs;
+
+		var role = canSpawnNpcs
+			? RoleTrashCompactor.Trashman
+			: RoleTrashCompactor.Survival;
+
+		foreach ( var player in players )
+			player.RespawnForRoundServer( role );
+
+		if ( canSpawnNpcs )
+			NpcManager.Instance.SpawnNpcsServer();
 	}
 
 	private List<Player> SelectTrashmenServer( List<Player> players, int trashmanCount )
@@ -284,7 +349,15 @@ public class RoundManager : Component
 		}
 
 		if ( IsSoloRound )
+		{
+			if ( IsSoloTrashmanRound && !HasAliveNpcSurvivorsServer() )
+			{
+				FinishRoundServer( RoundWinner.Trashman );
+				return true;
+			}
+
 			return false;
+		}
 
 		var hasTrashman = players.Any( player => player.RoleEnum == RoleTrashCompactor.Trashman );
 		if ( !hasTrashman )
@@ -312,6 +385,7 @@ public class RoundManager : Component
 		LastWinner = RoundWinner.None;
 		SyncedEndTime = Time.Now;
 
+		NpcManager.Instance?.ClearNpcsServer();
 		SpawnerTrash.Instance?.FinishRoundServer();
 		StartRoundServer();
 	}
@@ -362,6 +436,12 @@ public class RoundManager : Component
 		return spawns.Any( spawn => spawn.IsValid() );
 	}
 
+	private bool IsMapVoteDueServer()
+	{
+		return MaxRoundsBeforeVote > 0
+			&& RoundNumber >= MaxRoundsBeforeVote;
+	}
+
 	private void RemoveInvalidPlayersServer()
 	{
 		_registeredPlayers.RemoveAll( player => !player.IsValid() );
@@ -394,6 +474,18 @@ public class RoundManager : Component
 			return;
 
 		var killerName = string.IsNullOrWhiteSpace( killer.Name ) ? "Trashman" : killer.Name;
+
+		PublishKillFeedRpc( killerName, victimName, false );
+	}
+
+	public void PublishNpcKillFeedServer( string npcName )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		var killer = GetPlayersServer().FirstOrDefault( player => player.IsValid() && player.IsTrashman );
+		var killerName = killer.IsValid() && !string.IsNullOrWhiteSpace( killer.Name ) ? killer.Name : "Trashman";
+		var victimName = string.IsNullOrWhiteSpace( npcName ) ? "Survivor" : npcName;
 
 		PublishKillFeedRpc( killerName, victimName, false );
 	}

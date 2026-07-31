@@ -104,7 +104,7 @@
           "Flags": 0,
           "ButtonClickSound": "sounds/click.sound",
           "IntermissionTime": 5,
-          "MaxRoundsBeforeVote": 10,
+          "MaxRoundsBeforeVote": 12,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -115,6 +115,35 @@
           "RoundStartSound": "sounds/ding.sound",
           "RoundTime": 70,
           "SoloRoundTime": 60
+        },
+        {
+          "__type": "NpcManager",
+          "__guid": "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
+          "__enabled": true,
+          "Flags": 0,
+          "MaxNpcCount": 3,
+          "NpcNames": [
+            "Zhora",
+            "Tolyan",
+            "Kabanchik",
+            "Vasyan",
+            "Pahan",
+            "Semen",
+            "Kolyan",
+            "Vitalik",
+            "Sanya",
+            "Gena"
+          ],
+          "NpcPrefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/npc.prefab"
+          },
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
         }
       ],
       "Children": []
@@ -257,6 +286,18 @@
         {
           "__type": "Sandbox.KillFeed",
           "__guid": "8d07d972-354b-4260-becf-a0f7a27cb850",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        },
+        {
+          "__type": "Sandbox.MapVotePanel",
+          "__guid": "fedf0d2b-1046-44c0-8282-7b3a0616507d",
           "__enabled": true,
           "Flags": 0,
           "OnComponentDestroy": null,

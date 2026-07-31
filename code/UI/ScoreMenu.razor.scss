@@ -55,6 +55,40 @@ ScoreMenu
 		overflow: scroll;
 	}
 
+	.scoreboard-actions
+	{
+		width: 100%;
+		justify-content: flex-end;
+	}
+
+	.force-vote-button
+	{
+		height: 38px;
+		padding: 0 16px;
+		justify-content: center;
+		align-items: center;
+		background-color: #df5151;
+		border: 0;
+		border-radius: 6px;
+		color: #fff;
+		font-family: Poppins;
+		font-size: 15px;
+		font-weight: 800;
+		cursor: pointer;
+		pointer-events: all;
+	}
+
+	.force-vote-button:hover
+	{
+		background-color: #ef6767;
+	}
+
+	.force-vote-button.disabled
+	{
+		opacity: 0.4;
+		pointer-events: none;
+	}
+
 	.team-section
 	{
 		flex-direction: column;
@@ -99,6 +133,11 @@ ScoreMenu
 		border-radius: 6px;
 	}
 
+	.scoreboard-row.dead
+	{
+		opacity: 0.45;
+	}
+
 	.avatar
 	{
 		width: 42px;
@@ -106,6 +145,13 @@ ScoreMenu
 		border-radius: 6px;
 		cursor: pointer;
 		flex-shrink: 0;
+	}
+
+	.avatar.bot
+	{
+		cursor: default;
+		background-color: rgba( 255, 255, 255, 0.12 );
+		border: 1px solid rgba( 255, 255, 255, 0.22 );
 	}
 
 	.player-name

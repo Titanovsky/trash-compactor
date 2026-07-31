@@ -3,17 +3,28 @@
 @inherits PanelComponent
 @namespace Sandbox
 
-<root>
-	<div class="title">@MyStringValue</div>
+<root class="@PanelState">
+	@if ( IsMapLoading )
+	{
+		<div class="loading-title">Map Loading...</div>
+	}
+	else if ( IsWaitingForHost )
+	{
+		<div class="loading-title">Waiting the host...</div>
+	}
 </root>
 
 @code
 {
+	private GameManager Manager => GameManager.Instance;
 
-	[Property, TextArea] public string MyStringValue { get; set; } = "Hello World!";
+	private bool IsMapLoading => Manager?.IsLocalMapLoadedForCurrentRevision != true;
+	private bool IsWaitingForHost => !Networking.IsHost
+		&& !IsMapLoading
+		&& Manager?.IsHostReadyForCurrentMap != true;
+	private string PanelState => IsMapLoading
+		? "loading"
+		: IsWaitingForHost ? "waiting" : "loaded";
 
-	/// <summary>
-	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
-	/// </summary>
-	protected override int BuildHash() => System.HashCode.Combine( MyStringValue );
+	protected override int BuildHash() => System.HashCode.Combine( PanelState );
 }

@@ -44,18 +44,42 @@
             "OnComponentStart": null,
             "OnComponentUpdate": null,
             "SoloTrashPropSpawns": [
-              null
+              {
+                "_type": "gameobject",
+                "go": "60e04447-94d7-49cf-9d22-96aa81be5817"
+              }
             ],
             "SpawnSpectors": [
-              null
+              {
+                "_type": "gameobject",
+                "go": "c9f6213e-222a-4b88-9baa-d2534569b60b"
+              }
             ],
             "SpawnSurvivals": [
-              null,
-              null,
-              null,
-              null,
-              null,
-              null
+              {
+                "_type": "gameobject",
+                "go": "5b83841c-f471-44a4-af12-4c6691a82960"
+              },
+              {
+                "_type": "gameobject",
+                "go": "095d7c31-9ed7-4e05-a050-80ad535db147"
+              },
+              {
+                "_type": "gameobject",
+                "go": "94c011ff-4f65-452a-af71-c75db15a3e29"
+              },
+              {
+                "_type": "gameobject",
+                "go": "1b9b2232-4433-4e88-b898-8bb8fcb5b9b4"
+              },
+              {
+                "_type": "gameobject",
+                "go": "a7f23521-deeb-46ad-9c3c-ec83b55fd322"
+              },
+              {
+                "_type": "gameobject",
+                "go": "c9f6213e-222a-4b88-9baa-d2534569b60b"
+              }
             ],
             "SpawnTrashmans": [
               {
@@ -66,14 +90,32 @@
                 "_type": "gameobject",
                 "go": "33e84f0c-7080-472a-8a2b-8c072a717b4a"
               },
-              null,
-              null
+              {
+                "_type": "gameobject",
+                "go": "9e3d370d-5708-49fa-9fb6-edb567bf9495"
+              },
+              {
+                "_type": "gameobject",
+                "go": "23eecb10-9f3d-4c26-a239-7a2e1dfce6e7"
+              }
             ],
             "TrashPropSpawns": [
-              null,
-              null,
-              null,
-              null
+              {
+                "_type": "gameobject",
+                "go": "8db29edb-fce2-4ac3-a9d8-bd8a7052f93e"
+              },
+              {
+                "_type": "gameobject",
+                "go": "905c3e5f-754b-4040-a366-a6d318037a3a"
+              },
+              {
+                "_type": "gameobject",
+                "go": "32d0edd8-4010-4a69-8d4a-256e4f7f4ece"
+              },
+              {
+                "_type": "gameobject",
+                "go": "23eecb10-9f3d-4c26-a239-7a2e1dfce6e7"
+              }
             ]
           }
         ],
@@ -244,7 +286,7 @@
         "__version": 2,
         "Flags": 0,
         "Name": "Text (2)",
-        "Position": "1544,192.530197,320",
+        "Position": "1544,192.530197,312",
         "Rotation": "0,0,-1,1.49011612E-07",
         "Scale": "1,1,1",
         "Tags": "",
@@ -324,7 +366,7 @@
         "__version": 2,
         "Flags": 0,
         "Name": "Text (1)",
-        "Position": "1544,217.150604,312",
+        "Position": "1544,248,312",
         "Rotation": "0,0,-1,1.49011612E-07",
         "Scale": "1,1,1",
         "Tags": "",
@@ -458,7 +500,7 @@
         "__version": 2,
         "Flags": 0,
         "Name": "Block (1)",
-        "Position": "1544,217.150604,280",
+        "Position": "1544,248,280",
         "Rotation": "0,0,-0.70710659,0.707106829",
         "Scale": "1,1,1",
         "Tags": "world",
@@ -604,7 +646,12 @@
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null,
-            "Trigger": null
+            "Trigger": {
+              "_type": "component",
+              "component_id": "07767fe5-19a7-4f30-a1c4-872baf222585",
+              "go": "c16120e7-5bd8-4d33-ba3a-add2985320a5",
+              "component_type": "TriggerPropPush"
+            }
           }
         ],
         "Children": []
@@ -614,7 +661,7 @@
         "__version": 2,
         "Flags": 0,
         "Name": "big_button",
-        "Position": "1547.8689,217.150604,296",
+        "Position": "1547.8689,248,296",
         "Rotation": "-0.5,0.499999821,-0.499999851,0.5",
         "Scale": "1,1,1",
         "Tags": "",
@@ -877,8 +924,8 @@
             "__version": 2,
             "Flags": 0,
             "Name": "Spawn Surv",
-            "Position": "-146.2285,-2.10728717,137.091614",
-            "Rotation": "0.00485342275,-0.0527803153,0.0914401263,0.994399011",
+            "Position": "-356.337341,126.979027,393.99588",
+            "Rotation": "0.00636212993,0.173531234,-0.0360815078,0.984146595",
             "Scale": "1,1,1",
             "Tags": "",
             "Enabled": true,
@@ -1005,7 +1052,7 @@
         "__version": 2,
         "Flags": 0,
         "Name": "Props Spawn Point",
-        "Position": "1390.6792,90.3095322,308.553986",
+        "Position": "1366.70691,89.3015671,307.999695",
         "Rotation": "0.0115457093,0.000242624796,-0.999712586,0.0210082438",
         "Scale": "1,1,1",
         "Tags": "",
@@ -1085,6 +1132,10 @@
               {
                 "_type": "gameobject",
                 "prefab": "prefabs/trash/trash10.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/trash/trash_conus.prefab"
               }
             ]
           }
@@ -1096,7 +1147,7 @@
         "__version": 2,
         "Flags": 0,
         "Name": "TriggerTeleport",
-        "Position": "1189.46521,-0.231776237,322.538177",
+        "Position": "1200,-0.231776237,368",
         "Rotation": "0,0,-0.707106769,0.707106769",
         "Scale": "1,1,1",
         "Tags": "world",
@@ -1153,7 +1204,10 @@
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null,
-            "Spawn": null
+            "Spawn": {
+              "_type": "gameobject",
+              "go": "f5ff486e-b554-44ee-83f3-2893c76a6fdd"
+            }
           }
         ],
         "Children": []
@@ -1163,7 +1217,7 @@
         "__version": 2,
         "Flags": 0,
         "Name": "TriggerPunch",
-        "Position": "1472,136,72",
+        "Position": "1392,136,24",
         "Rotation": "0,0,0,1",
         "Scale": "1,2.78947353,2.84210539",
         "Tags": "world",

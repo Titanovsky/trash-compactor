@@ -5,5 +5,6 @@
     Started = 2,
     Paused = 3,
     Finished = 4,
-    PostFinished = 5
+    PostFinished = 5,
+    MapVote = 6
 }

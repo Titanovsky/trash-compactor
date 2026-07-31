@@ -206,6 +206,10 @@
               {
                 "_type": "gameobject",
                 "prefab": "prefabs/trash/trash10.prefab"
+              },
+              {
+                "_type": "gameobject",
+                "prefab": "prefabs/trash/trash_conus.prefab"
               }
             ]
           }

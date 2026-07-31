@@ -1,0 +1,188 @@
+{
+  "RootObject": {
+    "__guid": "6de723e7-952b-4cfe-a5d9-942f8396638c",
+    "__version": 2,
+    "Flags": 0,
+    "Name": "npc",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "npc",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "NetworkFlags": 0,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
+    "Components": [
+      {
+        "__type": "NpcSurvivor",
+        "__guid": "21bb60ce-4777-4bb9-bf58-e7502080bfb5",
+        "__enabled": true,
+        "Flags": 0,
+        "Agent": {
+          "_type": "component",
+          "component_id": "16c5b18a-3cc0-441c-a45f-67c7176996c3",
+          "go": "6de723e7-952b-4cfe-a5d9-942f8396638c",
+          "component_type": "NavMeshAgent"
+        },
+        "AnimationUpdateRate": 10,
+        "CorpseImpulseScale": 1,
+        "CorpseMinImpulse": 400,
+        "MaxHealth": 100,
+        "TurnSpeed": 540,
+        "WanderIntervalMax": 1,
+        "WanderIntervalMin": 0.5,
+        "WanderRadius": 300,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "Renderer": {
+          "_type": "component",
+          "component_id": "81e1dcf3-c57b-4208-912a-fc0421f0313d",
+          "go": "6de723e7-952b-4cfe-a5d9-942f8396638c",
+          "component_type": "SkinnedModelRenderer"
+        }
+      },
+      {
+        "__type": "Sandbox.SkinnedModelRenderer",
+        "__guid": "81e1dcf3-c57b-4208-912a-fc0421f0313d",
+        "__enabled": true,
+        "Flags": 0,
+        "AnimationGraph": null,
+        "BodyGroups": 341,
+        "BoneMergeTarget": null,
+        "CreateAttachments": false,
+        "CreateBoneObjects": false,
+        "LodOverride": null,
+        "MaterialGroup": "default",
+        "MaterialOverride": null,
+        "Materials": null,
+        "Model": "models/citizen/citizen.vmdl",
+        "Morphs": {},
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "Parameters": {
+          "bools": {
+            "b_jump": false
+          },
+          "ints": {
+            "_character_type": 0,
+            "move_style": 0
+          },
+          "floats": {
+            "move_speed": 0,
+            "move_direction": 0,
+            "move_z": 0,
+            "move_y": 0,
+            "move_x": 0
+          },
+          "vectors": {
+            "aim_eyes": "100,0,0",
+            "aim_head": "100,0,0"
+          },
+          "rotations": {}
+        },
+        "PlaybackRate": 1,
+        "RenderOptions": {
+          "GameLayer": true,
+          "OverlayLayer": false,
+          "BloomLayer": false,
+          "AfterUILayer": false
+        },
+        "RenderType": "On",
+        "Sequence": {
+          "Name": null,
+          "Looping": true,
+          "Blending": false
+        },
+        "Tint": "1,1,1,1",
+        "UseAnimGraph": true
+      },
+      {
+        "__type": "Sandbox.NavMeshAgent",
+        "__guid": "16c5b18a-3cc0-441c-a45f-67c7176996c3",
+        "__enabled": true,
+        "Flags": 0,
+        "Acceleration": 555,
+        "AllowDefaultArea": true,
+        "AllowedAreas": [],
+        "AutoTraverseLinks": true,
+        "ForbiddenAreas": [],
+        "Height": 64,
+        "MaxSpeed": 120,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "Radius": 16,
+        "Separation": 0.25,
+        "UpdatePosition": true,
+        "UpdateRotation": false
+      },
+      {
+        "__type": "Sandbox.ModelCollider",
+        "__guid": "9f496275-ea83-4fc4-b542-e1da0419be3b",
+        "__enabled": true,
+        "Flags": 0,
+        "ColliderFlags": 0,
+        "Elasticity": null,
+        "Friction": null,
+        "IsTrigger": false,
+        "Model": "models/citizen/citizen.vmdl",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OnObjectTriggerEnter": null,
+        "OnObjectTriggerExit": null,
+        "OnTriggerEnter": null,
+        "OnTriggerExit": null,
+        "RollingResistance": null,
+        "Static": false,
+        "Surface": null,
+        "SurfaceVelocity": "0,0,0"
+      }
+    ],
+    "Children": [],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [],
+  "__version": 2
+}

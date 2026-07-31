@@ -64,6 +64,15 @@ public sealed class SpawnerTrash : Component
 		RemoveSingleton();
 	}
 
+	public void ClearForMapVoteServer()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		_soloAutoSpawnEnabled = false;
+		ClearSpawnedTrashServer();
+	}
+
 	private void SpawnRoundStockServer()
 	{
 		var spawns = MapInfo.Instance?.TrashPropSpawns ?? new();

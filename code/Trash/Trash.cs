@@ -64,10 +64,27 @@ public sealed class Trash : Component, Component.ICollisionListener
 			return;
 
 		var player = FindPlayer( collision.Other.GameObject );
-		if ( !player.IsValid() || !player.IsAlive || player.IsTrashman )
+		if ( player.IsValid() )
+		{
+			if ( !player.IsAlive || player.IsTrashman )
+				return;
+
+			var playerBody = player.Controller?.Body;
+			ApplyImpactDamage( collision, playerBody.IsValid() ? playerBody.Velocity : Vector3.Zero, player );
+			return;
+		}
+
+		var npc = FindNpc( collision.Other.GameObject );
+		if ( !npc.IsValid() || !npc.IsAlive )
 			return;
 
-		var speed = GetImpactSpeed( collision, player );
+		var agent = npc.Agent;
+		ApplyImpactDamage( collision, agent.IsValid() ? agent.Velocity : Vector3.Zero, npc );
+	}
+
+	private void ApplyImpactDamage( Collision collision, Vector3 targetVelocity, Component.IDamageable target )
+	{
+		var speed = GetImpactSpeed( collision, targetVelocity );
 		const float minSpeed = 150f;
 		if ( speed < minSpeed )
 			return;
@@ -83,20 +100,17 @@ public sealed class Trash : Component, Component.ICollisionListener
 			Position = collision.Contact.Point,
 		};
 
-		((Component.IDamageable)player).OnDamage( info );
+		target.OnDamage( info );
 	}
 
-	private float GetImpactSpeed( Collision collision, Player player )
+	private float GetImpactSpeed( Collision collision, Vector3 targetVelocity )
 	{
 		var contactSpeed = MathF.Abs( collision.Contact.NormalSpeed );
 
 		var trashBody = GameObject.Components.Get<Rigidbody>();
 		var trashVelocity = trashBody.IsValid() ? trashBody.Velocity : Vector3.Zero;
 
-		var playerBody = player.Controller?.Body;
-		var playerVelocity = playerBody.IsValid() ? playerBody.Velocity : Vector3.Zero;
-
-		var relativeSpeed = (trashVelocity - playerVelocity).Length;
+		var relativeSpeed = (trashVelocity - targetVelocity).Length;
 		var trashSpeed = trashVelocity.Length;
 
 		return MathF.Max( contactSpeed, MathF.Max( relativeSpeed, trashSpeed ) );
@@ -120,6 +134,21 @@ public sealed class Trash : Component, Component.ICollisionListener
 			var player = current.Components.Get<Player>();
 			if ( player.IsValid() )
 				return player;
+
+			current = current.Parent;
+		}
+
+		return null;
+	}
+
+	private NpcSurvivor FindNpc( GameObject gameObject )
+	{
+		var current = gameObject;
+		while ( current.IsValid() )
+		{
+			var npc = current.Components.Get<NpcSurvivor>();
+			if ( npc.IsValid() )
+				return npc;
 
 			current = current.Parent;
 		}

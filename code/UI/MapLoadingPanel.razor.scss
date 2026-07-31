@@ -5,16 +5,30 @@ MapLoadingPanel
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: #444;
+	display: none;
 	justify-content: center;
 	align-items: center;
-	font-weight: bold;
-	border-radius: 20px;
+	font-family: Poppins;
+	pointer-events: none;
+	z-index: 10000;
 
-	.title
+	&.loading,
+	&.waiting
 	{
-		font-size: 25px;
-		font-family: Poppins;
+		display: flex;
+		background-color: #000;
+	}
+
+	&.loaded
+	{
+		display: none;
+	}
+
+	.loading-title
+	{
 		color: #fff;
+		font-size: 46px;
+		font-weight: 900;
+		text-align: center;
 	}
 }
