@@ -4,5 +4,6 @@
   "end": 0,
   "rate": 44100,
   "compress": false,
-  "bitrate": 256
+  "bitrate": 256,
+  "guid": "00740065-0073-005c-6d00-610074006500"
 }

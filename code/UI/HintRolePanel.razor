@@ -1,0 +1,66 @@
+@using System;
+@using System.Collections.Generic;
+@using Sandbox;
+@using Sandbox.UI;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsVisible )
+	{
+		<div class="hint">
+			<div class="hint-role" style="color: @RoleColor">@RoleTitle</div>
+			@foreach ( var line in HintLines )
+			{
+				<div class="hint-line">@line</div>
+			}
+		</div>
+	}
+</root>
+
+@code
+{
+	private const float HintDuration = 8f;
+
+	private readonly HashSet<RoleTrashCompactor> _shownRoles = new();
+	private RoleTrashCompactor _hintRole = RoleTrashCompactor.Spectator;
+	private float _hideAt;
+
+	private bool IsVisible => RealTime.Now < _hideAt;
+
+	private string RoleTitle => _hintRole == RoleTrashCompactor.Trashman
+		? "YOU ARE THE TRASHMAN"
+		: "YOU ARE A SURVIVOR";
+
+	private string RoleColor => _hintRole == RoleTrashCompactor.Trashman
+		? "#df5151"
+		: "#5191df";
+
+	private string[] HintLines => _hintRole == RoleTrashCompactor.Trashman
+		?
+		[
+			"Hold LMB to grab trash, release to throw it.",
+			"Eliminate every survivor before time runs out."
+		]
+		:
+		[
+			"The Trashman throws trash at you.",
+			"Dodge it and survive until the timer ends."
+		];
+
+	protected override void OnUpdate()
+	{
+		var player = Player.Local;
+		if ( !player.IsValid() || !player.IsAlive || !player.HasRoundSpawn )
+			return;
+
+		var role = player.RoleEnum;
+		if ( role == RoleTrashCompactor.Spectator || !_shownRoles.Add( role ) )
+			return;
+
+		_hintRole = role;
+		_hideAt = RealTime.Now + HintDuration;
+	}
+
+	protected override int BuildHash() => HashCode.Combine( IsVisible, _hintRole );
+}

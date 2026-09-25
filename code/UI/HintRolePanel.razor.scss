@@ -1,0 +1,40 @@
+HintRolePanel
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	justify-content: center;
+	align-items: flex-end;
+	padding-bottom: 160px;
+	font-weight: bold;
+	pointer-events: none;
+
+	.hint
+	{
+		flex-direction: column;
+		align-items: center;
+		gap: 6px;
+		padding: 18px 28px;
+		background-color: rgba( 0, 0, 0, 0.45 );
+		border-radius: 12px;
+	}
+
+	.hint-role
+	{
+		font-family: Poppins;
+		font-size: 32px;
+		text-stroke: 4px black;
+		text-align: center;
+	}
+
+	.hint-line
+	{
+		font-family: Poppins;
+		font-size: 20px;
+		color: #fff;
+		text-stroke: 4px black;
+		text-align: center;
+	}
+}

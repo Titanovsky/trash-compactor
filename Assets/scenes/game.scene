@@ -245,6 +245,7 @@
             "go": "3ee1c9f4-07be-4e0b-8b23-67bee2d8ec8a",
             "component_type": "CameraComponent"
           },
+          "Timing": "AfterPostProcess",
           "ZIndex": 100
         },
         {
@@ -298,6 +299,18 @@
         {
           "__type": "Sandbox.MapVotePanel",
           "__guid": "fedf0d2b-1046-44c0-8282-7b3a0616507d",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        },
+        {
+          "__type": "Sandbox.HintRolePanel",
+          "__guid": "54b2661b-cbbf-4ef1-a1f0-d63661f3c907",
           "__enabled": true,
           "Flags": 0,
           "OnComponentDestroy": null,
@@ -361,8 +374,6 @@
           "__enabled": false,
           "Flags": 0,
           "__version": 1,
-          "Filter": "Bilinear",
-          "Gamma": 2.2,
           "Mode": "Additive",
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
@@ -458,7 +469,8 @@
     "GameObjectSystems": {
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
-          "$blob": "e061c5fe-a89d-4356-ab95-f3be0e132f25"
+          "$blob": "64db792e-5935-8fbc-8cfa-050cd49fa7fd",
+          "$refs": []
         }
       },
       "Sandbox.SelectionSetsSystem": {
