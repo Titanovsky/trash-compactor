@@ -11,7 +11,7 @@
   "Mounts": null,
   "IsStandaloneOnly": false,
   "Metadata": {
-    "MaxPlayers": 20,
+    "MaxPlayers": 12,
     "MinPlayers": 1,
     "TickRate": 50,
     "GameNetworkType": "Multiplayer",
@@ -23,7 +23,7 @@
     "PerMapRanking": false,
     "LeaderboardType": "None",
     "CsProjName": "",
-    "StartupScene": "scenes/game.scene",
+    "StartupScene": "scenes/start.scene",
     "LaunchMode": "Launcher",
     "DedicatedServerStartupScene": "scenes/game.scene",
     "ControlModes": {
@@ -31,6 +31,10 @@
       "VR": false,
       "Gamepad": false
     },
-    "MapStartupScene": "scenes/game.scene"
+    "MapStartupScene": "scenes/game.scene",
+    "RecommendedMinPlayers": 1,
+    "RecommendedMaxPlayers": 12,
+    "Coop": false,
+    "Versus": true
   }
 }

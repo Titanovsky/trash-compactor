@@ -258,9 +258,26 @@ public sealed class GameManager : Component
 		return false;
 	}
 
+	private string ResolveInitialMapPackageId()
+	{
+		var launchMap = LaunchArguments.Map;
+		if ( string.IsNullOrWhiteSpace( launchMap ) )
+			return NormalizePackageId( InitialMapPackageId );
+
+		var packageId = CanonicalPackageId( launchMap );
+		if ( Package.TryParseIdent( packageId, out _ ) && FindMapPrefab( packageId ).IsValid() )
+		{
+			Log.Info( $"[GameManager] Using launcher map '{packageId}'." );
+			return packageId;
+		}
+
+		Log.Warning( $"[GameManager] Launcher map '{launchMap}' is not supported. Falling back to '{InitialMapPackageId}'." );
+		return NormalizePackageId( InitialMapPackageId );
+	}
+
 	private void LoadInitialMapServer()
 	{
-		var packageId = NormalizePackageId( InitialMapPackageId );
+		var packageId = ResolveInitialMapPackageId();
 		if ( !ValidateMapPackageId( packageId ) || !EnsureMapInstance() )
 			return;
 
@@ -385,7 +402,10 @@ public sealed class GameManager : Component
 			return;
 
 		if ( _activeMapPrefab.IsValid() && string.Equals( _spawnedMapPackageId, prefabPackageId, StringComparison.OrdinalIgnoreCase ) )
+		{
+			EnsureMapReadyServer();
 			return;
+		}
 
 		var reportedMapName = MapInstance.MapName;
 		var reportedPackageId = CanonicalPackageId( reportedMapName );
@@ -440,6 +460,21 @@ public sealed class GameManager : Component
 		Log.Info( $"[GameManager] Map '{prefabPackageId}' revision {ActiveMapRevision} is ready (MapInstance: '{reportedMapName}')." );
 	}
 
+	private void EnsureMapReadyServer()
+	{
+		var roundManager = RoundManager.Instance;
+		if ( roundManager.IsValid() && MapInfo.Instance.IsValid() && !roundManager.IsMapReadyServer && roundManager.State != RoundState.MapVote )
+		{
+			Log.Warning( $"[GameManager] RoundManager lost map readiness for revision {ActiveMapRevision}. Restoring it." );
+			roundManager.SetMapReadyServer();
+		}
+
+		if ( !IsMapReady || HostReadyMapRevision != ActiveMapRevision )
+			MarkHostMapReady();
+
+		GenerateNavMeshServer( ActiveMapRevision );
+	}
+
 	private async void GenerateNavMeshServer( int mapRevision )
 	{
 		if ( !Networking.IsHost || _navMeshRevision == mapRevision )
@@ -463,6 +498,7 @@ public sealed class GameManager : Component
 			return;
 
 		_mapUnloadObservedRevision = ActiveMapRevision;
+		_navMeshRevision = -1;
 		ResetHostMapReady();
 		RoundManager.Instance?.SetMapLoadingServer();
 	}

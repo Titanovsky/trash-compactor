@@ -102,7 +102,10 @@
           "__guid": "6f67e38b-c772-48df-8df6-8934244a3383",
           "__enabled": true,
           "Flags": 0,
-          "ButtonClickSound": "sounds/click.sound",
+          "ButtonClickSound": {
+            "Id": "e7085139-3148-490f-86ca-cbe1ebd204d0",
+            "Path": "sounds/click.sound"
+          },
           "IntermissionTime": 5,
           "MaxRoundsBeforeVote": 12,
           "OnComponentDestroy": null,
@@ -111,8 +114,14 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "PlayerDeadSound": "sounds/roblox-death.sound",
-          "RoundStartSound": "sounds/ding.sound",
+          "PlayerDeadSound": {
+            "Id": "502d738d-96a1-48e2-978c-aa3871290405",
+            "Path": "sounds/roblox-death.sound"
+          },
+          "RoundStartSound": {
+            "Id": "e0924ab9-fc25-4022-ace1-0d0fddd2531a",
+            "Path": "sounds/ding.sound"
+          },
           "RoundTime": 70,
           "SoloRoundTime": 60
         },
@@ -421,7 +430,7 @@
           "OnComponentUpdate": null,
           "OnMapLoaded": null,
           "OnMapUnloaded": null,
-          "UseMapFromLaunch": true
+          "UseMapFromLaunch": false
         }
       ],
       "Children": []
@@ -447,6 +456,7 @@
   ],
   "SceneProperties": {
     "NetworkInterpolation": true,
+    "PhysicsMode": "Physics3D",
     "TimeScale": 1,
     "WantsSystemScene": true,
     "Metadata": {

@@ -22,6 +22,8 @@ public class RoundManager : Component
 
 	public float TimeLeft => MathF.Max( SyncedEndTime - Time.Now, 0f );
 
+	public bool IsMapReadyServer => _isMapReadyServer;
+
 	private readonly List<Player> _trashmanHistory = new();
 	private readonly List<Player> _registeredPlayers = new();
 	private readonly List<Player> _pendingRegistrations = new();
@@ -542,7 +544,8 @@ public class RoundManager : Component
 
 	protected override void OnStart()
 	{
-		SetMapLoadingServer();
+		if ( !_isMapReadyServer )
+			SetMapLoadingServer();
 	}
 
 	protected override void OnUpdate()

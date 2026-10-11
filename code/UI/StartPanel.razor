@@ -1,0 +1,244 @@
+@using System;
+@using System.Threading.Tasks;
+@using Sandbox;
+@using Sandbox.Network;
+@using Sandbox.UI;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="title">@GameTitle</div>
+
+	@if ( _view == MenuView.Main )
+	{
+		<div class="menu">
+			<div class="item" onclick=@Play>@PlayText</div>
+			<div class="item" onclick=@OpenLobbies>@FindLobbyText</div>
+			<div class="item" onclick=@Exit>@ExitText</div>
+		</div>
+	}
+	else
+	{
+		<div class="lobbies">
+			<div class="list">
+				@if ( Networking.IsConnecting )
+				{
+					<div class="status">@ConnectingText</div>
+				}
+				else if ( !string.IsNullOrEmpty( _error ) )
+				{
+					<div class="status">@_error</div>
+				}
+				else if ( !_hasSearched )
+				{
+					<div class="status">@SearchingText</div>
+				}
+				else if ( _lobbies.Count == 0 )
+				{
+					<div class="status">@NoLobbiesText</div>
+				}
+
+				@foreach ( var lobby in _lobbies )
+				{
+					<div class="@LobbyClass( lobby )" onclick=@( () => JoinLobby( lobby ) )>
+						<div class="lobby-name">@LobbyName( lobby )</div>
+
+						<div class="stat">
+							<div class="stat-value">@PlayersText( lobby )</div>
+							<div class="stat-label">@OnlineLabel</div>
+						</div>
+
+						<div class="stat ping">
+							<div class="@PingClass( lobby )">@PingText( lobby )</div>
+							<div class="stat-label">@PingLabel</div>
+						</div>
+					</div>
+				}
+			</div>
+
+			<div class="item back" onclick=@CloseLobbies>@BackText</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	private enum MenuView
+	{
+		Main,
+		Lobbies
+	}
+
+	private const string PlayText = "Play";
+	private const string FindLobbyText = "Find Lobby";
+	private const string ExitText = "Exit";
+	private const string BackText = "Back";
+
+	private const string SearchingText = "Searching for lobbies...";
+	private const string NoLobbiesText = "No lobbies found";
+	private const string ConnectingText = "Connecting...";
+	private const string OnlineLabel = "online";
+	private const string PingLabel = "ping";
+	private const string UnnamedLobbyText = "Trash Compactor";
+
+	private const float AutoRefreshSeconds = 5f;
+
+	[Property] public string GameTitle { get; set; } = "Trash Compactor";
+
+	/// <summary>
+	/// Network scene loaded by "Play". If it is not assigned, scenes/game.scene is used.
+	/// The scene must contain a NetworkHelper with StartServer enabled.
+	/// </summary>
+	[Property] public SceneFile GameScene { get; set; }
+
+	private MenuView _view = MenuView.Main;
+	private List<LobbyInformation> _lobbies = new();
+	private bool _isQuerying;
+	private bool _hasSearched;
+	private string _error;
+	private TimeSince _sinceRefresh;
+
+	protected override void OnStart()
+	{
+		Mouse.Visibility = MouseVisibility.Visible;
+	}
+
+	protected override void OnUpdate()
+	{
+		Mouse.Visibility = MouseVisibility.Visible;
+
+		if ( _view == MenuView.Lobbies && !_isQuerying && _sinceRefresh > AutoRefreshSeconds )
+			_ = RefreshLobbiesAsync();
+	}
+
+	private void Play()
+	{
+		if ( Networking.IsConnecting )
+			return;
+
+		var options = new SceneLoadOptions { ShowLoadingScreen = true };
+		var sceneSet = GameScene.IsValid() ? options.SetScene( GameScene ) : options.SetScene( "scenes/game.scene" );
+
+		if ( !sceneSet || !Game.ChangeScene( options ) )
+			Log.Warning( "[StartPanel] Could not load the game scene." );
+	}
+
+	private void OpenLobbies()
+	{
+		_view = MenuView.Lobbies;
+		_lobbies = new List<LobbyInformation>();
+		_hasSearched = false;
+		_error = null;
+
+		_ = RefreshLobbiesAsync();
+	}
+
+	private void CloseLobbies()
+	{
+		_view = MenuView.Main;
+	}
+
+	private void Exit()
+	{
+		Game.Close();
+	}
+
+	private void JoinLobby( LobbyInformation lobby )
+	{
+		if ( lobby.IsFull || Networking.IsConnecting )
+			return;
+
+		Networking.Connect( lobby.LobbyId );
+	}
+
+	private async Task RefreshLobbiesAsync()
+	{
+		if ( _isQuerying )
+			return;
+
+		_isQuerying = true;
+		_sinceRefresh = 0;
+
+		try
+		{
+			var result = await Networking.QueryLobbies();
+			if ( !this.IsValid() )
+				return;
+
+			_lobbies = result
+				.Where( x => !x.IsHidden )
+				.OrderBy( x => x.IsFull )
+				.ThenByDescending( x => x.Members )
+				.ToList();
+			_error = null;
+		}
+		catch ( Exception e )
+		{
+			Log.Warning( $"[StartPanel] Lobby query failed: {e.Message}" );
+
+			if ( this.IsValid() )
+				_error = e.Message;
+		}
+		finally
+		{
+			_isQuerying = false;
+			_hasSearched = true;
+			_sinceRefresh = 0;
+		}
+	}
+
+	private static string LobbyName( LobbyInformation lobby )
+	{
+		return string.IsNullOrWhiteSpace( lobby.Name ) ? UnnamedLobbyText : lobby.Name;
+	}
+
+	private static string PlayersText( LobbyInformation lobby )
+	{
+		return $"{lobby.Members} / {lobby.MaxMembers}";
+	}
+
+	private static string PingText( LobbyInformation lobby )
+	{
+		var ping = (int)lobby.Ping;
+		return ping < 0 ? "-" : $"{ping} ms";
+	}
+
+	private static string LobbyClass( LobbyInformation lobby )
+	{
+		return lobby.IsFull ? "lobby full" : "lobby";
+	}
+
+	private static string PingClass( LobbyInformation lobby )
+	{
+		var ping = (int)lobby.Ping;
+
+		if ( ping < 0 ) return "stat-value";
+		if ( ping < 60 ) return "stat-value ping-good";
+		if ( ping < 120 ) return "stat-value ping-medium";
+		return "stat-value ping-bad";
+	}
+
+	/// <summary>
+	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+	/// </summary>
+	protected override int BuildHash()
+	{
+		var hash = new System.HashCode();
+		hash.Add( GameTitle );
+		hash.Add( _view );
+		hash.Add( _hasSearched );
+		hash.Add( _error );
+		hash.Add( Networking.IsConnecting );
+
+		foreach ( var lobby in _lobbies )
+		{
+			hash.Add( lobby.LobbyId );
+			hash.Add( lobby.Name );
+			hash.Add( lobby.Members );
+			hash.Add( lobby.MaxMembers );
+			hash.Add( (int)lobby.Ping );
+		}
+
+		return hash.ToHashCode();
+	}
+}
